@@ -1,0 +1,97 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+    <h1>{{ 'pc.registry.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  <div class="tabs">
+    <button class="tab" [class.active]="tab() === 'drift'" (click)="selectTab('drift')">{{ 'pc.registry.drift' | t }}</button>
+    <button class="tab" [class.active]="tab() === 'matrix'" (click)="selectTab('matrix')">{{ 'pc.registry.matrix' | t }}</button>
+  </div>
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else if (tab() === 'drift') {
+    <div class="panel">
+      @if (drift().length === 0) {
+        <div class="empty-state">{{ 'pc.registry.empty' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.registry.tenant' | t }}</th>
+                <th class="num">{{ 'pc.registry.dbVersion' | t }}</th>
+                <th class="num">{{ 'pc.registry.latest' | t }}</th>
+                <th>{{ 'pc.registry.status' | t }}</th>
+                <th class="num">{{ 'pc.registry.models' | t }}</th>
+                <th class="num">{{ 'pc.registry.asmErrors' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (d of drift(); track d.tenantId) {
+                <tr>
+                  <td class="mono">{{ d.tenantId }}</td>
+                  <td class="mono num">{{ d.databaseVersion }}</td>
+                  <td class="mono num">{{ d.latestVersion }}</td>
+                  <td><app-status-badge [tone]="d.isBehind ? 'warn' : 'success'" [label]="(d.isBehind ? 'pc.registry.behind' : 'pc.registry.current') | t" /></td>
+                  <td class="mono num">{{ d.modelCount }}</td>
+                  <td class="mono num">
+                    @if (d.assemblyErrorCount > 0) { <span class="badge badge-danger">{{ d.assemblyErrorCount }}</span> }
+                    @else { 0 }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="panel">
+      @if (matrix().length === 0) {
+        <div class="empty-state">{{ 'pc.registry.empty' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.registry.tenant' | t }}</th>
+                <th>{{ 'pc.registry.model' | t }}</th>
+                <th class="num">{{ 'pc.registry.version' | t }}</th>
+                <th class="num">{{ 'pc.registry.columns' | t }}</th>
+                <th>{{ 'pc.registry.asmVersion' | t }}</th>
+                <th>{{ 'pc.registry.synced' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (m of matrix(); track m.tenantId + m.modelName) {
+                <tr>
+                  <td class="mono">{{ m.tenantId }}</td>
+                  <td class="mono">{{ m.modelName }}
+                    @if (m.assemblyError) { <span class="badge badge-danger">asm</span> }
+                  </td>
+                  <td class="mono num">v{{ m.activeVersion }}</td>
+                  <td class="mono num">{{ m.columnCount }}</td>
+                  <td class="mono">{{ m.assemblyVersion || '—' }}</td>
+                  <td class="mono nowrap">{{ m.syncedAt | date:'short' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>

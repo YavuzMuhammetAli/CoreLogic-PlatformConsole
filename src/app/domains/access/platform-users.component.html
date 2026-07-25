@@ -1,0 +1,69 @@
+<div class="stack page">
+  <header class="page-head cluster">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.access' | t }}</span>
+      <h1>{{ 'pc.users.title' | t }}</h1>
+    </div>
+    <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/access/platform-users" routerLinkActive="active">{{ 'pc.imp.users' | t }}</a>
+    <a routerLink="/access/impersonation" routerLinkActive="active">{{ 'pc.imp.title' | t }}</a>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <div class="panel">
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (users().length === 0) {
+      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.users.email' | t }}</th>
+              <th>{{ 'pc.users.name' | t }}</th>
+              <th>{{ 'pc.users.roles' | t }}</th>
+              <th>{{ 'pc.users.mfa' | t }}</th>
+              <th>{{ 'pc.users.status' | t }}</th>
+              <th>{{ 'pc.users.lastLogin' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users(); track u.id) {
+              <tr>
+                <td>{{ u.email }}</td>
+                <td>{{ (u.name || '') + ' ' + (u.surname || '') }}</td>
+                <td>
+                  <div class="cluster">
+                    @for (r of u.roles; track r) {
+                      <span class="badge badge-meta">{{ r }}</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <app-status-badge
+                    [tone]="u.mfaEnrolled ? 'success' : 'warn'"
+                    [label]="(u.mfaEnrolled ? 'pc.users.enrolled' : 'pc.users.notEnrolled') | t" />
+                </td>
+                <td>
+                  <app-status-badge
+                    [tone]="u.active ? 'success' : 'neutral'"
+                    [label]="(u.active ? 'pc.users.active' : 'pc.users.inactive') | t" />
+                </td>
+                <td class="mono">
+                  {{ u.lastLoginAt ? (u.lastLoginAt | date:'short') : ('pc.users.never' | t) }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+    <h1>{{ 'pc.ann.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/settings/config" routerLinkActive="active">{{ 'pc.config.title' | t }}</a>
+    <a routerLink="/settings/flags" routerLinkActive="active">{{ 'pc.flags.title' | t }}</a>
+    <a routerLink="/settings/integration" routerLinkActive="active">{{ 'pc.intg.title' | t }}</a>
+    <a routerLink="/settings/announcements" routerLinkActive="active">{{ 'pc.ann.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  <section class="panel">
+    <div class="panel-head"><h2>{{ 'pc.ann.new' | t }}</h2></div>
+    <div class="panel-body">
+      <div class="cluster wrap">
+        <input class="input" [(ngModel)]="form.title" [placeholder]="'pc.ann.titleField' | t" />
+        <select class="input" [(ngModel)]="form.severity">
+          @for (s of severities; track s) { <option [value]="s">{{ s }}</option> }
+        </select>
+        <input class="input grow" [(ngModel)]="form.body" [placeholder]="'pc.ann.body' | t" />
+        <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.title" (click)="create()">{{ 'pc.ann.create' | t }}</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="panel">
+    <div class="panel-head"><h2>{{ 'pc.ann.list' | t }}</h2>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+    @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+    @else if (rows().length === 0) { <div class="empty-state">{{ 'pc.ann.empty' | t }}</div> }
+    @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.ann.severity' | t }}</th>
+              <th>{{ 'pc.ann.titleField' | t }}</th>
+              <th>{{ 'pc.ann.status' | t }}</th>
+              <th>{{ 'pc.ann.created' | t }}</th>
+              <th class="td-actions">{{ 'pc.ann.actions' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of rows(); track a.id) {
+              <tr>
+                <td><app-status-badge [tone]="sevTone(a.severity)" [label]="a.severity" /></td>
+                <td>{{ a.title }}</td>
+                <td><app-status-badge [tone]="stTone(a.status)" [label]="a.status" /></td>
+                <td class="mono nowrap">{{ a.createdAt | date:'short' }}</td>
+                <td class="td-actions">
+                  @if (a.status === 'Draft') {
+                    <button class="btn btn-primary btn-sm" [disabled]="busyId() === a.id" (click)="act(a, 'publish')">{{ 'pc.ann.publish' | t }}</button>
+                  }
+                  @if (a.status === 'Published') {
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === a.id" (click)="act(a, 'expire')">{{ 'pc.ann.expire' | t }}</button>
+                  }
+                  @if (a.status === 'Expired') { <span class="muted">—</span> }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  <!-- ── Multi-region tohumu: DB sunucu envanteri ── -->
+  <div class="panel">
+    <div class="panel-head"><h2>{{ 'pc.ann.servers' | t }}</h2></div>
+    @if (servers().length === 0) { <div class="empty-state">{{ 'pc.ann.noServers' | t }}</div> }
+    @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.ann.serverName' | t }}</th>
+              <th>{{ 'pc.ann.region' | t }}</th>
+              <th>{{ 'pc.ann.host' | t }}</th>
+              <th>{{ 'pc.ann.status' | t }}</th>
+              <th class="num">{{ 'pc.ann.capacity' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of servers(); track s.id) {
+              <tr>
+                <td class="mono">{{ s.name }}</td>
+                <td><span class="badge badge-meta">{{ s.region }}</span></td>
+                <td class="mono">{{ s.hostName }}</td>
+                <td><app-status-badge [tone]="s.status === 'Active' ? 'success' : 'warn'" [label]="s.status" /></td>
+                <td class="mono num">{{ s.currentTenants }} / {{ s.maxTenants }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

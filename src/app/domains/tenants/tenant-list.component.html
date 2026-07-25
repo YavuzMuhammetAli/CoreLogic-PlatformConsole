@@ -1,0 +1,75 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.tenants' | t }}</span>
+    <h1>{{ 'pc.tenants.title' | t }}</h1>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <div class="panel">
+    <div class="panel-head filters">
+      <div class="cluster">
+        <input class="input search" type="search" [(ngModel)]="search"
+               (keyup.enter)="applyFilter()"
+               [placeholder]="'pc.tenants.search' | t" [attr.aria-label]="'pc.tenants.search' | t" />
+        <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
+          <option value="">{{ 'pc.tenants.allStatuses' | t }}</option>
+          @for (s of statuses; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="applyFilter()">{{ 'pc.search' | t }}</button>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (!result() || result()!.items.length === 0) {
+      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.tenants.code' | t }}</th>
+              <th>{{ 'pc.tenants.name' | t }}</th>
+              <th>{{ 'pc.tenants.status' | t }}</th>
+              <th>{{ 'pc.tenants.health' | t }}</th>
+              <th>{{ 'pc.tenants.db' | t }}</th>
+              <th>{{ 'pc.tenants.version' | t }}</th>
+              <th>{{ 'pc.tenants.created' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of result()!.items; track t.code) {
+              <tr>
+                <td><a class="code-link mono" [routerLink]="['/tenants', t.code]">{{ t.code }}</a></td>
+                <td>{{ t.name }}</td>
+                <td><app-status-badge [tone]="tone(t.status)" [label]="t.status" /></td>
+                <td><app-status-badge [tone]="hTone(t.lastHealthStatus)" [label]="t.lastHealthStatus" /></td>
+                <td class="mono">{{ t.databaseName || '—' }}</td>
+                <td class="mono">{{ t.databaseVersion ?? '—' }}</td>
+                <td class="mono nowrap">{{ t.createdDate | date:'short' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel-head pager">
+        <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
+        <div class="cluster">
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">
+            {{ 'pc.tenants.prev' | t }}
+          </button>
+          <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">
+            {{ 'pc.tenants.next' | t }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

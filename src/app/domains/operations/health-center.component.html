@@ -1,0 +1,62 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+    <h1>{{ 'pc.health.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else if (tree()) {
+    @if (tree(); as tr) {
+    <div class="overall panel">
+      <div class="panel-body cluster">
+        <span class="eyebrow">{{ 'pc.health.overall' | t }}</span>
+        <app-status-badge [tone]="tone(tr.overall)" [label]="tr.overall" />
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.health.component' | t }}</th>
+              <th>{{ 'pc.health.status' | t }}</th>
+              <th class="num">{{ 'pc.health.latency' | t }}</th>
+              <th>{{ 'pc.health.detail' | t }}</th>
+              <th>{{ 'pc.health.checked' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of tr.components; track c.name) {
+              <tr>
+                <td class="mono">{{ c.name }}</td>
+                <td><app-status-badge [tone]="tone(c.status)" [label]="c.status" /></td>
+                <td class="mono num">{{ c.latencyMs }} ms</td>
+                <td class="muted">{{ c.error || '—' }}</td>
+                <td class="mono nowrap">{{ c.checkedAt | date:'HH:mm:ss' }}</td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="empty-state">{{ 'pc.health.empty' | t }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
+  }
+</div>

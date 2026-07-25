@@ -1,0 +1,85 @@
+<div class="auth-wrap">
+  <div class="auth-top">
+    <button class="mini-btn" type="button" (click)="language.toggle()">
+      {{ language.lang() === 'tr' ? 'TR' : 'EN' }}
+    </button>
+    <button class="mini-btn" type="button" (click)="theme.toggle()" aria-label="Theme">
+      {{ theme.theme() === 'dark' ? '☀' : '☾' }}
+    </button>
+  </div>
+
+  <div class="panel auth-card">
+    <div class="auth-head">
+      <span class="brand-mark">CL</span>
+      <h1>{{ 'pc.login.title' | t }}</h1>
+      <p class="muted">{{ 'pc.login.subtitle' | t }}</p>
+    </div>
+
+    @if (sessionExpired()) {
+      <div class="alert alert-warn">{{ 'pc.login.sessionExpired' | t }}</div>
+    }
+    @if (error()) {
+      <div class="alert alert-danger" role="alert">{{ error() }}</div>
+    }
+
+    <!-- Adım 1: parola -->
+    @if (step() === 'login') {
+      <form class="stack" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="field">
+          <label for="email">{{ 'pc.login.email' | t }}</label>
+          <input id="email" class="input" type="email" formControlName="email" autocomplete="username"
+                 [attr.aria-invalid]="lf.email.invalid && lf.email.touched" />
+        </div>
+        <div class="field">
+          <label for="password">{{ 'pc.login.password' | t }}</label>
+          <input id="password" class="input" type="password" formControlName="password" autocomplete="current-password"
+                 [attr.aria-invalid]="lf.password.invalid && lf.password.touched" />
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
+          @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.login.submit' | t }} }
+        </button>
+      </form>
+    }
+
+    <!-- Adım 2: MFA doğrulama -->
+    @if (step() === 'mfa') {
+      <div class="stack">
+        <p class="muted">{{ 'pc.mfa.subtitle' | t }}</p>
+        <form class="stack" (ngSubmit)="onVerify()">
+          <div class="field">
+            <label for="code">{{ 'pc.mfa.code' | t }}</label>
+            <input id="code" class="input code-input" inputmode="numeric" maxlength="6"
+                   [formControl]="codeControl" autocomplete="one-time-code" />
+          </div>
+          <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
+            @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.mfa.verify' | t }} }
+          </button>
+        </form>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="backToLogin()">{{ 'pc.mfa.back' | t }}</button>
+      </div>
+    }
+
+    <!-- Adım 3: MFA kurulumu -->
+    @if (step() === 'enroll') {
+      <div class="stack">
+        <h2 class="enroll-title">{{ 'pc.mfa.enrollTitle' | t }}</h2>
+        <p class="muted">{{ 'pc.mfa.enrollSubtitle' | t }}</p>
+        <div class="field">
+          <label>{{ 'pc.mfa.secretLabel' | t }}</label>
+          <code class="secret">{{ mfaSecret() }}</code>
+        </div>
+        <form class="stack" (ngSubmit)="onEnroll()">
+          <div class="field">
+            <label for="ecode">{{ 'pc.mfa.code' | t }}</label>
+            <input id="ecode" class="input code-input" inputmode="numeric" maxlength="6"
+                   [formControl]="codeControl" autocomplete="one-time-code" />
+          </div>
+          <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
+            @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.mfa.verify' | t }} }
+          </button>
+        </form>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="backToLogin()">{{ 'pc.mfa.back' | t }}</button>
+      </div>
+    }
+  </div>
+</div>

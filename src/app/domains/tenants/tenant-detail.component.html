@@ -1,0 +1,254 @@
+<div class="stack page">
+  <a class="back mono" routerLink="/tenants">← {{ 'pc.tenants.back' | t }}</a>
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  } @else if (detail()) {
+    @if (detail(); as d) {
+    <header class="detail-head">
+      <div class="detail-id">
+        <span class="eyebrow">{{ 'pc.nav.tenants' | t }}</span>
+        <h1 class="mono">{{ d.code }}</h1>
+        <span class="muted">{{ d.name }}</span>
+      </div>
+      <div class="detail-right">
+        <app-status-badge [tone]="tone(d.status)" [label]="d.status" />
+        @if (availableActions().length > 0) {
+          <div class="cluster actions">
+            @for (a of availableActions(); track a.key) {
+              <button
+                class="btn btn-sm"
+                [class.btn-danger]="a.danger"
+                [class.btn-secondary]="!a.danger"
+                type="button"
+                (click)="openAction(a)">
+                {{ a.labelKey | t }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </header>
+
+    @if (actionError()) {
+      <div class="alert alert-danger" role="alert">{{ actionError() }}</div>
+    }
+
+    <nav class="tabs">
+      <button class="tab" [class.active]="tab() === 'summary'" (click)="selectTab('summary')">
+        {{ 'pc.tenants.tabSummary' | t }}
+      </button>
+      <button class="tab" [class.active]="tab() === 'provisioning'" (click)="selectTab('provisioning')">
+        {{ 'pc.tenants.tabProvisioning' | t }}
+      </button>
+      <button class="tab" [class.active]="tab() === 'history'" (click)="selectTab('history')">
+        {{ 'pc.tenants.tabHistory' | t }}
+      </button>
+      <button class="tab" [class.active]="tab() === 'licensing'" (click)="selectTab('licensing')">
+        {{ 'pc.billing.licensing' | t }}
+      </button>
+      <button class="tab" [class.active]="tab() === 'backups'" (click)="selectTab('backups')">
+        {{ 'pc.backup.title' | t }}
+      </button>
+    </nav>
+
+    @if (tab() === 'summary') {
+      <div class="panel">
+        <div class="panel-body">
+          <dl class="kv">
+            <dt>{{ 'pc.tenants.code' | t }}</dt><dd class="mono">{{ d.code }}</dd>
+            <dt>{{ 'pc.tenants.name' | t }}</dt><dd>{{ d.name }}</dd>
+            <dt>{{ 'pc.tenants.status' | t }}</dt><dd><app-status-badge [tone]="tone(d.status)" [label]="d.status" /></dd>
+            <dt>{{ 'pc.tenants.health' | t }}</dt>
+            <dd>
+              <app-status-badge [tone]="hTone(d.lastHealthStatus)" [label]="d.lastHealthStatus" />
+              @if (d.lastHealthAt) { <span class="muted mono">· {{ d.lastHealthAt | date:'short' }}</span> }
+            </dd>
+            <dt>{{ 'pc.tenants.provisioned' | t }}</dt>
+            <dd>{{ (d.isProvisioned ? 'pc.tenants.yes' : 'pc.tenants.no') | t }}</dd>
+            <dt>{{ 'pc.tenants.db' | t }}</dt><dd class="mono">{{ d.databaseName || '—' }}</dd>
+            <dt>{{ 'pc.tenants.version' | t }}</dt><dd class="mono">{{ d.databaseVersion ?? '—' }}</dd>
+            <dt>{{ 'pc.tenants.created' | t }}</dt><dd class="mono">{{ d.createdDate | date:'medium' }}</dd>
+          </dl>
+        </div>
+      </div>
+    }
+
+    @if (tab() === 'provisioning') {
+      <div class="panel">
+        @if (d.latestProvision; as p) {
+          <div class="panel-head">
+            <div class="cluster">
+              <app-status-badge [tone]="tone(p.status)" [label]="p.status" />
+              <span class="muted mono">{{ p.createdDate | date:'medium' }}</span>
+            </div>
+            <span class="muted">{{ p.adminEmail }}</span>
+          </div>
+          @if (p.error) {
+            <div class="panel-body"><div class="alert alert-danger">{{ p.error }}</div></div>
+          }
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>{{ 'pc.tenants.step' | t }}</th>
+                  <th>{{ 'pc.tenants.status' | t }}</th>
+                  <th>{{ 'pc.tenants.duration' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (s of p.steps; track s.stepName) {
+                  <tr>
+                    <td class="mono">{{ s.stepName }}</td>
+                    <td><app-status-badge [tone]="tone(s.status)" [label]="s.status" /></td>
+                    <td class="mono">{{ s.durationMs != null ? s.durationMs + ' ms' : '—' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="empty-state">{{ 'pc.tenants.noProvision' | t }}</div>
+        }
+      </div>
+    }
+
+    @if (tab() === 'history') {
+      <div class="panel">
+        @if (history().length === 0) {
+          <div class="empty-state">{{ 'pc.noData' | t }}</div>
+        } @else {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>{{ 'pc.audit.time' | t }}</th>
+                  <th>{{ 'pc.lc.from' | t }}</th>
+                  <th>{{ 'pc.lc.to' | t }}</th>
+                  <th>{{ 'pc.dialog.reason' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (h of history(); track h.occurredAt) {
+                  <tr>
+                    <td class="mono nowrap">{{ h.occurredAt | date:'short' }}</td>
+                    <td><app-status-badge [tone]="tone(h.fromStatus)" [label]="h.fromStatus" /></td>
+                    <td><app-status-badge [tone]="tone(h.toStatus)" [label]="h.toStatus" /></td>
+                    <td>{{ h.reason || '—' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+
+    @if (tab() === 'licensing') {
+      <div class="panel">
+        <div class="panel-body">
+          @if (!entitlementLoaded()) {
+            <div class="empty-state"><span class="spinner"></span></div>
+          } @else if (entitlement()) {
+            @if (entitlement(); as e) {
+            @if (!e.planCode) {
+              <div class="empty-state">{{ 'pc.billing.noSub' | t }}</div>
+            } @else {
+              <dl class="kv">
+                <dt>{{ 'pc.billing.plan' | t }}</dt><dd class="mono">{{ e.planCode }}</dd>
+                <dt>{{ 'pc.billing.status' | t }}</dt>
+                <dd><app-status-badge [tone]="subTone(e.subscriptionStatus)" [label]="e.subscriptionStatus" /></dd>
+                <dt>{{ 'pc.billing.entitled' | t }}</dt>
+                <dd>{{ (e.entitled ? 'pc.tenants.yes' : 'pc.tenants.no') | t }}</dd>
+                <dt>{{ 'pc.billing.seats' | t }}</dt><dd class="mono">{{ e.seats }}</dd>
+              </dl>
+              <table class="data-table">
+                <thead>
+                  <tr><th>{{ 'pc.billing.feature' | t }}</th><th class="num">{{ 'pc.billing.limit' | t }}</th></tr>
+                </thead>
+                <tbody>
+                  @for (f of entitlementFeatures(); track f.key) {
+                    <tr><td class="mono">{{ f.key }}</td><td class="mono num">{{ f.limit == null ? '✓' : f.limit }}</td></tr>
+                  }
+                </tbody>
+              </table>
+            }
+            }
+          } @else {
+            <div class="empty-state">{{ 'pc.billing.noSub' | t }}</div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (tab() === 'backups') {
+      <div class="panel">
+        <div class="panel-head">
+          <h2>{{ 'pc.backup.title' | t }}</h2>
+          @if (canOps) {
+            <button class="btn btn-primary btn-sm" type="button" [disabled]="backupBusy() === -1" (click)="runBackup()">
+              {{ 'pc.backup.run' | t }}
+            </button>
+          }
+        </div>
+        @if (!backupsLoaded()) {
+          <div class="empty-state"><span class="spinner"></span></div>
+        } @else if (backups().length === 0) {
+          <div class="empty-state">{{ 'pc.backup.empty' | t }}</div>
+        } @else {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>{{ 'pc.backup.type' | t }}</th>
+                  <th>{{ 'pc.backup.status' | t }}</th>
+                  <th class="num">{{ 'pc.backup.size' | t }}</th>
+                  <th>{{ 'pc.backup.started' | t }}</th>
+                  <th>{{ 'pc.backup.verified' | t }}</th>
+                  <th class="td-actions">{{ 'pc.backup.actions' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (b of backups(); track b.id) {
+                  <tr>
+                    <td class="mono">{{ b.type }}</td>
+                    <td>
+                      <app-status-badge [tone]="b.status === 'Completed' ? 'success' : b.status === 'Failed' ? 'danger' : 'meta'" [label]="b.status" />
+                      @if (b.error) { <span class="muted" [title]="b.error">⚠</span> }
+                    </td>
+                    <td class="mono num">{{ (b.sizeBytes / 1048576) | number:'1.0-1' }} MB</td>
+                    <td class="mono nowrap">{{ b.startedAt | date:'short' }}</td>
+                    <td class="mono nowrap">{{ b.verifiedAt ? (b.verifiedAt | date:'short') : '—' }}</td>
+                    <td class="td-actions">
+                      @if (canOps && b.status === 'Completed') {
+                        <button class="btn btn-secondary btn-sm" type="button" [disabled]="backupBusy() === b.id" (click)="verifyBackup(b)">
+                          {{ 'pc.backup.verify' | t }}
+                        </button>
+                      } @else { <span class="muted">—</span> }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+    }
+  }
+</div>
+
+@if (pending(); as p) {
+  <app-confirm-danger-dialog
+    [title]="p.titleKey | t"
+    [message]="p.messageKey | t"
+    [confirmLabel]="p.titleKey | t"
+    [requireReason]="p.requireReason"
+    [confirmCode]="p.confirmCode"
+    [danger]="p.danger"
+    [busy]="busy()"
+    (confirmed)="onConfirm($event)"
+    (cancelled)="pending.set(null)" />
+}

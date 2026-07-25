@@ -1,0 +1,162 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
+    <h1>{{ 'pc.sec.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/security/audit-logs" routerLinkActive="active">{{ 'pc.audit.title' | t }}</a>
+    <a routerLink="/security/center" routerLinkActive="active">{{ 'pc.sec.title' | t }}</a>
+    <a routerLink="/security/compliance" routerLinkActive="active">{{ 'pc.comp.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  <div class="tabs">
+    <button class="tab" [class.active]="tab() === 'events'" (click)="selectTab('events')">{{ 'pc.sec.events' | t }}</button>
+    <button class="tab" [class.active]="tab() === 'attempts'" (click)="selectTab('attempts')">{{ 'pc.sec.attempts' | t }}</button>
+    <button class="tab" [class.active]="tab() === 'iprules'" (click)="selectTab('iprules')">{{ 'pc.sec.ipRules' | t }}</button>
+  </div>
+
+  <!-- ── Tehdit olayları ── -->
+  @if (tab() === 'events') {
+    <div class="panel">
+      <div class="panel-head filters">
+        <select class="input" [(ngModel)]="eventStatus" (ngModelChange)="loadEvents()">
+          <option value="">{{ 'pc.sec.allStatuses' | t }}</option>
+          <option value="Open">Open</option>
+          <option value="Reviewed">Reviewed</option>
+          <option value="Dismissed">Dismissed</option>
+          <option value="Escalated">Escalated</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="loadEvents()">{{ 'pc.refresh' | t }}</button>
+      </div>
+      @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+      @else if (events().length === 0) { <div class="empty-state">{{ 'pc.sec.noEvents' | t }}</div> }
+      @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.sec.type' | t }}</th>
+                <th>{{ 'pc.sec.subject' | t }}</th>
+                <th>{{ 'pc.sec.status' | t }}</th>
+                <th>{{ 'pc.sec.time' | t }}</th>
+                <th class="td-actions">{{ 'pc.sec.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (e of events(); track e.id) {
+                <tr>
+                  <td><span class="badge badge-danger">{{ e.type }}</span></td>
+                  <td class="mono">{{ e.subjectType }}:{{ e.subjectId }}</td>
+                  <td><app-status-badge [tone]="evtTone(e.status)" [label]="e.status" /></td>
+                  <td class="mono nowrap">{{ e.occurredAt | date:'short' }}</td>
+                  <td class="td-actions">
+                    @if (canManage && e.status === 'Open') {
+                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === e.id" (click)="review(e, 'Reviewed')">{{ 'pc.sec.markReviewed' | t }}</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === e.id" (click)="review(e, 'Dismissed')">{{ 'pc.sec.dismiss' | t }}</button>
+                    } @else { <span class="muted">—</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Giriş denemeleri ── -->
+  @if (tab() === 'attempts') {
+    <div class="panel">
+      <div class="panel-head filters">
+        <input class="input" [(ngModel)]="attemptEmail" [placeholder]="'pc.sec.email' | t" />
+        <input class="input" [(ngModel)]="attemptIp" [placeholder]="'pc.sec.ip' | t" />
+        <button class="btn btn-secondary btn-sm" type="button" (click)="loadAttempts()">{{ 'pc.search' | t }}</button>
+      </div>
+      @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+      @else if (attempts().length === 0) { <div class="empty-state">{{ 'pc.sec.noAttempts' | t }}</div> }
+      @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.sec.email' | t }}</th>
+                <th>{{ 'pc.sec.ip' | t }}</th>
+                <th>{{ 'pc.sec.result' | t }}</th>
+                <th>{{ 'pc.sec.reason' | t }}</th>
+                <th>{{ 'pc.sec.time' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of attempts(); track a.id) {
+                <tr>
+                  <td>{{ a.email || '—' }}</td>
+                  <td class="mono">{{ a.ip || '—' }}</td>
+                  <td><app-status-badge [tone]="a.success ? 'success' : 'danger'" [label]="(a.success ? 'pc.sec.ok' : 'pc.sec.fail') | t" /></td>
+                  <td class="mono">{{ a.failureReason || '—' }}</td>
+                  <td class="mono nowrap">{{ a.occurredAt | date:'short' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── IP kuralları ── -->
+  @if (tab() === 'iprules') {
+    @if (canManage) {
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.sec.addRule' | t }}</h2></div>
+        <div class="panel-body">
+          <div class="cluster wrap">
+            <input class="input" [(ngModel)]="ipForm.cidr" [placeholder]="'pc.sec.cidr' | t" />
+            <select class="input" [(ngModel)]="ipForm.action">
+              <option value="Deny">Deny</option>
+              <option value="Allow">Allow</option>
+            </select>
+            <input class="input grow" [(ngModel)]="ipForm.reason" [placeholder]="'pc.sec.reason' | t" />
+            <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ipForm.cidr" (click)="addIpRule()">{{ 'pc.sec.add' | t }}</button>
+          </div>
+        </div>
+      </section>
+    }
+    <div class="panel">
+      @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+      @else if (ipRules().length === 0) { <div class="empty-state">{{ 'pc.sec.noRules' | t }}</div> }
+      @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.sec.cidr' | t }}</th>
+                <th>{{ 'pc.sec.action' | t }}</th>
+                <th>{{ 'pc.sec.reason' | t }}</th>
+                <th>{{ 'pc.sec.expires' | t }}</th>
+                <th class="td-actions">{{ 'pc.sec.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of ipRules(); track r.id) {
+                <tr>
+                  <td class="mono">{{ r.cidr }}</td>
+                  <td><span class="badge" [class.badge-danger]="r.action === 'Deny'" [class.badge-success]="r.action === 'Allow'">{{ r.action }}</span></td>
+                  <td class="muted">{{ r.reason || '—' }}</td>
+                  <td class="mono nowrap">{{ r.expiresAt ? (r.expiresAt | date:'short') : '—' }}</td>
+                  <td class="td-actions">
+                    @if (canManage) {
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === r.id" (click)="removeIpRule(r)">{{ 'pc.sec.remove' | t }}</button>
+                    } @else { <span class="muted">—</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>

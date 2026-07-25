@@ -1,0 +1,159 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+    <h1>{{ 'pc.intg.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/settings/config" routerLinkActive="active">{{ 'pc.config.title' | t }}</a>
+    <a routerLink="/settings/flags" routerLinkActive="active">{{ 'pc.flags.title' | t }}</a>
+    <a routerLink="/settings/integration" routerLinkActive="active">{{ 'pc.intg.title' | t }}</a>
+    <a routerLink="/settings/announcements" routerLinkActive="active">{{ 'pc.ann.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+  @if (secretOnce(); as s) {
+    <div class="alert alert-info"><strong>{{ 'pc.intg.secretOnce' | t }}</strong>
+      <textarea class="token" readonly rows="2">{{ s }}</textarea>
+    </div>
+  }
+
+  <div class="tabs">
+    <button class="tab" [class.active]="tab() === 'webhooks'" (click)="selectTab('webhooks')">{{ 'pc.intg.webhooks' | t }}</button>
+    <button class="tab" [class.active]="tab() === 'apikeys'" (click)="selectTab('apikeys')">{{ 'pc.intg.apiKeys' | t }}</button>
+  </div>
+
+  <!-- ── Webhooks ── -->
+  @if (tab() === 'webhooks') {
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.intg.newWebhook' | t }}</h2></div>
+      <div class="panel-body">
+        <div class="cluster wrap">
+          <input class="input" [(ngModel)]="whForm.name" [placeholder]="'pc.intg.name' | t" />
+          <input class="input grow" [(ngModel)]="whForm.url" placeholder="https://…" />
+          <input class="input" [(ngModel)]="whForm.eventTypes" [placeholder]="'pc.intg.eventTypes' | t" />
+          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !whForm.name || !whForm.url" (click)="createWebhook()">{{ 'pc.intg.create' | t }}</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="panel">
+      @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+      @else if (webhooks().length === 0) { <div class="empty-state">{{ 'pc.intg.noWebhooks' | t }}</div> }
+      @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.intg.name' | t }}</th>
+                <th>{{ 'pc.intg.url' | t }}</th>
+                <th>{{ 'pc.intg.events' | t }}</th>
+                <th>{{ 'pc.intg.enabled' | t }}</th>
+                <th class="td-actions">{{ 'pc.intg.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (w of webhooks(); track w.id) {
+                <tr>
+                  <td>{{ w.name }}</td>
+                  <td class="mono url">{{ w.url }}</td>
+                  <td class="mono">{{ w.eventTypes || '*' }}</td>
+                  <td>
+                    <app-status-badge [tone]="w.enabled ? 'success' : 'neutral'" [label]="(w.enabled ? 'pc.alerts.on' : 'pc.alerts.off') | t" />
+                    @if (w.failureCount > 0) { <span class="badge badge-warn">{{ w.failureCount }} hata</span> }
+                  </td>
+                  <td class="td-actions">
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === w.id" (click)="showDeliveries(w)">{{ 'pc.intg.deliveries' | t }}</button>
+                    <button class="btn btn-secondary btn-sm" [disabled]="busyId() === w.id" (click)="toggleWebhook(w)">{{ (w.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === w.id" (click)="deleteWebhook(w)">{{ 'pc.intg.delete' | t }}</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    @if (selectedWebhook() !== null) {
+      <div class="panel">
+        <div class="panel-head"><h2>{{ 'pc.intg.deliveryLog' | t }} #{{ selectedWebhook() }}</h2></div>
+        @if (deliveries().length === 0) { <div class="empty-state">{{ 'pc.intg.noDeliveries' | t }}</div> }
+        @else {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>{{ 'pc.intg.event' | t }}</th>
+                  <th>{{ 'pc.intg.status' | t }}</th>
+                  <th class="num">{{ 'pc.intg.attempt' | t }}</th>
+                  <th class="num">{{ 'pc.intg.code' | t }}</th>
+                  <th>{{ 'pc.intg.time' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (d of deliveries(); track d.id) {
+                  <tr>
+                    <td class="mono">{{ d.eventType }}</td>
+                    <td><app-status-badge [tone]="delTone(d.status)" [label]="d.status" /></td>
+                    <td class="mono num">{{ d.attemptCount }}</td>
+                    <td class="mono num">{{ d.responseCode ?? '—' }}</td>
+                    <td class="mono nowrap">{{ d.createdAt | date:'short' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  <!-- ── API Keys ── -->
+  @if (tab() === 'apikeys') {
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.intg.newKey' | t }}</h2></div>
+      <div class="panel-body">
+        <div class="cluster wrap">
+          <input class="input" [(ngModel)]="keyForm.name" [placeholder]="'pc.intg.name' | t" />
+          <input class="input" [(ngModel)]="keyForm.scopes" [placeholder]="'pc.intg.scopes' | t" />
+          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !keyForm.name" (click)="createApiKey()">{{ 'pc.intg.create' | t }}</button>
+        </div>
+      </div>
+    </section>
+    <div class="panel">
+      @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+      @else if (apiKeys().length === 0) { <div class="empty-state">{{ 'pc.intg.noKeys' | t }}</div> }
+      @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.intg.name' | t }}</th>
+                <th>{{ 'pc.intg.prefix' | t }}</th>
+                <th>{{ 'pc.intg.enabled' | t }}</th>
+                <th>{{ 'pc.intg.created' | t }}</th>
+                <th class="td-actions">{{ 'pc.intg.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (k of apiKeys(); track k.id) {
+                <tr>
+                  <td>{{ k.name }}</td>
+                  <td class="mono">{{ k.prefix }}…</td>
+                  <td><app-status-badge [tone]="k.enabled ? 'success' : 'danger'" [label]="(k.enabled ? 'pc.alerts.on' : 'pc.intg.revoked') | t" /></td>
+                  <td class="mono nowrap">{{ k.createdAt | date:'short' }}</td>
+                  <td class="td-actions">
+                    @if (k.enabled) {
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === k.id" (click)="revokeApiKey(k)">{{ 'pc.intg.revoke' | t }}</button>
+                    } @else { <span class="muted">—</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>

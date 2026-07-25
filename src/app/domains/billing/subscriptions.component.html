@@ -1,0 +1,101 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
+    <h1>{{ 'pc.billing.subs' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/billing/plans" routerLinkActive="active">{{ 'pc.billing.plans' | t }}</a>
+    <a routerLink="/billing/subscriptions" routerLinkActive="active">{{ 'pc.billing.subs' | t }}</a>
+    <a routerLink="/billing/usage" routerLinkActive="active">{{ 'pc.billing.usage' | t }}</a>
+    <a routerLink="/billing/cost" routerLinkActive="active">{{ 'pc.cost.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  @if (canWrite) {
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.billing.assignPlan' | t }}</h2></div>
+      <div class="panel-body">
+        <div class="cluster wrap">
+          <input class="input" [(ngModel)]="form.tenantCode" [placeholder]="'pc.billing.tenantCode' | t" />
+          <select class="input" [(ngModel)]="form.planId">
+            <option [ngValue]="0">{{ 'pc.billing.selectPlan' | t }}</option>
+            @for (p of plans(); track p.id) { <option [ngValue]="p.id">{{ p.name }} ({{ p.code }})</option> }
+          </select>
+          <input class="input narrow" type="number" min="1" [(ngModel)]="form.seats" [placeholder]="'pc.billing.seats' | t" />
+          <input class="input narrow" type="number" min="0" [(ngModel)]="form.trialDays" [placeholder]="'pc.billing.trialDays' | t" />
+          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.tenantCode || !form.planId" (click)="create()">
+            {{ 'pc.billing.assign' | t }}
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+
+  <div class="panel">
+    <div class="panel-head filters">
+      <div class="cluster">
+        <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
+          <option value="">{{ 'pc.billing.allStatuses' | t }}</option>
+          @for (s of statuses; track s) { <option [value]="s">{{ s }}</option> }
+        </select>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (!result() || result()!.items.length === 0) {
+      <div class="empty-state">{{ 'pc.billing.noSubs' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.billing.tenant' | t }}</th>
+              <th>{{ 'pc.billing.plan' | t }}</th>
+              <th>{{ 'pc.billing.status' | t }}</th>
+              <th>{{ 'pc.billing.seats' | t }}</th>
+              <th>{{ 'pc.billing.trialEnds' | t }}</th>
+              <th class="td-actions">{{ 'pc.billing.actions' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of result()!.items; track s.id) {
+              <tr>
+                <td class="mono">{{ s.companyCode }}</td>
+                <td class="mono">{{ s.planCode }}</td>
+                <td><app-status-badge [tone]="tone(s.status)" [label]="s.status" /></td>
+                <td class="mono">{{ s.seats }}</td>
+                <td class="mono nowrap">{{ s.trialEndsAt ? (s.trialEndsAt | date:'short') : '—' }}</td>
+                <td class="td-actions">
+                  @if (canWrite) {
+                    @if (s.status === 'Trial' || s.status === 'PastDue') {
+                      <button class="btn btn-primary btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'pay')">{{ 'pc.billing.recordPayment' | t }}</button>
+                    }
+                    @if (s.status === 'Trial') {
+                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'extend')">{{ 'pc.billing.extend' | t }}</button>
+                    }
+                    @if (s.status !== 'Cancelled') {
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'cancel')">{{ 'pc.billing.cancel' | t }}</button>
+                    }
+                  } @else { <span class="muted">—</span> }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel-head pager">
+        <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
+        <div class="cluster">
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">{{ 'pc.tenants.prev' | t }}</button>
+          <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">{{ 'pc.tenants.next' | t }}</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,100 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.overview' | t }}</span>
+    <h1>{{ 'pc.overview.welcome' | t:{ name: user()?.name || '' } }}</h1>
+  </header>
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else {
+    <!-- ── Golden signals (son 24s) ── -->
+    <div class="stats">
+      <section class="stat panel">
+        <div class="panel-body stack">
+          <span class="eyebrow">{{ 'pc.overview.health' | t }}</span>
+          <div class="cluster">
+            <app-status-badge [tone]="hTone(tree()?.overall || 'Unknown')" [label]="tree()?.overall || 'Unknown'" />
+            <a class="muted mono" routerLink="/operations/health">{{ healthCounts().total }} bileşen →</a>
+          </div>
+          @if (healthCounts().unhealthy > 0 || healthCounts().degraded > 0) {
+            <span class="muted">{{ healthCounts().unhealthy }} unhealthy · {{ healthCounts().degraded }} degraded</span>
+          }
+        </div>
+      </section>
+
+      <section class="stat panel">
+        <div class="panel-body stack">
+          <span class="eyebrow">{{ 'pc.overview.requests24h' | t }}</span>
+          <strong class="metric">{{ totalRequests() }}</strong>
+        </div>
+      </section>
+
+      <section class="stat panel">
+        <div class="panel-body stack">
+          <span class="eyebrow">{{ 'pc.overview.errorRate' | t }}</span>
+          <strong class="metric" [class.danger]="errorRate() >= 5" [class.warn]="errorRate() >= 1 && errorRate() < 5">
+            {{ errorRate() | number:'1.0-2' }}%
+          </strong>
+        </div>
+      </section>
+
+      <section class="stat panel">
+        <div class="panel-body stack">
+          <span class="eyebrow">{{ 'pc.overview.worstP95' | t }}</span>
+          <strong class="metric">{{ worstP95() }} <span class="unit">ms</span></strong>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── Açık uyarılar ── -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>{{ 'pc.overview.openAlerts' | t }}</h2>
+        <a class="btn btn-ghost btn-sm" routerLink="/operations/alerts">{{ 'pc.overview.allAlerts' | t }}</a>
+      </div>
+      @if (openAlerts().length === 0) {
+        <div class="empty-state">{{ 'pc.overview.noAlerts' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <tbody>
+              @for (a of openAlerts(); track a.id) {
+                <tr>
+                  <td><app-status-badge [tone]="sevTone(a.severity)" [label]="a.severity" /></td>
+                  <td>{{ a.ruleName }}</td>
+                  <td class="mono">{{ a.value }} / {{ a.threshold }}</td>
+                  <td class="mono nowrap">{{ a.firedAt | date:'short' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- ── Kimlik/yetki ── -->
+    <div class="cards">
+      <section class="panel">
+        <div class="panel-body stack">
+          <span class="eyebrow">{{ 'pc.overview.rolesLabel' | t }}</span>
+          <div class="cluster">
+            @for (role of user()?.roles ?? []; track role) {
+              <span class="badge badge-meta">{{ role }}</span>
+            } @empty { <span class="muted">—</span> }
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-body stack">
+          <span class="eyebrow">{{ 'pc.overview.capsLabel' | t }}</span>
+          <div class="cluster">
+            @for (cap of user()?.capabilities ?? []; track cap) {
+              <span class="badge">{{ cap }}</span>
+            } @empty { <span class="muted">—</span> }
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+</div>

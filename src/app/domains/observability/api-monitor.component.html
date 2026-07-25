@@ -1,0 +1,108 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.observability' | t }}</span>
+    <h1>{{ 'pc.api.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/observability/api" routerLinkActive="active">{{ 'pc.api.title' | t }}</a>
+    <a routerLink="/observability/performance" routerLinkActive="active">{{ 'pc.perf.title' | t }}</a>
+  </nav>
+
+  <nav class="tabs">
+    <button class="tab" [class.active]="tab() === 'metrics'" (click)="selectTab('metrics')">
+      {{ 'pc.api.metrics' | t }}
+    </button>
+    <button class="tab" [class.active]="tab() === 'live'" (click)="selectTab('live')">
+      {{ 'pc.api.liveTab' | t }}
+    </button>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <!-- Metrikler (rollup) -->
+  @if (tab() === 'metrics') {
+    <div class="panel">
+      @if (loading() && metrics().length === 0) {
+        <div class="empty-state"><span class="spinner"></span></div>
+      } @else if (metrics().length === 0) {
+        <div class="empty-state">{{ 'pc.api.metricsEmpty' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.api.route' | t }}</th>
+                <th class="num">{{ 'pc.api.count' | t }}</th>
+                <th class="num">{{ 'pc.api.errorRate' | t }}</th>
+                <th class="num">{{ 'pc.api.p95' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (m of metrics(); track m.route) {
+                <tr>
+                  <td class="mono route">{{ m.route }}</td>
+                  <td class="mono num">{{ m.count }}</td>
+                  <td class="num">
+                    <app-status-badge [tone]="errTone(m.errorRatePct)" [label]="m.errorRatePct + '%'" />
+                  </td>
+                  <td class="mono num">{{ m.p95DurationMs }} ms</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Canlı istek akışı -->
+  @if (tab() === 'live') {
+    <div class="panel">
+      <div class="panel-head filters">
+        <label class="checkbox">
+          <input type="checkbox" [(ngModel)]="auto" (ngModelChange)="toggleAuto()" />
+          {{ 'pc.api.live' | t }}
+        </label>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      </div>
+
+      @if (loading() && items().length === 0) {
+        <div class="empty-state"><span class="spinner"></span></div>
+      } @else if (items().length === 0) {
+        <div class="empty-state">{{ 'pc.api.empty' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.api.time' | t }}</th>
+                <th>{{ 'pc.api.method' | t }}</th>
+                <th>{{ 'pc.api.route' | t }}</th>
+                <th>{{ 'pc.api.status' | t }}</th>
+                <th class="num">{{ 'pc.api.duration' | t }}</th>
+                <th>{{ 'pc.api.tenant' | t }}</th>
+                <th>{{ 'pc.audit.correlation' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of items(); track r.timestamp + r.correlationId) {
+                <tr>
+                  <td class="mono nowrap">{{ r.timestamp | date:'HH:mm:ss' }}</td>
+                  <td class="mono">{{ r.method }}</td>
+                  <td class="mono route">{{ r.route }}</td>
+                  <td><app-status-badge [tone]="tone(r.statusCode)" [label]="r.statusCode + ''" /></td>
+                  <td class="mono num">{{ r.durationMs }} ms</td>
+                  <td class="mono">{{ r.tenantId || '—' }}</td>
+                  <td class="mono corr">{{ (r.correlationId || '').slice(0, 8) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>

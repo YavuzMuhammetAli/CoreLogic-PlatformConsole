@@ -1,0 +1,83 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
+    <h1>{{ 'pc.comp.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/security/audit-logs" routerLinkActive="active">{{ 'pc.audit.title' | t }}</a>
+    <a routerLink="/security/center" routerLinkActive="active">{{ 'pc.sec.title' | t }}</a>
+    <a routerLink="/security/compliance" routerLinkActive="active">{{ 'pc.comp.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  @if (canManage) {
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.comp.newRequest' | t }}</h2></div>
+      <div class="panel-body">
+        <div class="cluster wrap">
+          <select class="input" [(ngModel)]="form.type">
+            @for (t of types; track t) { <option [value]="t">{{ t }}</option> }
+          </select>
+          <input class="input" [(ngModel)]="form.tenantId" [placeholder]="'pc.comp.tenant' | t" />
+          <input class="input" [(ngModel)]="form.subjectRef" [placeholder]="'pc.comp.subject' | t" />
+          <input class="input grow" [(ngModel)]="form.reason" [placeholder]="'pc.comp.reason' | t" />
+          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.tenantId" (click)="create()">{{ 'pc.comp.create' | t }}</button>
+        </div>
+      </div>
+    </section>
+  }
+
+  <div class="panel">
+    <div class="panel-head filters">
+      <select class="input" [(ngModel)]="status" (ngModelChange)="load()">
+        <option value="">{{ 'pc.comp.allStatuses' | t }}</option>
+        <option value="Open">Open</option>
+        <option value="InProgress">InProgress</option>
+        <option value="Completed">Completed</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+    @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+    @else if (rows().length === 0) { <div class="empty-state">{{ 'pc.comp.empty' | t }}</div> }
+    @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.comp.type' | t }}</th>
+              <th>{{ 'pc.comp.tenant' | t }}</th>
+              <th>{{ 'pc.comp.subject' | t }}</th>
+              <th>{{ 'pc.comp.status' | t }}</th>
+              <th>{{ 'pc.comp.requested' | t }}</th>
+              <th class="td-actions">{{ 'pc.comp.actions' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of rows(); track r.id) {
+              <tr>
+                <td><span class="badge badge-meta">{{ r.type }}</span></td>
+                <td class="mono">{{ r.tenantId }}</td>
+                <td class="mono">{{ r.subjectRef || '—' }}</td>
+                <td><app-status-badge [tone]="tone(r.status)" [label]="r.status" /></td>
+                <td class="mono nowrap">{{ r.requestedAt | date:'short' }}</td>
+                <td class="td-actions">
+                  @if (canManage && r.status === 'Open') {
+                    <button class="btn btn-secondary btn-sm" [disabled]="busyId() === r.id" (click)="advance(r, 'InProgress')">{{ 'pc.comp.start' | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === r.id" (click)="advance(r, 'Rejected')">{{ 'pc.comp.reject' | t }}</button>
+                  }
+                  @if (canManage && r.status === 'InProgress') {
+                    <button class="btn btn-primary btn-sm" [disabled]="busyId() === r.id" (click)="advance(r, 'Completed')">{{ 'pc.comp.complete' | t }}</button>
+                  }
+                  @if (r.status === 'Completed' || r.status === 'Rejected') { <span class="muted">—</span> }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

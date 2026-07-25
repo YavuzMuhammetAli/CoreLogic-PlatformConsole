@@ -1,0 +1,25 @@
+# Bağımlılıklar
+/node_modules
+
+# Build çıktıları
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Angular cache
+/.angular/cache
+.angular
+
+# IDE / OS
+.vscode/*
+.idea
+.DS_Store
+Thumbs.db
+
+# Loglar
+*.log
+npm-debug.log*
+
+# CodeGraph local index (yerel araç indeksi)
+.codegraph/

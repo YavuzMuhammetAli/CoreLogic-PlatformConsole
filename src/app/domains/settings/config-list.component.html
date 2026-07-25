@@ -1,0 +1,49 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+    <h1>{{ 'pc.config.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/settings/config" routerLinkActive="active">{{ 'pc.config.title' | t }}</a>
+    <a routerLink="/settings/flags" routerLinkActive="active">{{ 'pc.flags.title' | t }}</a>
+    <a routerLink="/settings/integration" routerLinkActive="active">{{ 'pc.intg.title' | t }}</a>
+    <a routerLink="/settings/announcements" routerLinkActive="active">{{ 'pc.ann.title' | t }}</a>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <div class="panel">
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (items().length === 0) {
+      <div class="empty-state">{{ 'pc.config.empty' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.config.key' | t }}</th>
+              <th>{{ 'pc.config.value' | t }}</th>
+              <th>{{ 'pc.config.updated' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of items(); track c.key) {
+              <tr>
+                <td class="mono">
+                  {{ c.key }}
+                  @if (c.isSecret) { <span class="badge badge-warn">{{ 'pc.config.secret' | t }}</span> }
+                </td>
+                <td class="mono">{{ c.value || '—' }}</td>
+                <td class="mono nowrap">{{ c.updatedAt | date:'short' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

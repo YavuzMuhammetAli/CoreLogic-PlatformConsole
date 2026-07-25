@@ -1,0 +1,83 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
+    <h1>{{ 'pc.audit.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/security/audit-logs" routerLinkActive="active">{{ 'pc.audit.title' | t }}</a>
+    <a routerLink="/security/center" routerLinkActive="active">{{ 'pc.sec.title' | t }}</a>
+    <a routerLink="/security/compliance" routerLinkActive="active">{{ 'pc.comp.title' | t }}</a>
+  </nav>
+
+  <div class="panel">
+    <div class="panel-head filters">
+      <div class="cluster">
+        <select class="input" [(ngModel)]="category" (ngModelChange)="load()">
+          <option value="">{{ 'pc.audit.filterCategory' | t }}</option>
+          @for (c of categories; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
+        <input class="input take" type="number" min="1" max="500"
+               [(ngModel)]="take" (ngModelChange)="load()"
+               [attr.aria-label]="'pc.audit.take' | t" />
+      </div>
+      <div class="cluster">
+        <button class="btn btn-secondary btn-sm" type="button" [disabled]="items().length === 0" (click)="exportCsv()">
+          {{ 'pc.audit.export' | t }}
+        </button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      </div>
+    </div>
+
+    @if (chain(); as c) {
+      <div class="panel-body chain-banner">
+        <span>{{ 'pc.audit.chainOf' | t }} <span class="mono">{{ c.slice(0, 12) }}…</span></span>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="clearChain()">{{ 'pc.audit.clearChain' | t }}</button>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="panel-body"><div class="alert alert-danger" role="alert">{{ error() }}</div></div>
+    } @else if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (items().length === 0) {
+      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.audit.time' | t }}</th>
+              <th>{{ 'pc.audit.actor' | t }}</th>
+              <th>{{ 'pc.audit.action' | t }}</th>
+              <th>{{ 'pc.audit.category' | t }}</th>
+              <th>{{ 'pc.audit.result' | t }}</th>
+              <th>{{ 'pc.audit.severity' | t }}</th>
+              <th>{{ 'pc.audit.correlation' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of items(); track a.id) {
+              <tr>
+                <td class="mono nowrap">{{ a.occurredAt | date:'short' }}</td>
+                <td>{{ a.actorName || a.actorType }}</td>
+                <td class="mono">{{ a.action }}</td>
+                <td>{{ a.category }}</td>
+                <td><app-status-badge [tone]="resultTone(a.result)" [label]="a.result" /></td>
+                <td><app-status-badge [tone]="severityTone(a.severity)" [label]="a.severity" /></td>
+                <td class="mono corr">
+                  @if (a.correlationId) {
+                    <button class="corr-link" type="button" (click)="openChain(a.correlationId)"
+                            [title]="'pc.audit.openChain' | t">{{ a.correlationId.slice(0, 8) }}</button>
+                  } @else { — }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

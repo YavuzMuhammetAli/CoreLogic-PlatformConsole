@@ -1,0 +1,76 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
+    <h1>{{ 'pc.cost.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/billing/plans" routerLinkActive="active">{{ 'pc.billing.plans' | t }}</a>
+    <a routerLink="/billing/subscriptions" routerLinkActive="active">{{ 'pc.billing.subs' | t }}</a>
+    <a routerLink="/billing/usage" routerLinkActive="active">{{ 'pc.billing.usage' | t }}</a>
+    <a routerLink="/billing/cost" routerLinkActive="active">{{ 'pc.cost.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>{{ 'pc.cost.byTenant' | t }} <span class="muted">· {{ 'pc.cost.grand' | t }}: ${{ grandTotal() | number:'1.2-4' }}</span></h2>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+    @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+    @else if (rows().length === 0) { <div class="empty-state">{{ 'pc.cost.empty' | t }}</div> }
+    @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.cost.tenant' | t }}</th>
+              <th class="num">{{ 'pc.cost.total' | t }}</th>
+              <th class="td-actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of rows(); track r.tenantId) {
+              <tr>
+                <td class="mono">{{ r.tenantId }}</td>
+                <td class="mono num">${{ r.totalCost | number:'1.2-4' }}</td>
+                <td class="td-actions">
+                  <button class="btn btn-ghost btn-sm" type="button" (click)="toggle(r.tenantId)">
+                    {{ expanded() === r.tenantId ? ('pc.cost.hide' | t) : ('pc.cost.breakdown' | t) }}
+                  </button>
+                </td>
+              </tr>
+              @if (expanded() === r.tenantId) {
+                <tr>
+                  <td colspan="3">
+                    <table class="data-table sub">
+                      <thead>
+                        <tr>
+                          <th>{{ 'pc.cost.metric' | t }}</th>
+                          <th class="num">{{ 'pc.cost.qty' | t }}</th>
+                          <th class="num">{{ 'pc.cost.unit' | t }}</th>
+                          <th class="num">{{ 'pc.cost.lineCost' | t }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (l of r.lines; track l.metricKey) {
+                          <tr>
+                            <td class="mono">{{ l.metricKey }}</td>
+                            <td class="mono num">{{ l.quantity }}</td>
+                            <td class="mono num">${{ l.unitCost | number:'1.2-8' }}</td>
+                            <td class="mono num">${{ l.cost | number:'1.2-4' }}</td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,36 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { DataResponseModel, ListResponseModel } from '../../core/models/api.models';
+import { MigrationRunItem, MigrationRunDetail } from '../../core/models/migration.models';
+import { BadgeTone } from '../../shared/ui/status-badge.component';
+
+/** Migration Orchestrator (M10) servisi — /migrations uçları. */
+@Injectable({ providedIn: 'root' })
+export class MigrationService {
+  private readonly http = inject(HttpClient);
+  private readonly base = `${environment.platformApiBaseUrl}/migrations`;
+
+  listRuns(): Observable<ListResponseModel<MigrationRunItem>> {
+    return this.http.get<ListResponseModel<MigrationRunItem>>(`${this.base}/runs`);
+  }
+  getRun(id: number): Observable<DataResponseModel<MigrationRunDetail>> {
+    return this.http.get<DataResponseModel<MigrationRunDetail>>(`${this.base}/runs/${id}`);
+  }
+  startRun(dto: { takePreBackup: boolean; stopOnFailure: boolean }): Observable<DataResponseModel<number>> {
+    return this.http.post<DataResponseModel<number>>(`${this.base}/runs`, dto);
+  }
+}
+
+export function migrationStatusTone(status: string): BadgeTone {
+  switch (status) {
+    case 'Completed':
+    case 'Succeeded': return 'success';
+    case 'Running': return 'meta';
+    case 'Stopped': return 'warn';
+    case 'Failed': return 'danger';
+    case 'Skipped': return 'neutral';
+    default: return 'neutral';
+  }
+}

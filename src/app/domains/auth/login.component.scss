@@ -1,0 +1,67 @@
+:host { display: block; }
+
+.auth-wrap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  position: relative;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, var(--meta-bg), transparent),
+    var(--bg);
+}
+.auth-top {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-6);
+  display: flex;
+  gap: var(--space-2);
+}
+.mini-btn {
+  min-width: 34px; height: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--fg-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+.auth-card { width: 100%; max-width: 400px; padding: var(--space-8); }
+
+.auth-head { text-align: center; margin-bottom: var(--space-6); }
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: var(--accent-on);
+  font-weight: 800;
+  margin-bottom: var(--space-4);
+}
+.auth-head h1 { font-size: var(--text-xl); margin-bottom: var(--space-1); }
+
+.alert { margin-bottom: var(--space-4); }
+
+.enroll-title { font-size: var(--text-lg); }
+
+.code-input {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  letter-spacing: 0.35em;
+  text-align: center;
+}
+.secret {
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-warm);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  word-break: break-all;
+  color: var(--fg);
+}

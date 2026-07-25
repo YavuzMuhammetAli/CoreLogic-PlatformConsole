@@ -1,0 +1,26 @@
+.page { max-width: 1280px; }
+.page-head { margin-bottom: var(--space-2); }
+.page-head h1 { font-size: var(--text-2xl); }
+.filters { flex-wrap: wrap; gap: var(--space-3); }
+.take { max-width: 110px; }
+.table-scroll { overflow-x: auto; }
+.nowrap { white-space: nowrap; }
+.subnav { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--border); }
+.subnav a {
+  padding: var(--space-3) 0; border-bottom: 2px solid transparent;
+  color: var(--muted); font-size: var(--text-sm); font-weight: 600;
+  &:hover { color: var(--fg); }
+  &.active { color: var(--accent); border-bottom-color: var(--accent); }
+}
+.corr { color: var(--muted); }
+.corr-link {
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: var(--accent); font-family: inherit; font-size: inherit; text-decoration: underline dotted;
+  &:hover { text-decoration-style: solid; }
+}
+.chain-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  background: var(--surface-warm); border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+select.input { min-width: 200px; appearance: none; }

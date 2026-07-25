@@ -1,0 +1,68 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
+    <h1>{{ 'pc.billing.plans' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/billing/plans" routerLinkActive="active">{{ 'pc.billing.plans' | t }}</a>
+    <a routerLink="/billing/subscriptions" routerLinkActive="active">{{ 'pc.billing.subs' | t }}</a>
+    <a routerLink="/billing/usage" routerLinkActive="active">{{ 'pc.billing.usage' | t }}</a>
+    <a routerLink="/billing/cost" routerLinkActive="active">{{ 'pc.cost.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else {
+    <div class="plan-grid">
+      @for (p of plans(); track p.id) {
+        <section class="panel plan-card">
+          <div class="panel-body stack">
+            <div class="plan-head">
+              <div>
+                <strong>{{ p.name }}</strong>
+                <span class="muted mono">{{ p.code }} v{{ p.version }}</span>
+              </div>
+              <app-status-badge [tone]="tone(p.status)" [label]="p.status" />
+            </div>
+            @if (p.description) { <p class="muted">{{ p.description }}</p> }
+            <div class="cluster feature-list">
+              @for (f of p.features; track f.featureKey) {
+                <span class="badge">{{ featureLabel(f) }}</span>
+              } @empty { <span class="muted">{{ 'pc.billing.noFeatures' | t }}</span> }
+            </div>
+            @if (canWrite) {
+              <div class="cluster">
+                @if (p.status !== 'Active') {
+                  <button class="btn btn-secondary btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Active')">{{ 'pc.billing.activate' | t }}</button>
+                }
+                @if (p.status !== 'Retired') {
+                  <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Retired')">{{ 'pc.billing.retire' | t }}</button>
+                }
+              </div>
+            }
+          </div>
+        </section>
+      }
+    </div>
+
+    @if (canWrite) {
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.billing.newPlan' | t }}</h2></div>
+        <div class="panel-body">
+          <div class="cluster wrap">
+            <input class="input" [(ngModel)]="form.code" [placeholder]="'pc.billing.code' | t" />
+            <input class="input" [(ngModel)]="form.name" [placeholder]="'pc.billing.name' | t" />
+            <input class="input grow" [(ngModel)]="form.description" [placeholder]="'pc.billing.desc' | t" />
+            <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.isPublic" /> {{ 'pc.billing.public' | t }}</label>
+            <button class="btn btn-primary btn-sm" [disabled]="creating() || !form.code || !form.name" (click)="create()">
+              {{ 'pc.billing.createDraft' | t }}
+            </button>
+          </div>
+        </div>
+      </section>
+    }
+  }
+</div>

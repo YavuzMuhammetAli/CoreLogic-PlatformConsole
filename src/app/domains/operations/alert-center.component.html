@@ -1,0 +1,152 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+    <h1>{{ 'pc.alerts.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <div class="tabs">
+    <button class="tab" [class.active]="tab() === 'alerts'" (click)="selectTab('alerts')">{{ 'pc.alerts.tabAlerts' | t }}</button>
+    <button class="tab" [class.active]="tab() === 'rules'" (click)="selectTab('rules')">{{ 'pc.alerts.tabRules' | t }}</button>
+  </div>
+
+  <!-- ── Uyarılar sekmesi ── -->
+  @if (tab() === 'alerts') {
+    <div class="panel">
+      <div class="panel-head filters">
+        <div class="cluster">
+          <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
+            @for (s of statusFilters; track s) {
+              <option [value]="s">{{ ('pc.alerts.filter.' + s) | t }}</option>
+            }
+          </select>
+          <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="empty-state"><span class="spinner"></span></div>
+      } @else if (!result() || result()!.items.length === 0) {
+        <div class="empty-state">{{ 'pc.alerts.empty' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.alerts.severity' | t }}</th>
+                <th>{{ 'pc.alerts.rule' | t }}</th>
+                <th>{{ 'pc.alerts.value' | t }}</th>
+                <th>{{ 'pc.alerts.status' | t }}</th>
+                <th>{{ 'pc.alerts.firedAt' | t }}</th>
+                <th class="td-actions">{{ 'pc.alerts.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of result()!.items; track a.id) {
+                <tr>
+                  <td><app-status-badge [tone]="sevTone(a.severity)" [label]="a.severity" /></td>
+                  <td>
+                    <div>{{ a.ruleName }}</div>
+                    <span class="muted mono">{{ a.metricKey }}</span>
+                    @if (a.runbookUrl) { · <a class="code-link" [href]="a.runbookUrl" target="_blank" rel="noopener">runbook</a> }
+                  </td>
+                  <td class="mono">{{ a.value }} <span class="muted">/ {{ a.threshold }}</span></td>
+                  <td><app-status-badge [tone]="stTone(a.status)" [label]="a.status" /></td>
+                  <td class="mono nowrap">{{ a.firedAt | date:'short' }}</td>
+                  <td class="td-actions">
+                    @if (canManage) {
+                      @if (a.status === 'Firing') {
+                        <button class="btn btn-secondary btn-sm" type="button" [disabled]="busyId() === a.id" (click)="acknowledge(a)">
+                          {{ 'pc.alerts.ack' | t }}
+                        </button>
+                      }
+                      @if (a.status !== 'Resolved') {
+                        <button class="btn btn-primary btn-sm" type="button" [disabled]="busyId() === a.id" (click)="resolve(a)">
+                          {{ 'pc.alerts.resolve' | t }}
+                        </button>
+                      }
+                    } @else { <span class="muted">—</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel-head pager">
+          <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
+          <div class="cluster">
+            <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">
+              {{ 'pc.tenants.prev' | t }}
+            </button>
+            <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
+            <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">
+              {{ 'pc.tenants.next' | t }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Kurallar sekmesi ── -->
+  @if (tab() === 'rules') {
+    <div class="panel">
+      @if (loading()) {
+        <div class="empty-state"><span class="spinner"></span></div>
+      } @else if (rules().length === 0) {
+        <div class="empty-state">{{ 'pc.alerts.noRules' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.alerts.rule' | t }}</th>
+                <th>{{ 'pc.alerts.metric' | t }}</th>
+                <th>{{ 'pc.alerts.condition' | t }}</th>
+                <th>{{ 'pc.alerts.severity' | t }}</th>
+                <th>{{ 'pc.alerts.window' | t }}</th>
+                <th>{{ 'pc.alerts.enabled' | t }}</th>
+                <th class="td-actions">{{ 'pc.alerts.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of rules(); track r.id) {
+                <tr>
+                  <td>{{ r.name }}</td>
+                  <td class="mono">{{ r.metricKey }}</td>
+                  <td class="mono">{{ r.condition }} {{ r.threshold }}</td>
+                  <td><app-status-badge [tone]="sevTone(r.severity)" [label]="r.severity" /></td>
+                  <td class="mono">{{ r.windowMinutes }}d</td>
+                  <td>
+                    <app-status-badge [tone]="r.enabled ? 'success' : 'neutral'"
+                      [label]="(r.enabled ? 'pc.alerts.on' : 'pc.alerts.off') | t" />
+                  </td>
+                  <td class="td-actions">
+                    @if (canManage) {
+                      <button class="btn btn-secondary btn-sm" type="button" [disabled]="busyId() === r.id" (click)="toggleRule(r)">
+                        {{ (r.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}
+                      </button>
+                    } @else { <span class="muted">—</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>

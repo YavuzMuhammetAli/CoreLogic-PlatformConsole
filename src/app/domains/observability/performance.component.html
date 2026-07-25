@@ -1,0 +1,93 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.observability' | t }}</span>
+    <h1>{{ 'pc.perf.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/observability/api" routerLinkActive="active">{{ 'pc.api.title' | t }}</a>
+    <a routerLink="/observability/performance" routerLinkActive="active">{{ 'pc.perf.title' | t }}</a>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <div class="panel">
+    <div class="panel-head filters">
+      <div class="cluster">
+        <label class="muted">{{ 'pc.perf.hours' | t }}</label>
+        <input class="input hours" type="number" min="1" max="168" [(ngModel)]="hours" (ngModelChange)="load()" />
+      </div>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else {
+    <!-- ── En yavaş uçlar ── -->
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.perf.slowRoutes' | t }}</h2></div>
+      @if (slowRoutes().length === 0) {
+        <div class="empty-state">{{ 'pc.noData' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.perf.route' | t }}</th>
+                <th class="num">{{ 'pc.perf.p95' | t }}</th>
+                <th class="num">{{ 'pc.perf.count' | t }}</th>
+                <th>{{ 'pc.perf.errorRate' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (m of slowRoutes(); track m.route) {
+                <tr>
+                  <td class="mono">{{ m.route }}</td>
+                  <td class="mono num">{{ m.p95DurationMs }} ms</td>
+                  <td class="mono num">{{ m.count }}</td>
+                  <td><app-status-badge [tone]="errTone(m.errorRatePct)" [label]="m.errorRatePct + '%'" /></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- ── En yavaş son istekler ── -->
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.perf.slowRequests' | t }}</h2></div>
+      @if (slowRequests().length === 0) {
+        <div class="empty-state">{{ 'pc.noData' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.perf.time' | t }}</th>
+                <th>{{ 'pc.perf.method' | t }}</th>
+                <th>{{ 'pc.perf.route' | t }}</th>
+                <th>{{ 'pc.perf.statusCode' | t }}</th>
+                <th class="num">{{ 'pc.perf.duration' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of slowRequests(); track $index) {
+                <tr>
+                  <td class="mono nowrap">{{ r.timestamp | date:'short' }}</td>
+                  <td class="mono">{{ r.method }}</td>
+                  <td class="mono">{{ r.route }}</td>
+                  <td><app-status-badge [tone]="tone(r.statusCode)" [label]="r.statusCode + ''" /></td>
+                  <td class="mono num">{{ r.durationMs }} ms</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+</div>

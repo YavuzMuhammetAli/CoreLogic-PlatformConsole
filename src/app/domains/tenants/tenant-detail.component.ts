@@ -1,0 +1,230 @@
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Observable } from 'rxjs';
+import { TenantsService, tenantStatusTone, healthTone } from './tenants.service';
+import { BillingService, subStatusTone } from '../billing/billing.service';
+import { BackupService } from './backup.service';
+import { TenantDetail, TenantStateHistory } from '../../core/models/tenant.models';
+import { EntitlementSnapshot } from '../../core/models/commerce.models';
+import { TenantBackupItem } from '../../core/models/backup.models';
+import { ResponseModel } from '../../core/models/api.models';
+import { PlatformSessionStore } from '../../core/auth/platform-session.store';
+import { Cap } from '../../core/models/capabilities';
+import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dialog.component';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+
+type Tab = 'summary' | 'provisioning' | 'history' | 'licensing' | 'backups';
+
+interface TenantAction {
+  key: string;
+  labelKey: string;
+  danger: boolean;
+  cap: 'write' | 'purge';
+}
+
+interface PendingAction {
+  action: string;
+  titleKey: string;
+  messageKey: string;
+  requireReason: boolean;
+  confirmCode: string | null;
+  danger: boolean;
+}
+
+/** Tenant detay (M02/M04) — özet/provisioning/tarihçe + yaşam döngüsü eylemleri. */
+@Component({
+  selector: 'app-tenant-detail',
+  standalone: true,
+  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, TranslatePipe],
+  templateUrl: './tenant-detail.component.html',
+  styleUrl: './tenant-detail.component.scss'
+})
+export class TenantDetailComponent implements OnInit {
+  private readonly service = inject(TenantsService);
+  private readonly billing = inject(BillingService);
+  private readonly backupSvc = inject(BackupService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly store = inject(PlatformSessionStore);
+
+  readonly loading = signal(true);
+  readonly error = signal<string | null>(null);
+  readonly detail = signal<TenantDetail | null>(null);
+  readonly tab = signal<Tab>('summary');
+  readonly history = signal<TenantStateHistory[]>([]);
+  readonly historyLoaded = signal(false);
+  readonly pending = signal<PendingAction | null>(null);
+  readonly busy = signal(false);
+  readonly actionError = signal<string | null>(null);
+
+  readonly entitlement = signal<EntitlementSnapshot | null>(null);
+  readonly entitlementLoaded = signal(false);
+  readonly backups = signal<TenantBackupItem[]>([]);
+  readonly backupsLoaded = signal(false);
+  readonly backupBusy = signal<number | null>(null);
+
+  readonly tone = tenantStatusTone;
+  readonly hTone = healthTone;
+  readonly subTone = subStatusTone;
+  readonly canWrite = this.store.has(Cap.TenantsWrite);
+  readonly canOps = this.store.has(Cap.OpsManage);
+  readonly canPurge = this.store.has(Cap.TenantsPurge);
+
+  private code = '';
+
+  private readonly A = {
+    suspend: { key: 'suspend', labelKey: 'pc.lc.suspend', danger: false, cap: 'write' as const },
+    resume: { key: 'resume', labelKey: 'pc.lc.resume', danger: false, cap: 'write' as const },
+    archive: { key: 'archive', labelKey: 'pc.lc.archive', danger: false, cap: 'write' as const },
+    unarchive: { key: 'unarchive', labelKey: 'pc.lc.unarchive', danger: false, cap: 'write' as const },
+    purge: { key: 'schedule-purge', labelKey: 'pc.lc.schedulePurge', danger: true, cap: 'purge' as const },
+    cancelPurge: { key: 'cancel-purge', labelKey: 'pc.lc.cancelPurge', danger: false, cap: 'purge' as const }
+  };
+
+  ngOnInit(): void {
+    const code = this.route.snapshot.paramMap.get('code');
+    if (!code) { this.error.set('Kod yok'); this.loading.set(false); return; }
+    this.code = code;
+    this.load();
+  }
+
+  load(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.service.get(this.code).subscribe({
+      next: res => {
+        this.loading.set(false);
+        if (res.success) this.detail.set(res.data);
+        else this.error.set(res.message);
+      },
+      error: err => { this.loading.set(false); this.error.set(err?.error?.message ?? 'Yüklenemedi'); }
+    });
+  }
+
+  selectTab(t: Tab): void {
+    this.tab.set(t);
+    if (t === 'history' && !this.historyLoaded()) this.loadHistory();
+    if (t === 'licensing' && !this.entitlementLoaded()) this.loadEntitlement();
+    if (t === 'backups' && !this.backupsLoaded()) this.loadBackups();
+  }
+
+  private loadBackups(): void {
+    const code = this.detail()?.code;
+    if (!code) return;
+    this.backupSvc.list(code).subscribe({
+      next: res => { if (res.success) this.backups.set(res.data ?? []); this.backupsLoaded.set(true); },
+      error: () => { this.backupsLoaded.set(true); }
+    });
+  }
+
+  runBackup(): void {
+    const code = this.detail()?.code;
+    if (!code) return;
+    this.backupBusy.set(-1);
+    this.backupSvc.create(code).subscribe({
+      next: () => { this.backupBusy.set(null); this.loadBackups(); },
+      error: e => { this.backupBusy.set(null); this.actionError.set(e?.error?.message ?? 'Yedek alınamadı'); }
+    });
+  }
+
+  verifyBackup(b: TenantBackupItem): void {
+    this.backupBusy.set(b.id);
+    this.backupSvc.verify(b.id).subscribe({
+      next: () => { this.backupBusy.set(null); this.loadBackups(); },
+      error: e => { this.backupBusy.set(null); this.actionError.set(e?.error?.message ?? 'Doğrulanamadı'); }
+    });
+  }
+
+  private loadEntitlement(): void {
+    const code = this.detail()?.code;
+    if (!code) return;
+    this.billing.entitlements(code).subscribe({
+      next: res => { if (res.success) this.entitlement.set(res.data); this.entitlementLoaded.set(true); },
+      error: () => { this.entitlementLoaded.set(true); }
+    });
+  }
+
+  /** Entitlement snapshot'ının feature dict'ini şablona uygun diziye çevirir. */
+  entitlementFeatures(): { key: string; limit: number | null }[] {
+    const f = this.entitlement()?.features ?? {};
+    return Object.keys(f).sort().map(key => ({ key, limit: f[key] }));
+  }
+
+  private loadHistory(): void {
+    this.service.stateHistory(this.code).subscribe({
+      next: res => { if (res.success) { this.history.set(res.data ?? []); this.historyLoaded.set(true); } },
+      error: () => {}
+    });
+  }
+
+  availableActions(): TenantAction[] {
+    const d = this.detail();
+    if (!d) return [];
+    const byStatus: Record<string, TenantAction[]> = {
+      Active: [this.A.suspend, this.A.archive, this.A.purge],
+      Suspended: [this.A.resume, this.A.archive, this.A.purge],
+      Archived: [this.A.unarchive, this.A.purge],
+      PendingPurge: [this.A.cancelPurge]
+    };
+    const list = byStatus[d.status] ?? [];
+    return list.filter(a => a.cap === 'purge' ? this.canPurge : this.canWrite);
+  }
+
+  openAction(a: TenantAction): void {
+    this.actionError.set(null);
+    const isPurge = a.key === 'schedule-purge';
+    const reasonActions = new Set(['suspend', 'archive', 'schedule-purge']);
+    this.pending.set({
+      action: a.key,
+      titleKey: a.labelKey,
+      messageKey: this.messageKeyFor(a.key),
+      requireReason: reasonActions.has(a.key),
+      confirmCode: isPurge ? this.code : null,
+      danger: a.danger
+    });
+  }
+
+  onConfirm(reason: string): void {
+    const p = this.pending();
+    if (!p) return;
+    this.busy.set(true);
+    this.call(p.action, reason).subscribe({
+      next: res => {
+        this.busy.set(false);
+        this.pending.set(null);
+        if (res.success) {
+          this.historyLoaded.set(false);
+          this.load();
+        } else {
+          this.actionError.set(res.message);
+        }
+      },
+      error: err => {
+        this.busy.set(false);
+        this.pending.set(null);
+        this.actionError.set(err?.error?.message ?? 'İşlem başarısız');
+      }
+    });
+  }
+
+  private call(action: string, reason: string): Observable<ResponseModel> {
+    switch (action) {
+      case 'suspend': return this.service.suspend(this.code, reason);
+      case 'resume': return this.service.resume(this.code);
+      case 'archive': return this.service.archive(this.code, reason);
+      case 'unarchive': return this.service.unarchive(this.code);
+      case 'schedule-purge': return this.service.schedulePurge(this.code, reason);
+      default: return this.service.cancelPurge(this.code);
+    }
+  }
+
+  private messageKeyFor(action: string): string {
+    switch (action) {
+      case 'suspend': return 'pc.lc.suspendMsg';
+      case 'archive': return 'pc.lc.archiveMsg';
+      case 'schedule-purge': return 'pc.lc.purgeMsg';
+      default: return 'pc.lc.genericMsg';
+    }
+  }
+}

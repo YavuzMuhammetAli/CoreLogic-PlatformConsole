@@ -1,0 +1,79 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+    <h1>{{ 'pc.jobs.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+
+  <div class="panel">
+    <div class="panel-head filters">
+      <div class="cluster">
+        <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
+          <option value="">{{ 'pc.jobs.allStatuses' | t }}</option>
+          @for (s of statuses; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (!result() || result()!.items.length === 0) {
+      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.jobs.type' | t }}</th>
+              <th>{{ 'pc.jobs.status' | t }}</th>
+              <th>{{ 'pc.jobs.attempts' | t }}</th>
+              <th>{{ 'pc.jobs.tenant' | t }}</th>
+              <th>{{ 'pc.jobs.created' | t }}</th>
+              <th>{{ 'pc.jobs.error' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (j of result()!.items; track j.id) {
+              <tr>
+                <td class="mono">{{ j.type }}</td>
+                <td><app-status-badge [tone]="tone(j.status)" [label]="j.status" /></td>
+                <td class="mono">{{ j.attemptCount }}/{{ j.maxAttempts }}</td>
+                <td class="mono">{{ j.tenantId || '—' }}</td>
+                <td class="mono nowrap">{{ j.createdDate | date:'short' }}</td>
+                <td class="err">{{ j.lastError || '' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel-head pager">
+        <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
+        <div class="cluster">
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">
+            {{ 'pc.tenants.prev' | t }}
+          </button>
+          <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">
+            {{ 'pc.tenants.next' | t }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

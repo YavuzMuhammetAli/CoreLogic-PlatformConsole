@@ -1,0 +1,16 @@
+.page { max-width: 1280px; }
+.page-head { margin-bottom: var(--space-2); }
+.page-head h1 { font-size: var(--text-2xl); }
+.subnav { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--border); }
+.subnav a {
+  padding: var(--space-3) 0; border-bottom: 2px solid transparent;
+  color: var(--muted); font-size: var(--text-sm); font-weight: 600;
+  &:hover { color: var(--fg); }
+  &.active { color: var(--accent); border-bottom-color: var(--accent); }
+}
+.panel-head h2 { font-size: var(--text-lg); }
+.filters { flex-wrap: wrap; gap: var(--space-3); }
+.hours { max-width: 90px; }
+.table-scroll { overflow-x: auto; }
+.nowrap { white-space: nowrap; }
+.num { text-align: right; }

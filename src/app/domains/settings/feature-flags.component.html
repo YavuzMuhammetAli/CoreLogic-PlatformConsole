@@ -1,0 +1,103 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+    <h1>{{ 'pc.flags.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/settings/config" routerLinkActive="active">{{ 'pc.config.title' | t }}</a>
+    <a routerLink="/settings/flags" routerLinkActive="active">{{ 'pc.flags.title' | t }}</a>
+    <a routerLink="/settings/integration" routerLinkActive="active">{{ 'pc.intg.title' | t }}</a>
+    <a routerLink="/settings/announcements" routerLinkActive="active">{{ 'pc.ann.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else {
+    <div class="panel">
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.flags.key' | t }}</th>
+              <th>{{ 'pc.flags.state' | t }}</th>
+              <th>{{ 'pc.flags.overrides' | t }}</th>
+              <th class="td-actions">{{ 'pc.flags.actions' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (f of flags(); track f.key) {
+              <tr>
+                <td>
+                  <div class="mono">{{ f.key }}
+                    @if (f.isStale) { <span class="badge badge-warn">{{ 'pc.flags.stale' | t }}</span> }
+                  </div>
+                  @if (f.description) { <span class="muted">{{ f.description }}</span> }
+                </td>
+                <td>
+                  <span class="badge" [class.badge-success]="f.defaultState === 'On'" [class.badge-meta]="f.defaultState === 'Percentage'">
+                    {{ f.defaultState }}@if (f.defaultState === 'Percentage') { <span> {{ f.percentage }}%</span> }
+                  </span>
+                </td>
+                <td>
+                  @if (f.overrides.length === 0) { <span class="muted">—</span> }
+                  @for (o of f.overrides; track o.tenantId) {
+                    <span class="badge ov">
+                      {{ o.tenantId }}: {{ o.state }}
+                      <button class="x" type="button" (click)="removeOverride(f.key, o.tenantId)" title="kaldır">×</button>
+                    </span>
+                  }
+                </td>
+                <td class="td-actions">
+                  @if (f.defaultState !== 'On') { <button class="btn btn-secondary btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'On')">On</button> }
+                  @if (f.defaultState !== 'Off') { <button class="btn btn-ghost btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'Off')">Off</button> }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.flags.newFlag' | t }}</h2></div>
+        <div class="panel-body stack">
+          <input class="input" [(ngModel)]="createForm.key" [placeholder]="'pc.flags.key' | t" />
+          <input class="input" [(ngModel)]="createForm.description" [placeholder]="'pc.flags.desc' | t" />
+          <div class="cluster">
+            <select class="input" [(ngModel)]="createForm.defaultState">
+              @for (s of states; track s) { <option [value]="s">{{ s }}</option> }
+            </select>
+            @if (createForm.defaultState === 'Percentage') {
+              <input class="input narrow" type="number" min="0" max="100" [(ngModel)]="createForm.percentage" placeholder="%" />
+            }
+            <button class="btn btn-primary btn-sm" [disabled]="busyKey() === '__new__' || !createForm.key" (click)="create()">
+              {{ 'pc.flags.create' | t }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.flags.addOverride' | t }}</h2></div>
+        <div class="panel-body stack">
+          <input class="input" [(ngModel)]="ovForm.key" [placeholder]="'pc.flags.flagKey' | t" />
+          <input class="input" [(ngModel)]="ovForm.tenantId" [placeholder]="'pc.flags.tenantCode' | t" />
+          <div class="cluster">
+            <select class="input" [(ngModel)]="ovForm.state">
+              <option value="On">On</option>
+              <option value="Off">Off</option>
+            </select>
+            <input class="input grow" [(ngModel)]="ovForm.reason" [placeholder]="'pc.flags.reason' | t" />
+            <button class="btn btn-primary btn-sm" [disabled]="!ovForm.key || !ovForm.tenantId" (click)="addOverride()">
+              {{ 'pc.flags.apply' | t }}
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+</div>

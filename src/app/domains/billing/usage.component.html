@@ -1,0 +1,63 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
+    <h1>{{ 'pc.billing.usage' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/billing/plans" routerLinkActive="active">{{ 'pc.billing.plans' | t }}</a>
+    <a routerLink="/billing/subscriptions" routerLinkActive="active">{{ 'pc.billing.subs' | t }}</a>
+    <a routerLink="/billing/usage" routerLinkActive="active">{{ 'pc.billing.usage' | t }}</a>
+    <a routerLink="/billing/cost" routerLinkActive="active">{{ 'pc.cost.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  @if (canWrite) {
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.billing.recordUsage' | t }}</h2></div>
+      <div class="panel-body">
+        <div class="cluster wrap">
+          <input class="input" [(ngModel)]="form.tenantCode" [placeholder]="'pc.billing.tenantCode' | t" />
+          <input class="input" [(ngModel)]="form.metricKey" [placeholder]="'pc.billing.metric' | t" />
+          <input class="input narrow" type="number" min="0" [(ngModel)]="form.quantity" [placeholder]="'pc.billing.quantity' | t" />
+          <button class="btn btn-primary btn-sm" [disabled]="busy() || !form.tenantCode || !form.metricKey" (click)="record()">
+            {{ 'pc.billing.record' | t }}
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+
+  <div class="panel">
+    <div class="panel-head"><h2>{{ 'pc.billing.usageSummary' | t }}</h2>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (rows().length === 0) {
+      <div class="empty-state">{{ 'pc.billing.noUsage' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.billing.tenant' | t }}</th>
+              <th>{{ 'pc.billing.metric' | t }}</th>
+              <th class="num">{{ 'pc.billing.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of rows(); track r.tenantId + r.metricKey) {
+              <tr>
+                <td class="mono">{{ r.tenantId }}</td>
+                <td class="mono">{{ r.metricKey }}</td>
+                <td class="mono num">{{ r.total }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

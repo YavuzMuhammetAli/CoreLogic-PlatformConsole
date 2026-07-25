@@ -1,0 +1,107 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+    <h1>{{ 'pc.mig.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  @if (canManage) {
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.mig.startRun' | t }}</h2></div>
+      <div class="panel-body">
+        <div class="cluster wrap">
+          <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.takePreBackup" /> {{ 'pc.mig.preBackup' | t }}</label>
+          <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.stopOnFailure" /> {{ 'pc.mig.stopOnFailure' | t }}</label>
+          <button class="btn btn-primary btn-sm" [disabled]="running()" (click)="start()">
+            {{ running() ? ('pc.mig.running' | t) : ('pc.mig.start' | t) }}
+          </button>
+        </div>
+        <p class="muted">{{ 'pc.mig.waveHint' | t }}</p>
+      </div>
+    </section>
+  }
+
+  <div class="panel">
+    <div class="panel-head"><h2>{{ 'pc.mig.runs' | t }}</h2>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+    @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
+    @else if (runs().length === 0) { <div class="empty-state">{{ 'pc.mig.empty' | t }}</div> }
+    @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.mig.status' | t }}</th>
+              <th class="num">{{ 'pc.mig.total' | t }}</th>
+              <th class="num">{{ 'pc.mig.ok' | t }}</th>
+              <th class="num">{{ 'pc.mig.failed' | t }}</th>
+              <th>{{ 'pc.mig.started' | t }}</th>
+              <th class="td-actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of runs(); track r.id) {
+              <tr>
+                <td><app-status-badge [tone]="tone(r.status)" [label]="r.status" /></td>
+                <td class="mono num">{{ r.totalTenants }}</td>
+                <td class="mono num">{{ r.succeededCount }}</td>
+                <td class="mono num">{{ r.failedCount }}</td>
+                <td class="mono nowrap">{{ r.startedAt | date:'short' }}</td>
+                <td class="td-actions">
+                  <button class="btn btn-ghost btn-sm" type="button" (click)="open(r)">{{ 'pc.mig.detail' | t }}</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (detail(); as d) {
+    <div class="panel">
+      <div class="panel-head">
+        <h2>{{ 'pc.mig.runDetail' | t }} #{{ d.id }}</h2>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="closeDetail()">{{ 'pc.mig.close' | t }}</button>
+      </div>
+      @if (d.stoppedReason) { <div class="panel-body"><div class="alert alert-warn">{{ d.stoppedReason }}</div></div> }
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="num">{{ 'pc.mig.wave' | t }}</th>
+              <th>{{ 'pc.mig.tenant' | t }}</th>
+              <th class="num">{{ 'pc.mig.from' | t }}</th>
+              <th class="num">{{ 'pc.mig.to' | t }}</th>
+              <th>{{ 'pc.mig.status' | t }}</th>
+              <th>{{ 'pc.mig.error' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of d.items; track i.tenantId) {
+              <tr>
+                <td class="mono num">{{ i.wave }}</td>
+                <td class="mono">{{ i.tenantId }}</td>
+                <td class="mono num">{{ i.fromVersion }}</td>
+                <td class="mono num">{{ i.toVersion }}</td>
+                <td><app-status-badge [tone]="tone(i.status)" [label]="i.status" /></td>
+                <td class="muted">{{ i.error || '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

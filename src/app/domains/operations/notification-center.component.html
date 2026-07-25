@@ -1,0 +1,118 @@
+<div class="stack page">
+  <header class="page-head">
+    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+    <h1>{{ 'pc.notif.title' | t }}</h1>
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  <div class="tabs">
+    <button class="tab" [class.active]="tab() === 'inbox'" (click)="selectTab('inbox')">{{ 'pc.notif.inbox' | t }}</button>
+    <button class="tab" [class.active]="tab() === 'rules'" (click)="selectTab('rules')">{{ 'pc.notif.rules' | t }}</button>
+  </div>
+
+  <!-- ── Gelen kutusu ── -->
+  @if (tab() === 'inbox') {
+    <div class="panel">
+      <div class="panel-head filters">
+        <label class="checkbox-label"><input type="checkbox" [(ngModel)]="unreadOnly" (ngModelChange)="load()" /> {{ 'pc.notif.unreadOnly' | t }}</label>
+        <div class="cluster">
+          <button class="btn btn-secondary btn-sm" type="button" (click)="markAllRead()">{{ 'pc.notif.markAll' | t }}</button>
+          <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        </div>
+      </div>
+      @if (loading()) {
+        <div class="empty-state"><span class="spinner"></span></div>
+      } @else if (items().length === 0) {
+        <div class="empty-state">{{ 'pc.notif.empty' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <tbody>
+              @for (n of items(); track n.id) {
+                <tr [class.unread]="!n.readAt">
+                  <td><app-status-badge [tone]="sevTone(n.severity)" [label]="n.severity" /></td>
+                  <td><div>{{ n.title }}</div>@if (n.body) { <span class="muted">{{ n.body }}</span> }</td>
+                  <td class="mono nowrap">{{ n.createdAt | date:'short' }}</td>
+                  <td class="td-actions">
+                    @if (!n.readAt) {
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === n.id" (click)="markRead(n)">{{ 'pc.notif.read' | t }}</button>
+                    } @else { <span class="muted">{{ 'pc.notif.wasRead' | t }}</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Kurallar ── -->
+  @if (tab() === 'rules') {
+    @if (canManage) {
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.notif.newRule' | t }}</h2></div>
+        <div class="panel-body">
+          <div class="cluster wrap">
+            <input class="input" [(ngModel)]="ruleForm.name" [placeholder]="'pc.notif.name' | t" />
+            <select class="input" [(ngModel)]="ruleForm.channelType">
+              <option value="InApp">InApp</option>
+              <option value="Email">Email</option>
+            </select>
+            <input class="input" [(ngModel)]="ruleForm.triggerFilter" placeholder='["Critical","Warning"]' />
+            <input class="input" [(ngModel)]="ruleForm.targets" [placeholder]="'pc.notif.targets' | t" />
+            <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ruleForm.name" (click)="createRule()">{{ 'pc.notif.create' | t }}</button>
+          </div>
+        </div>
+      </section>
+    }
+    <div class="panel">
+      @if (loading()) {
+        <div class="empty-state"><span class="spinner"></span></div>
+      } @else if (rules().length === 0) {
+        <div class="empty-state">{{ 'pc.notif.noRules' | t }}</div>
+      } @else {
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ 'pc.notif.name' | t }}</th>
+                <th>{{ 'pc.notif.trigger' | t }}</th>
+                <th>{{ 'pc.notif.channel' | t }}</th>
+                <th>{{ 'pc.notif.filter' | t }}</th>
+                <th>{{ 'pc.notif.enabled' | t }}</th>
+                <th class="td-actions">{{ 'pc.notif.actions' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of rules(); track r.id) {
+                <tr>
+                  <td>{{ r.name }}</td>
+                  <td class="mono">{{ r.triggerType }}</td>
+                  <td class="mono">{{ r.channelType }}</td>
+                  <td class="mono">{{ r.triggerFilter || '—' }}</td>
+                  <td><app-status-badge [tone]="r.enabled ? 'success' : 'neutral'" [label]="(r.enabled ? 'pc.alerts.on' : 'pc.alerts.off') | t" /></td>
+                  <td class="td-actions">
+                    @if (canManage) {
+                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === r.id" (click)="toggleRule(r)">{{ (r.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}</button>
+                    } @else { <span class="muted">—</span> }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>
