@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AlertsService, severityTone, alertStatusTone } from './alerts.service';
@@ -16,7 +16,7 @@ type Tab = 'alerts' | 'rules';
 @Component({
   selector: 'app-alert-center',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
   templateUrl: './alert-center.component.html',
   styleUrl: './alert-center.component.scss'
 })
@@ -30,6 +30,8 @@ export class AlertCenterComponent implements OnInit {
   readonly result = signal<PagedResult<AlertItem> | null>(null);
   readonly rules = signal<AlertRuleItem[]>([]);
   readonly busyId = signal<number | null>(null);
+  /** Detay satırı açık olan uyarının id'si — aynı anda tek satır açılır. */
+  readonly expandedId = signal<number | null>(null);
 
   readonly sevTone = severityTone;
   readonly stTone = alertStatusTone;
@@ -51,6 +53,7 @@ export class AlertCenterComponent implements OnInit {
   load(): void {
     this.loading.set(true);
     this.error.set(null);
+    this.expandedId.set(null); // liste tazelenince açık detay bayatlamasın
     this.service.list(this.status, this.page, this.pageSize).subscribe({
       next: res => {
         this.loading.set(false);
@@ -75,6 +78,14 @@ export class AlertCenterComponent implements OnInit {
   }
 
   applyFilter(): void { this.page = 1; this.load(); }
+
+  /** Uyarının bağlam panelini açar/kapatır. */
+  toggleDetails(a: AlertItem): void {
+    this.expandedId.set(this.expandedId() === a.id ? null : a.id);
+  }
+
+  /** Detay tablosunun kolon sayısı — genişletilmiş satırın colspan'i. */
+  readonly columnCount = 6;
 
   prev(): void { if (this.page > 1) { this.page--; this.load(); } }
   next(): void { if (this.result()?.hasMore) { this.page++; this.load(); } }

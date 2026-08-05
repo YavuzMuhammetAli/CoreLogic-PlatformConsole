@@ -35,6 +35,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.mfa.secretLabel': { tr: 'Gizli anahtar (base32)', en: 'Secret key (base32)' },
   'pc.mfa.back': { tr: 'Geri', en: 'Back' },
   'pc.mfa.invalidCode': { tr: 'Doğrulama kodu hatalı.', en: 'Invalid verification code.' },
+  'pc.mfa.codeLength': { tr: 'Kod 6 haneli olmalı.', en: 'The code must be 6 digits.' },
 
   // Navigasyon (8 alan)
   'pc.nav.overview': { tr: 'Genel Bakış', en: 'Overview' },
@@ -118,6 +119,29 @@ export const PLATFORM_I18N: Translations = {
   'pc.tenants.duration': { tr: 'Süre', en: 'Duration' },
   'pc.tenants.noProvision': { tr: 'Kurulum kaydı yok.', en: 'No provisioning record.' },
   'pc.tenants.tabHistory': { tr: 'Zaman Çizelgesi', en: 'Timeline' },
+
+  // Modeller sekmesi — ana + alt model ağacı
+  'pc.tenants.tabModels': { tr: 'Modeller', en: 'Models' },
+  'pc.tenants.model': { tr: 'Model', en: 'Model' },
+  'pc.tenants.columnCount': { tr: 'Kolon', en: 'Columns' },
+  'pc.tenants.modelPath': { tr: 'Yol', en: 'Path' },
+  'pc.tenants.rootModel': { tr: 'ana model', en: 'root model' },
+  'pc.tenants.modelCount': { tr: '{count} model', en: '{count} models' },
+  'pc.tenants.rootCount': { tr: '{count} kök', en: '{count} roots' },
+  'pc.tenants.modelsEmpty': { tr: 'Bu tenant henüz model yayınlamamış.', en: 'This tenant has no published models yet.' },
+
+  // Tablolar sekmesi — fiziksel envanter
+  'pc.tenants.tabTables': { tr: 'Tablolar', en: 'Tables' },
+  'pc.tenants.table': { tr: 'Tablo', en: 'Table' },
+  'pc.tenants.tableKind': { tr: 'Tür', en: 'Kind' },
+  'pc.tenants.tableRows': { tr: 'Satır', en: 'Rows' },
+  'pc.tenants.tableSize': { tr: 'Boyut', en: 'Size' },
+  'pc.tenants.tableKindPublished': { tr: 'Yayınlanmış', en: 'Published' },
+  'pc.tenants.tableKindDeletedModel': { tr: 'Silinmiş model', en: 'Deleted model' },
+  'pc.tenants.tableKindDeleted': { tr: 'Öksüz', en: 'Orphan' },
+  'pc.tenants.tableKindSystem': { tr: 'Sistem', en: 'System' },
+  'pc.tenants.tableKindUnknown': { tr: 'Bilinmeyen', en: 'Unknown' },
+  'pc.tenants.tablesEmpty': { tr: 'Tablo bulunamadı.', en: 'No tables found.' },
 
   // Yaşam döngüsü (M04)
   'pc.lc.suspend': { tr: 'Askıya al', en: 'Suspend' },
@@ -467,6 +491,25 @@ export const PLATFORM_I18N: Translations = {
   'pc.alerts.filter.Firing': { tr: 'Firing', en: 'Firing' },
   'pc.alerts.filter.Acknowledged': { tr: 'Üstlenilmiş', en: 'Acknowledged' },
   'pc.alerts.filter.Resolved': { tr: 'Çözümlenmiş', en: 'Resolved' },
+  // Uyarı bağlam paneli — "ne oldu"
+  'pc.alerts.detailsToggle': { tr: 'Ayrıntıyı aç/kapat', en: 'Toggle details' },
+  'pc.alerts.minutes': { tr: 'dk', en: 'min' },
+  'pc.alerts.totalRequests': { tr: 'istek', en: 'requests' },
+  'pc.alerts.errorRequests': { tr: 'hata', en: 'errors' },
+  'pc.alerts.endpoint': { tr: 'Endpoint', en: 'Endpoint' },
+  'pc.alerts.method': { tr: 'Yöntem', en: 'Method' },
+  'pc.alerts.errorsOfTotal': { tr: 'Hata / Toplam', en: 'Errors / Total' },
+  'pc.alerts.errorRate': { tr: 'Hata oranı', en: 'Error rate' },
+  'pc.alerts.statusCodes': { tr: 'Durum kodları', en: 'Status codes' },
+  'pc.alerts.correlationIds': { tr: 'Örnek correlationId', en: 'Sample correlationId' },
+  'pc.alerts.noTraceData': {
+    tr: 'Ham istek izleri budanmış — endpoint kırılımı gösteriliyor, durum kodu dağılımı yok.',
+    en: 'Raw request traces pruned — endpoint breakdown shown, status code split unavailable.'
+  },
+  'pc.alerts.noDetails': {
+    tr: 'Bu uyarı için bağlam kaydedilmemiş (yalnız api.* metriklerinde üretilir).',
+    en: 'No context recorded for this alert (produced for api.* metrics only).'
+  },
 
   // Config (M41)
   'pc.config.title': { tr: 'Platform Yapılandırması', en: 'Platform Configuration' },

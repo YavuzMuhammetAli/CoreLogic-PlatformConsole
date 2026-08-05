@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { TenantsService, tenantStatusTone, healthTone } from './tenants.service';
 import { BillingService, subStatusTone } from '../billing/billing.service';
 import { BackupService } from './backup.service';
-import { TenantDetail, TenantStateHistory } from '../../core/models/tenant.models';
+import { TenantDetail, TenantModelTree, TenantStateHistory, TenantTables } from '../../core/models/tenant.models';
 import { EntitlementSnapshot } from '../../core/models/commerce.models';
 import { TenantBackupItem } from '../../core/models/backup.models';
 import { ResponseModel } from '../../core/models/api.models';
@@ -15,7 +15,7 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dialog.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
-type Tab = 'summary' | 'provisioning' | 'history' | 'licensing' | 'backups';
+type Tab = 'summary' | 'provisioning' | 'history' | 'licensing' | 'backups' | 'models' | 'tables';
 
 interface TenantAction {
   key: string;
@@ -64,6 +64,14 @@ export class TenantDetailComponent implements OnInit {
   readonly backupsLoaded = signal(false);
   readonly backupBusy = signal<number | null>(null);
 
+  readonly models = signal<TenantModelTree | null>(null);
+  readonly modelsLoaded = signal(false);
+  readonly modelsError = signal<string | null>(null);
+
+  readonly tables = signal<TenantTables | null>(null);
+  readonly tablesLoaded = signal(false);
+  readonly tablesError = signal<string | null>(null);
+
   readonly tone = tenantStatusTone;
   readonly hTone = healthTone;
   readonly subTone = subStatusTone;
@@ -107,6 +115,58 @@ export class TenantDetailComponent implements OnInit {
     if (t === 'history' && !this.historyLoaded()) this.loadHistory();
     if (t === 'licensing' && !this.entitlementLoaded()) this.loadEntitlement();
     if (t === 'backups' && !this.backupsLoaded()) this.loadBackups();
+    if (t === 'models' && !this.modelsLoaded()) this.loadModels();
+    if (t === 'tables' && !this.tablesLoaded()) this.loadTables();
+  }
+
+  /**
+   * Model ağacı — tenant DB'sine canlı gider. Diğer sekmelerin aksine hatası
+   * yutulmaz: kurulumu tamamlanmamış/erişilemeyen tenant'ta boş liste değil,
+   * sebebi yazan bir mesaj gösterilir.
+   */
+  private loadModels(): void {
+    const code = this.detail()?.code;
+    if (!code) return;
+    this.modelsError.set(null);
+    this.service.models(code).subscribe({
+      next: res => {
+        if (res.success) this.models.set(res.data);
+        else this.modelsError.set(res.message);
+        this.modelsLoaded.set(true);
+      },
+      error: err => {
+        this.modelsError.set(err?.error?.message ?? 'Modeller yüklenemedi');
+        this.modelsLoaded.set(true);
+      }
+    });
+  }
+
+  /** Tablo envanteri — model ağacıyla aynı hata yaklaşımı. */
+  private loadTables(): void {
+    const code = this.detail()?.code;
+    if (!code) return;
+    this.tablesError.set(null);
+    this.service.tables(code).subscribe({
+      next: res => {
+        if (res.success) this.tables.set(res.data);
+        else this.tablesError.set(res.message);
+        this.tablesLoaded.set(true);
+      },
+      error: err => {
+        this.tablesError.set(err?.error?.message ?? 'Tablolar yüklenemedi');
+        this.tablesLoaded.set(true);
+      }
+    });
+  }
+
+  /** Tablo türü → rozet tonu. Öksüz tablolar (silinmiş model) uyarı tonuyla öne çıkar. */
+  tableKindTone(kind: string): 'success' | 'warn' | 'danger' | 'meta' | 'neutral' {
+    switch (kind) {
+      case 'Published': return 'success';
+      case 'DeletedModel': return 'warn';
+      case 'System': return 'meta';
+      default: return 'neutral';
+    }
   }
 
   private loadBackups(): void {

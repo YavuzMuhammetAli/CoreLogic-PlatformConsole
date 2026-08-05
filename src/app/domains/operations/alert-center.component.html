@@ -58,9 +58,24 @@
                 <tr>
                   <td><app-status-badge [tone]="sevTone(a.severity)" [label]="a.severity" /></td>
                   <td>
-                    <div>{{ a.ruleName }}</div>
-                    <span class="muted mono">{{ a.metricKey }}</span>
-                    @if (a.runbookUrl) { · <a class="code-link" [href]="a.runbookUrl" target="_blank" rel="noopener">runbook</a> }
+                    <button class="alert-toggle" type="button"
+                            [attr.aria-expanded]="expandedId() === a.id"
+                            [attr.aria-label]="'pc.alerts.detailsToggle' | t"
+                            (click)="toggleDetails(a)">
+                      <svg class="alert-caret" [class.open]="expandedId() === a.id" width="12" height="12"
+                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                      <span>{{ a.ruleName }}</span>
+                    </button>
+                    <div>
+                      <span class="muted mono">{{ a.metricKey }}</span>
+                      @if (a.runbookUrl) { <span class="muted">·</span> <a class="code-link" [href]="a.runbookUrl" target="_blank" rel="noopener">runbook</a> }
+                    </div>
+                    @if (a.target) {
+                      <div class="mono alert-target" [title]="a.target">{{ a.target }}</div>
+                    }
                   </td>
                   <td class="mono">{{ a.value }} <span class="muted">/ {{ a.threshold }}</span></td>
                   <td><app-status-badge [tone]="stTone(a.status)" [label]="a.status" /></td>
@@ -80,6 +95,80 @@
                     } @else { <span class="muted">—</span> }
                   </td>
                 </tr>
+
+                <!-- ── Bağlam paneli: "ne oldu" ── -->
+                @if (expandedId() === a.id) {
+                  <tr class="alert-details-row">
+                    <td [attr.colspan]="columnCount">
+                      @if (a.details; as d) {
+                        <div class="alert-details">
+                          <div class="alert-details-summary">
+                            <span>
+                              {{ 'pc.alerts.window' | t }}:
+                              <span class="mono">{{ d.windowStart | date:'short' }} – {{ d.windowEnd | date:'short' }}</span>
+                              <span class="muted">({{ d.windowMinutes }} {{ 'pc.alerts.minutes' | t }})</span>
+                            </span>
+                            <span>
+                              <span class="mono">{{ d.totalRequests }}</span> {{ 'pc.alerts.totalRequests' | t }} ·
+                              <span class="mono">{{ d.errorRequests }}</span> {{ 'pc.alerts.errorRequests' | t }}
+                            </span>
+                          </div>
+
+                          @if (d.routes.length > 0) {
+                            <table class="data-table alert-details-table">
+                              <thead>
+                                <tr>
+                                  <th>{{ 'pc.alerts.endpoint' | t }}</th>
+                                  <th>{{ 'pc.alerts.method' | t }}</th>
+                                  <th class="num">{{ 'pc.alerts.errorsOfTotal' | t }}</th>
+                                  <th class="num">{{ 'pc.alerts.errorRate' | t }}</th>
+                                  <th class="num">p95</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                @for (r of d.routes; track r.route) {
+                                  <tr>
+                                    <td class="mono">{{ r.route }}</td>
+                                    <td class="mono">{{ r.method || '—' }}</td>
+                                    <td class="mono num">{{ r.errorCount }} / {{ r.count }}</td>
+                                    <td class="mono num">%{{ r.errorRatePct | number:'1.0-2' }}</td>
+                                    <td class="mono num">{{ r.p95DurationMs }} ms</td>
+                                  </tr>
+                                }
+                              </tbody>
+                            </table>
+                          }
+
+                          @if (d.traceDataAvailable) {
+                            @if (d.statusCodes.length > 0) {
+                              <div class="alert-details-line">
+                                <span class="muted">{{ 'pc.alerts.statusCodes' | t }}:</span>
+                                @for (s of d.statusCodes; track s.statusCode) {
+                                  <span class="badge" [class.badge-danger]="s.statusCode >= 500"
+                                        [class.badge-warn]="s.statusCode < 500">
+                                    {{ s.statusCode }} × {{ s.count }}
+                                  </span>
+                                }
+                              </div>
+                            }
+                            @if (d.sampleCorrelationIds.length > 0) {
+                              <div class="alert-details-line">
+                                <span class="muted">{{ 'pc.alerts.correlationIds' | t }}:</span>
+                                @for (c of d.sampleCorrelationIds; track c) {
+                                  <span class="mono muted">{{ c }}</span>
+                                }
+                              </div>
+                            }
+                          } @else {
+                            <div class="alert-details-line muted">{{ 'pc.alerts.noTraceData' | t }}</div>
+                          }
+                        </div>
+                      } @else {
+                        <div class="empty-state">{{ 'pc.alerts.noDetails' | t }}</div>
+                      }
+                    </td>
+                  </tr>
+                }
               }
             </tbody>
           </table>

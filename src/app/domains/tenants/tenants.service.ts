@@ -3,7 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/models/api.models';
-import { PagedResult, TenantDetail, TenantStateHistory, TenantSummary } from '../../core/models/tenant.models';
+import {
+  PagedResult, TenantDetail, TenantModelTree, TenantStateHistory, TenantSummary, TenantTables
+} from '../../core/models/tenant.models';
 
 @Injectable({ providedIn: 'root' })
 export class TenantsService {
@@ -24,6 +26,16 @@ export class TenantsService {
 
   stateHistory(code: string): Observable<ListResponseModel<TenantStateHistory>> {
     return this.http.get<ListResponseModel<TenantStateHistory>>(`${this.action(code, 'state-history')}`);
+  }
+
+  /** Ana + alt modeller (tenant DB'sinden canlı; registry read-model'i parent/depth taşımıyor). */
+  models(code: string): Observable<DataResponseModel<TenantModelTree>> {
+    return this.http.get<DataResponseModel<TenantModelTree>>(this.action(code, 'models'));
+  }
+
+  /** Fiziksel tablolar: boyut + yayınlanmış/sistem sınıflandırması. */
+  tables(code: string): Observable<DataResponseModel<TenantTables>> {
+    return this.http.get<DataResponseModel<TenantTables>>(this.action(code, 'tables'));
   }
 
   // ── Yaşam döngüsü geçişleri (M04) ──

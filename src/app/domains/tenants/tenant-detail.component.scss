@@ -18,7 +18,8 @@
 }
 .actions { justify-content: flex-end; }
 
-.tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--border); }
+/* 7 sekme dar ekranda tek satıra sığmıyor — sarmalasın. */
+.tabs { display: flex; flex-wrap: wrap; gap: var(--space-1); border-bottom: 1px solid var(--border); }
 .tab {
   padding: var(--space-3) var(--space-4);
   background: transparent;
@@ -43,8 +44,26 @@
 .table-scroll { overflow-x: auto; }
 .nowrap { white-space: nowrap; }
 
+/* ── Modeller sekmesi: ağaç tablo ── */
+.model-name { display: inline-flex; align-items: center; gap: var(--space-2); }
+.model-branch { font-size: var(--text-xs); }
+.model-desc { font-size: var(--text-xs); margin-top: 2px; }
+
+/* Ata zinciri sağa hizalı — derinlik tek bakışta okunur. */
+.model-path-col { text-align: right; }
+.model-path {
+  display: inline-block; max-width: 34ch;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  vertical-align: bottom; font-size: var(--text-xs);
+}
+
+/* ── Tablolar sekmesi ── */
+/* Öksüz tablolar (modeli silinmiş ama tablo diskte) dikkat çeksin. */
+.table-orphan { color: var(--warn); font-weight: 600; }
+
 @media (max-width: 600px) {
   .kv { grid-template-columns: 1fr; gap: var(--space-1); }
   .kv dd { margin-bottom: var(--space-3); }
   .detail-right { align-items: flex-start; }
+  .model-path { max-width: 18ch; }
 }

@@ -52,6 +52,12 @@
       <button class="tab" [class.active]="tab() === 'backups'" (click)="selectTab('backups')">
         {{ 'pc.backup.title' | t }}
       </button>
+      <button class="tab" [class.active]="tab() === 'models'" (click)="selectTab('models')">
+        {{ 'pc.tenants.tabModels' | t }}
+      </button>
+      <button class="tab" [class.active]="tab() === 'tables'" (click)="selectTab('tables')">
+        {{ 'pc.tenants.tabTables' | t }}
+      </button>
     </nav>
 
     @if (tab() === 'summary') {
@@ -228,6 +234,125 @@
                         </button>
                       } @else { <span class="muted">—</span> }
                     </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── Modeller: ana + alt modeller, ata zinciriyle ── -->
+    @if (tab() === 'models') {
+      <div class="panel">
+        <div class="panel-head">
+          <h2>{{ 'pc.tenants.tabModels' | t }}</h2>
+          @if (models(); as m) {
+            <span class="muted">
+              {{ 'pc.tenants.modelCount' | t:{ count: m.totalCount } }} ·
+              {{ 'pc.tenants.rootCount' | t:{ count: m.rootCount } }}
+            </span>
+          }
+        </div>
+
+        @if (!modelsLoaded()) {
+          <div class="empty-state"><span class="spinner"></span></div>
+        } @else if (modelsError()) {
+          <div class="alert alert-danger" role="alert">{{ modelsError() }}</div>
+        } @else if (!models() || models()!.items.length === 0) {
+          <div class="empty-state">{{ 'pc.tenants.modelsEmpty' | t }}</div>
+        } @else {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>{{ 'pc.tenants.model' | t }}</th>
+                  <th class="num">{{ 'pc.tenants.columnCount' | t }}</th>
+                  <th>{{ 'pc.tenants.version' | t }}</th>
+                  <th>{{ 'pc.tenants.status' | t }}</th>
+                  <th class="model-path-col">{{ 'pc.tenants.modelPath' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (m of models()!.items; track m.id) {
+                  <tr>
+                    <td>
+                      <!-- Girinti derinlikten gelir; liste backend'den derinlik-öncelikli sıralı. -->
+                      <span class="model-name" [style.padding-left.px]="(m.depth - 1) * 20">
+                        @if (m.depth > 1) { <span class="muted model-branch" aria-hidden="true">└</span> }
+                        <span class="mono">{{ m.name }}</span>
+                      </span>
+                      @if (m.description) { <div class="muted model-desc">{{ m.description }}</div> }
+                    </td>
+                    <td class="mono num">{{ m.columnCount }}</td>
+                    <td class="mono">v{{ m.version }}</td>
+                    <td>
+                      @if (m.status) {
+                        <app-status-badge [tone]="m.status === 'Published' ? 'success' : 'meta'" [label]="m.status" />
+                      } @else { <span class="muted">—</span> }
+                    </td>
+                    <td class="model-path-col">
+                      @if (m.depth === 1) {
+                        <span class="muted">{{ 'pc.tenants.rootModel' | t }}</span>
+                      } @else {
+                        <span class="mono muted model-path" [title]="m.path.join(' - ')">{{ m.path.join(' - ') }}</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── Tablolar: fiziksel envanter + boyut + sınıflandırma ── -->
+    @if (tab() === 'tables') {
+      <div class="panel">
+        <div class="panel-head">
+          <h2>{{ 'pc.tenants.tabTables' | t }}</h2>
+          @if (tables(); as tb) {
+            <span class="muted">
+              <span class="mono">{{ tb.databaseName }}</span> ·
+              {{ tb.totalBytes / 1048576 | number:'1.0-1' }} MB ·
+              {{ 'pc.tenants.tableKindPublished' | t }}: {{ tb.publishedCount }} ·
+              {{ 'pc.tenants.tableKindSystem' | t }}: {{ tb.systemCount }}
+              @if (tb.deletedCount > 0) {
+                · <span class="table-orphan">{{ 'pc.tenants.tableKindDeleted' | t }}: {{ tb.deletedCount }}</span>
+              }
+            </span>
+          }
+        </div>
+
+        @if (!tablesLoaded()) {
+          <div class="empty-state"><span class="spinner"></span></div>
+        } @else if (tablesError()) {
+          <div class="alert alert-danger" role="alert">{{ tablesError() }}</div>
+        } @else if (!tables() || tables()!.items.length === 0) {
+          <div class="empty-state">{{ 'pc.tenants.tablesEmpty' | t }}</div>
+        } @else {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>{{ 'pc.tenants.table' | t }}</th>
+                  <th>{{ 'pc.tenants.tableKind' | t }}</th>
+                  <th class="num">{{ 'pc.tenants.tableRows' | t }}</th>
+                  <th class="num">{{ 'pc.tenants.tableSize' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (t of tables()!.items; track t.name) {
+                  <tr>
+                    <td class="mono">{{ t.name }}</td>
+                    <td>
+                      <app-status-badge [tone]="tableKindTone(t.kind)"
+                                        [label]="('pc.tenants.tableKind' + t.kind) | t" />
+                    </td>
+                    <td class="mono num">{{ t.rowCount | number }}</td>
+                    <td class="mono num">{{ t.totalBytes / 1048576 | number:'1.0-2' }} MB</td>
                   </tr>
                 }
               </tbody>
