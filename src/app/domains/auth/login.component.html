@@ -45,11 +45,16 @@
     @if (step() === 'mfa') {
       <div class="stack">
         <p class="muted">{{ 'pc.mfa.subtitle' | t }}</p>
-        <form class="stack" (ngSubmit)="onVerify()">
+        <form class="stack" [formGroup]="codeForm" (ngSubmit)="onVerify()">
           <div class="field">
             <label for="code">{{ 'pc.mfa.code' | t }}</label>
             <input id="code" class="input code-input" inputmode="numeric" maxlength="6"
-                   [formControl]="codeControl" autocomplete="one-time-code" />
+                   formControlName="code" autocomplete="one-time-code"
+                   [attr.aria-invalid]="codeControl.invalid && codeControl.touched"
+                   [attr.aria-describedby]="codeControl.invalid && codeControl.touched ? 'code-err' : null" />
+            @if (codeControl.invalid && codeControl.touched) {
+              <span class="field-error" id="code-err" role="alert">{{ 'pc.mfa.codeLength' | t }}</span>
+            }
           </div>
           <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
             @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.mfa.verify' | t }} }
@@ -68,11 +73,16 @@
           <label>{{ 'pc.mfa.secretLabel' | t }}</label>
           <code class="secret">{{ mfaSecret() }}</code>
         </div>
-        <form class="stack" (ngSubmit)="onEnroll()">
+        <form class="stack" [formGroup]="codeForm" (ngSubmit)="onEnroll()">
           <div class="field">
             <label for="ecode">{{ 'pc.mfa.code' | t }}</label>
             <input id="ecode" class="input code-input" inputmode="numeric" maxlength="6"
-                   [formControl]="codeControl" autocomplete="one-time-code" />
+                   formControlName="code" autocomplete="one-time-code"
+                   [attr.aria-invalid]="codeControl.invalid && codeControl.touched"
+                   [attr.aria-describedby]="codeControl.invalid && codeControl.touched ? 'ecode-err' : null" />
+            @if (codeControl.invalid && codeControl.touched) {
+              <span class="field-error" id="ecode-err" role="alert">{{ 'pc.mfa.codeLength' | t }}</span>
+            }
           </div>
           <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
             @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.mfa.verify' | t }} }

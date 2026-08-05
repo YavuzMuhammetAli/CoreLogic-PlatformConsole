@@ -42,9 +42,14 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]]
   });
-  readonly codeControl = this.fb.control('', [Validators.required, Validators.minLength(6)]);
+  // Kod alanı da FormGroup içinde tutulur: (ngSubmit) yalnızca [formGroup] bağlı
+  // bir <form>'da tetiklenir. Aksi halde tarayıcı native submit yapıp sayfayı yeniler.
+  readonly codeForm = this.fb.group({
+    code: ['', [Validators.required, Validators.minLength(6)]]
+  });
 
   get lf() { return this.loginForm.controls; }
+  get codeControl() { return this.codeForm.controls.code; }
 
   onLogin(): void {
     if (this.loginForm.invalid || this.loading()) {

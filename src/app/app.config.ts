@@ -1,12 +1,14 @@
 import {
   ApplicationConfig,
   APP_INITIALIZER,
+  LOCALE_ID,
   PLATFORM_ID,
   provideZoneChangeDetection
 } from '@angular/core';
 import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, registerLocaleData } from '@angular/common';
+import localeTr from '@angular/common/locales/tr';
 import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
@@ -35,9 +37,14 @@ function sessionInitializerFactory(
   };
 }
 
+// DatePipe'ın TR biçimi (27.07.2026 12:14) kullanabilmesi için locale verisi kaydedilir;
+// Angular varsayılanı en-US'tir (7/27/26, 12:14 PM). Konsol arayüzü Türkçe.
+registerLocaleData(localeTr);
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    { provide: LOCALE_ID, useValue: 'tr' },
     provideRouter(routes, withEnabledBlockingInitialNavigation()),
     // Interceptor sırası: correlation + language header'ları ekler, sonra error
     // (401'de refresh+retry) platformAuth'u sarar — retry'da taze token eklenir.
