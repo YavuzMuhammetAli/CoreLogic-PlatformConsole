@@ -39,6 +39,16 @@ export interface PlatformUserListItem {
   roles: string[];
 }
 
+/**
+ * GET /platform-users/roles öğesi — rol → yetenek eşlemesi.
+ * Matris backend'de derlenmiş sabittir (`PlatformCapabilities.RoleMatrix`);
+ * konsol onu KOPYALAMAZ, bu uçtan okur — kopya sessizce bayatlardı.
+ */
+export interface PlatformRoleInfo {
+  role: string;
+  capabilities: string[];
+}
+
 /** GET /audit-logs öğesi (PlatformAuditLog, camelCase). */
 export interface PlatformAuditLogItem {
   id: number;

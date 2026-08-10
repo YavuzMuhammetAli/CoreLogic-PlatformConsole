@@ -6,6 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/models/api.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 interface UsageSummary { tenantId: string; metricKey: string; total: number; }
@@ -14,7 +15,7 @@ interface UsageSummary { tenantId: string; metricKey: string; total: number; }
 @Component({
   selector: 'app-usage',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, TranslatePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe],
   templateUrl: './usage.component.html',
   styleUrl: './billing.component.scss'
 })

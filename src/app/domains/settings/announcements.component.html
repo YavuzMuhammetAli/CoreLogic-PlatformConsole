@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
-    <h1>{{ 'pc.ann.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+      <h1>{{ 'pc.ann.title' | t }}</h1>
+    </div>
+    <app-help-button topic="announcements" />
   </header>
 
   <nav class="subnav">
@@ -18,9 +21,10 @@
     <div class="panel-body">
       <div class="cluster wrap">
         <input class="input" [(ngModel)]="form.title" [placeholder]="'pc.ann.titleField' | t" />
-        <select class="input" [(ngModel)]="form.severity">
-          @for (s of severities; track s) { <option [value]="s">{{ s }}</option> }
-        </select>
+        <app-select
+          [options]="severities"
+          [(value)]="form.severity"
+          [ariaLabel]="'pc.ann.severity' | t" />
         <input class="input grow" [(ngModel)]="form.body" [placeholder]="'pc.ann.body' | t" />
         <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.title" (click)="create()">{{ 'pc.ann.create' | t }}</button>
       </div>

@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.overview' | t }}</span>
-    <h1>{{ 'pc.overview.welcome' | t:{ name: user()?.name || '' } }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.overview' | t }}</span>
+      <h1>{{ 'pc.overview.welcome' | t:{ name: user()?.name || '' } }}</h1>
+    </div>
+    <app-help-button topic="overview" />
   </header>
 
   @if (loading()) {

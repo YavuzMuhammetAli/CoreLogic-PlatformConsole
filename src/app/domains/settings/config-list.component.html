@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
-    <h1>{{ 'pc.config.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+      <h1>{{ 'pc.config.title' | t }}</h1>
+    </div>
+    <app-help-button topic="config" />
   </header>
 
   <nav class="subnav">
@@ -13,6 +16,9 @@
 
   @if (error()) {
     <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+  @if (success()) {
+    <div class="alert alert-success" role="status">{{ success() }}</div>
   }
 
   <div class="panel">
@@ -28,6 +34,7 @@
               <th>{{ 'pc.config.key' | t }}</th>
               <th>{{ 'pc.config.value' | t }}</th>
               <th>{{ 'pc.config.updated' | t }}</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -37,8 +44,30 @@
                   {{ c.key }}
                   @if (c.isSecret) { <span class="badge badge-warn">{{ 'pc.config.secret' | t }}</span> }
                 </td>
-                <td class="mono">{{ c.value || '—' }}</td>
+                <td>
+                  <input
+                    class="input mono"
+                    [type]="c.isSecret ? 'password' : 'text'"
+                    [attr.aria-label]="c.key"
+                    [placeholder]="c.isSecret
+                      ? ((c.value ? 'pc.config.keepSecret' : 'pc.config.enterSecret') | t)
+                      : ''"
+                    [ngModel]="draftFor(c.key)"
+                    (ngModelChange)="onDraftChange(c.key, $event)" />
+                  @if (c.isSecret && c.value) {
+                    <span class="hint">{{ 'pc.config.currentlySet' | t }}</span>
+                  }
+                </td>
                 <td class="mono nowrap">{{ c.updatedAt | date:'short' }}</td>
+                <td class="nowrap">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    [disabled]="savingKey() !== null"
+                    (click)="save(c)">
+                    {{ (savingKey() === c.key ? 'pc.config.saving' : 'pc.config.save') | t }}
+                  </button>
+                </td>
               </tr>
             }
           </tbody>

@@ -22,7 +22,6 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     </div>
   `,
   styles: [`
-    .page { max-width: 900px; }
     h1 { font-size: var(--text-2xl); }
   `]
 })

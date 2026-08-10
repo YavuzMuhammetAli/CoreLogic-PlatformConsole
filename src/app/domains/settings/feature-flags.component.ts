@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FlagsService, flagStateTone } from './flags.service';
 import { FeatureFlagItem, FLAG_STATES } from '../../core/models/flag.models';
+import { SelectComponent } from '../../shared/ui/select/select.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Feature Flags (M39) — liste + durum/yüzde + tenant override + ölü flag işareti. */
 @Component({
   selector: 'app-feature-flags',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './feature-flags.component.html',
   styleUrl: './feature-flags.component.scss'
 })
@@ -24,6 +26,8 @@ export class FeatureFlagsComponent implements OnInit {
 
   readonly tone = flagStateTone;
   readonly states = FLAG_STATES;
+  /** Tenant override'ı yüzdelik olamaz — yalnız açık/kapalı. */
+  readonly overrideStates = ['On', 'Off'];
 
   createForm = { key: '', description: '', defaultState: 'Off', percentage: 0 };
   ovForm = { key: '', tenantId: '', state: 'On', reason: '' };

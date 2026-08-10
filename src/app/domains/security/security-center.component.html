@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
-    <h1>{{ 'pc.sec.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
+      <h1>{{ 'pc.sec.title' | t }}</h1>
+    </div>
+    <app-help-button topic="securityCenter" />
   </header>
 
   <nav class="subnav">
@@ -22,13 +25,11 @@
   @if (tab() === 'events') {
     <div class="panel">
       <div class="panel-head filters">
-        <select class="input" [(ngModel)]="eventStatus" (ngModelChange)="loadEvents()">
-          <option value="">{{ 'pc.sec.allStatuses' | t }}</option>
-          <option value="Open">Open</option>
-          <option value="Reviewed">Reviewed</option>
-          <option value="Dismissed">Dismissed</option>
-          <option value="Escalated">Escalated</option>
-        </select>
+        <app-select
+          [options]="eventStatusOptions()"
+          [value]="eventStatus"
+          (valueChange)="eventStatus = $event; loadEvents()"
+          [ariaLabel]="'pc.sec.allStatuses' | t" />
         <button class="btn btn-secondary btn-sm" type="button" (click)="loadEvents()">{{ 'pc.refresh' | t }}</button>
       </div>
       @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
@@ -114,10 +115,10 @@
         <div class="panel-body">
           <div class="cluster wrap">
             <input class="input" [(ngModel)]="ipForm.cidr" [placeholder]="'pc.sec.cidr' | t" />
-            <select class="input" [(ngModel)]="ipForm.action">
-              <option value="Deny">Deny</option>
-              <option value="Allow">Allow</option>
-            </select>
+            <app-select
+              [options]="ipActions"
+              [(value)]="ipForm.action"
+              [ariaLabel]="'pc.sec.action' | t" />
             <input class="input grow" [(ngModel)]="ipForm.reason" [placeholder]="'pc.sec.reason' | t" />
             <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ipForm.cidr" (click)="addIpRule()">{{ 'pc.sec.add' | t }}</button>
           </div>

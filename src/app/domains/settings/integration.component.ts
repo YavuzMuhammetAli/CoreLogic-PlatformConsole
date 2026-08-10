@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IntegrationService, deliveryTone } from './integration.service';
 import { WebhookItem, WebhookDeliveryItem, ApiKeyItem } from '../../core/models/integration.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'webhooks' | 'apikeys';
@@ -13,7 +14,7 @@ type Tab = 'webhooks' | 'apikeys';
 @Component({
   selector: 'app-integration',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './integration.component.html',
   styleUrl: './integration.component.scss'
 })

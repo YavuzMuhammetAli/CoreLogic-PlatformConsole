@@ -3,19 +3,26 @@ import { DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PlatformUsersService } from './platform-users.service';
 import { PlatformUserListItem } from '../../core/models/platform.models';
+import { PlatformSessionStore } from '../../core/auth/platform-session.store';
+import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
-/** Platform Kullanıcıları (M13) — liste. Yazma işlemleri sonraki adımda. */
+/** Platform Kullanıcıları (M13) — liste; yazma işlemleri detay ekranında. */
 @Component({
   selector: 'app-platform-users',
   standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './platform-users.component.html',
   styleUrl: './platform-users.component.scss'
 })
 export class PlatformUsersComponent implements OnInit {
   private readonly service = inject(PlatformUsersService);
+  private readonly store = inject(PlatformSessionStore);
+
+  /** Route Cap.UsersRead ile de girilebiliyor — yazma bağlantıları yalnız IamManage'e görünür. */
+  readonly canManage = this.store.has(Cap.IamManage);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);

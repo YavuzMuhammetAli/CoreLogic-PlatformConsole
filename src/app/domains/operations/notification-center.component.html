@@ -1,11 +1,15 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
-    <h1>{{ 'pc.notif.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+      <h1>{{ 'pc.notif.title' | t }}</h1>
+    </div>
+    <app-help-button topic="notifications" />
   </header>
 
   <nav class="subnav">
     <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/workers" routerLinkActive="active">{{ 'pc.workers.title' | t }}</a>
     <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
     <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
     <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
@@ -65,10 +69,10 @@
         <div class="panel-body">
           <div class="cluster wrap">
             <input class="input" [(ngModel)]="ruleForm.name" [placeholder]="'pc.notif.name' | t" />
-            <select class="input" [(ngModel)]="ruleForm.channelType">
-              <option value="InApp">InApp</option>
-              <option value="Email">Email</option>
-            </select>
+            <app-select
+              [options]="channelTypes"
+              [(value)]="ruleForm.channelType"
+              [ariaLabel]="'pc.notif.channel' | t" />
             <input class="input" [(ngModel)]="ruleForm.triggerFilter" placeholder='["Critical","Warning"]' />
             <input class="input" [(ngModel)]="ruleForm.targets" [placeholder]="'pc.notif.targets' | t" />
             <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ruleForm.name" (click)="createRule()">{{ 'pc.notif.create' | t }}</button>

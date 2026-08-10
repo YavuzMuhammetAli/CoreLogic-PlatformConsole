@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -7,19 +7,23 @@ import { ComplianceRequestItem, COMPLIANCE_TYPES } from '../../core/models/compl
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent, withAllOption } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Compliance & Data (M42) — DSAR/erasure/offboarding talep FSM (KVKK/GDPR). */
 @Component({
   selector: 'app-compliance',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './compliance.component.html',
   styleUrl: './security-center.component.scss'
 })
 export class ComplianceComponent implements OnInit {
   private readonly service = inject(ComplianceService);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -29,6 +33,10 @@ export class ComplianceComponent implements OnInit {
   readonly tone = complianceStatusTone;
   readonly types = COMPLIANCE_TYPES;
   readonly canManage = this.store.has(Cap.SecurityManage);
+  /** FSM durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
+  readonly statusOptions = computed(() =>
+    withAllOption(this.language.t('pc.comp.allStatuses'),
+      ['Open', 'InProgress', 'Completed', 'Rejected']));
 
   status = '';
   form = { type: 'DSAR', tenantId: '', subjectRef: '', reason: '' };

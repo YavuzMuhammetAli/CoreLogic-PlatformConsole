@@ -5,13 +5,15 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AnnouncementService, severityTone, announcementStatusTone } from './announcement.service';
 import { AnnouncementItem, DatabaseServerItem, ANNOUNCEMENT_SEVERITIES } from '../../core/models/announcement.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent } from '../../shared/ui/select/select.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Announcements & Status (M26) + DB sunucu envanteri (multi-region tohumu). */
 @Component({
   selector: 'app-announcements',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './announcements.component.html',
   styleUrl: './integration.component.scss'
 })

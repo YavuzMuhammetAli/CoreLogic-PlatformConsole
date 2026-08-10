@@ -1,11 +1,15 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
-    <h1>{{ 'pc.registry.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+      <h1>{{ 'pc.registry.title' | t }}</h1>
+    </div>
+    <app-help-button topic="registry" />
   </header>
 
   <nav class="subnav">
     <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/workers" routerLinkActive="active">{{ 'pc.workers.title' | t }}</a>
     <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
     <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
     <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>

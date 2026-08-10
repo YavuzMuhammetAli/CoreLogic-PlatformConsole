@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -8,6 +8,9 @@ import { PagedResult } from '../../core/models/api.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'alerts' | 'rules';
@@ -16,13 +19,14 @@ type Tab = 'alerts' | 'rules';
 @Component({
   selector: 'app-alert-center',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './alert-center.component.html',
   styleUrl: './alert-center.component.scss'
 })
 export class AlertCenterComponent implements OnInit {
   private readonly service = inject(AlertsService);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
 
   readonly tab = signal<Tab>('alerts');
   readonly loading = signal(true);
@@ -37,6 +41,9 @@ export class AlertCenterComponent implements OnInit {
   readonly stTone = alertStatusTone;
   readonly statusFilters = ALERT_STATUS_FILTERS;
   readonly canManage = this.store.has(Cap.OpsManage);
+  /** Etiketler çeviriden gelir ("open" sentetik filtresi dahil); dil değişince güncellenir. */
+  readonly statusOptions = computed(() =>
+    this.statusFilters.map(s => ({ value: s, label: this.language.t(`pc.alerts.filter.${s}`) })));
 
   status = 'open';
   page = 1;

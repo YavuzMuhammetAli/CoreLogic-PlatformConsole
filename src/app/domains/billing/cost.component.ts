@@ -2,13 +2,14 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BillingService, CostByTenant } from './billing.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Cost & AI Usage Analytics (M33/M34) — tenant başına maliyet dökümü (usage × birim). */
 @Component({
   selector: 'app-cost',
   standalone: true,
-  imports: [DecimalPipe, RouterLink, RouterLinkActive, TranslatePipe],
+  imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe],
   templateUrl: './cost.component.html',
   styleUrl: './billing.component.scss'
 })

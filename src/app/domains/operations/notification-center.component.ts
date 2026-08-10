@@ -8,6 +8,8 @@ import { NotificationItem, NotificationRuleItem } from '../../core/models/notifi
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent } from '../../shared/ui/select/select.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'inbox' | 'rules';
@@ -16,7 +18,7 @@ type Tab = 'inbox' | 'rules';
 @Component({
   selector: 'app-notification-center',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './notification-center.component.html',
   styleUrl: './alert-center.component.scss'
 })
@@ -33,6 +35,7 @@ export class NotificationCenterComponent implements OnInit {
 
   readonly sevTone = severityTone;
   readonly canManage = this.store.has(Cap.OpsManage);
+  readonly channelTypes = ['InApp', 'Email'];
 
   unreadOnly = false;
   ruleForm = { name: '', triggerType: 'Alert', triggerFilter: '["Critical"]', channelType: 'InApp', targets: '', throttleMinutes: 0 };

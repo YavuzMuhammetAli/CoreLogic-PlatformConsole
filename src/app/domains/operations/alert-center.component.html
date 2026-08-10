@@ -1,11 +1,15 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
-    <h1>{{ 'pc.alerts.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+      <h1>{{ 'pc.alerts.title' | t }}</h1>
+    </div>
+    <app-help-button topic="alerts" />
   </header>
 
   <nav class="subnav">
     <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/workers" routerLinkActive="active">{{ 'pc.workers.title' | t }}</a>
     <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
     <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
     <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
@@ -27,11 +31,11 @@
     <div class="panel">
       <div class="panel-head filters">
         <div class="cluster">
-          <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
-            @for (s of statusFilters; track s) {
-              <option [value]="s">{{ ('pc.alerts.filter.' + s) | t }}</option>
-            }
-          </select>
+          <app-select
+            [options]="statusOptions()"
+            [value]="status"
+            (valueChange)="status = $event; applyFilter()"
+            [ariaLabel]="'pc.alerts.status' | t" />
           <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
         </div>
       </div>

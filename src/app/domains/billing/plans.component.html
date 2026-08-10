@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
-    <h1>{{ 'pc.billing.plans' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
+      <h1>{{ 'pc.billing.plans' | t }}</h1>
+    </div>
+    <app-help-button topic="plans" />
   </header>
 
   <nav class="subnav">
@@ -22,10 +25,17 @@
           <div class="panel-body stack">
             <div class="plan-head">
               <div>
-                <strong>{{ p.name }}</strong>
+                <a class="plan-link" [routerLink]="['/billing/plans', p.id]"><strong>{{ p.name }}</strong></a>
                 <span class="muted mono">{{ p.code }} v{{ p.version }}</span>
               </div>
-              <app-status-badge [tone]="tone(p.status)" [label]="p.status" />
+              <div class="cluster">
+                @if (p.isDefaultForNewTenants) {
+                  <span class="badge badge-meta" [title]="'pc.billing.defaultPlanNote' | t">
+                    {{ 'pc.billing.isDefault' | t }}
+                  </span>
+                }
+                <app-status-badge [tone]="tone(p.status)" [label]="p.status" />
+              </div>
             </div>
             @if (p.description) { <p class="muted">{{ p.description }}</p> }
             <div class="cluster feature-list">
@@ -33,16 +43,19 @@
                 <span class="badge">{{ featureLabel(f) }}</span>
               } @empty { <span class="muted">{{ 'pc.billing.noFeatures' | t }}</span> }
             </div>
-            @if (canWrite) {
-              <div class="cluster">
+            <div class="cluster">
+              <a class="btn btn-secondary btn-sm" [routerLink]="['/billing/plans', p.id]">
+                {{ 'pc.billing.manage' | t }}
+              </a>
+              @if (canWrite) {
                 @if (p.status !== 'Active') {
-                  <button class="btn btn-secondary btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Active')">{{ 'pc.billing.activate' | t }}</button>
+                  <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Active')">{{ 'pc.billing.activate' | t }}</button>
                 }
-                @if (p.status !== 'Retired') {
+                @if (p.status !== 'Retired' && !p.isDefaultForNewTenants) {
                   <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Retired')">{{ 'pc.billing.retire' | t }}</button>
                 }
-              </div>
-            }
+              }
+            </div>
           </div>
         </section>
       }
@@ -56,6 +69,8 @@
             <input class="input" [(ngModel)]="form.code" [placeholder]="'pc.billing.code' | t" />
             <input class="input" [(ngModel)]="form.name" [placeholder]="'pc.billing.name' | t" />
             <input class="input grow" [(ngModel)]="form.description" [placeholder]="'pc.billing.desc' | t" />
+            <input class="input narrow" type="number" min="0" [(ngModel)]="form.trialDays"
+                   [placeholder]="'pc.billing.trialDays' | t" />
             <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.isPublic" /> {{ 'pc.billing.public' | t }}</label>
             <button class="btn btn-primary btn-sm" [disabled]="creating() || !form.code || !form.name" (click)="create()">
               {{ 'pc.billing.createDraft' | t }}

@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
-    <h1>{{ 'pc.audit.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
+      <h1>{{ 'pc.audit.title' | t }}</h1>
+    </div>
+    <app-help-button topic="auditLogs" />
   </header>
 
   <nav class="subnav">
@@ -13,12 +16,11 @@
   <div class="panel">
     <div class="panel-head filters">
       <div class="cluster">
-        <select class="input" [(ngModel)]="category" (ngModelChange)="load()">
-          <option value="">{{ 'pc.audit.filterCategory' | t }}</option>
-          @for (c of categories; track c) {
-            <option [value]="c">{{ c }}</option>
-          }
-        </select>
+        <app-select
+          [options]="categoryOptions()"
+          [value]="category"
+          (valueChange)="category = $event; load()"
+          [ariaLabel]="'pc.audit.filterCategory' | t" />
         <input class="input take" type="number" min="1" max="500"
                [(ngModel)]="take" (ngModelChange)="load()"
                [attr.aria-label]="'pc.audit.take' | t" />

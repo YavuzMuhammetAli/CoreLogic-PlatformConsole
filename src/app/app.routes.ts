@@ -34,6 +34,19 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./domains/access/platform-users.component').then(m => m.PlatformUsersComponent)
       },
+      // Sabit 'new' segmenti ':id'den ÖNCE — aksi hâlde Angular 'new'i parametre yakalar.
+      {
+        path: 'access/platform-users/new',
+        canActivate: [capabilityGuard(Cap.IamManage)],
+        loadComponent: () =>
+          import('./domains/access/platform-user-detail.component').then(m => m.PlatformUserDetailComponent)
+      },
+      {
+        path: 'access/platform-users/:id',
+        canActivate: [capabilityGuard(Cap.IamManage)],
+        loadComponent: () =>
+          import('./domains/access/platform-user-detail.component').then(m => m.PlatformUserDetailComponent)
+      },
       {
         path: 'access/impersonation',
         canActivate: [capabilityGuard(Cap.ImpersonationRequest, Cap.ImpersonationApprove)],
@@ -86,6 +99,13 @@ export const routes: Routes = [
           import('./domains/operations/jobs-list.component').then(m => m.JobsListComponent)
       },
       {
+        // Worker kontrol düzlemi (migrasyon 025) — aç/kapa, aralık, döngü yenileme.
+        path: 'operations/workers',
+        canActivate: [capabilityGuard(Cap.OpsRead)],
+        loadComponent: () =>
+          import('./domains/operations/worker-center.component').then(m => m.WorkerCenterComponent)
+      },
+      {
         path: 'operations/health',
         canActivate: [capabilityGuard(Cap.OpsRead)],
         loadComponent: () =>
@@ -136,6 +156,12 @@ export const routes: Routes = [
         canActivate: [capabilityGuard(Cap.BillingRead)],
         loadComponent: () =>
           import('./domains/billing/plans.component').then(m => m.PlansComponent)
+      },
+      {
+        path: 'billing/plans/:id',
+        canActivate: [capabilityGuard(Cap.BillingRead)],
+        loadComponent: () =>
+          import('./domains/billing/plan-detail.component').then(m => m.PlanDetailComponent)
       },
       {
         path: 'billing/subscriptions',

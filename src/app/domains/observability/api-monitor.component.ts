@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TelemetryService, statusTone, errorRateTone } from './telemetry.service';
 import { RequestTrace, RouteMetric } from '../../core/models/telemetry.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'metrics' | 'live';
@@ -13,7 +14,7 @@ type Tab = 'metrics' | 'live';
 @Component({
   selector: 'app-api-monitor',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './api-monitor.component.html',
   styleUrl: './api-monitor.component.scss'
 })

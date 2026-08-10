@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -8,19 +8,23 @@ import { PagedResult } from '../../core/models/api.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent, withAllOption } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Abonelikler (M36) — liste/filtre + tenant'a plan atama + yaşam döngüsü eylemleri. */
 @Component({
   selector: 'app-subscriptions',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './subscriptions.component.html',
   styleUrl: './billing.component.scss'
 })
 export class SubscriptionsComponent implements OnInit {
   private readonly service = inject(BillingService);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -31,6 +35,19 @@ export class SubscriptionsComponent implements OnInit {
   readonly tone = subStatusTone;
   readonly statuses = SUBSCRIPTION_STATUSES;
   readonly canWrite = this.store.has(Cap.BillingWrite);
+
+  /** Dil değişince "Tümü" etiketi de değişsin diye computed. */
+  readonly statusOptions = computed(() =>
+    withAllOption(this.language.t('pc.billing.allStatuses'), this.statuses));
+
+  /** app-select değerleri string; planId sayı olduğu için iki uçta da çevrilir. */
+  readonly planOptions = computed(() => [
+    { value: '0', label: this.language.t('pc.billing.selectPlan') },
+    ...this.plans().map(p => ({ value: String(p.id), label: `${p.name} (${p.code})` }))
+  ]);
+
+  /** Şablonda `String(...)` çağrılabilsin diye. */
+  readonly String = String;
 
   status = '';
   page = 1;

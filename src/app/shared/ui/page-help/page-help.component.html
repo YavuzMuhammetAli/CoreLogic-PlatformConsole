@@ -1,0 +1,72 @@
+@if (open()) {
+  <div class="help-overlay" (click)="onBackdrop($event)"
+       role="dialog" aria-modal="true" [attr.aria-label]="content().titleKey | t">
+    <div class="help-panel panel">
+      <div class="panel-head">
+        <h2>{{ content().titleKey | t }}</h2>
+        <button class="btn btn-ghost btn-sm" type="button"
+                (click)="close()" [attr.aria-label]="'pc.close' | t">✕</button>
+      </div>
+
+      <div class="help-body stack">
+        <!-- Ne işe yarar -->
+        <section class="stack">
+          <span class="eyebrow">{{ 'pc.help.sectionSummary' | t }}</span>
+          <p>{{ content().summaryKey | t }}</p>
+        </section>
+
+        <!-- Yaşam döngüsü şeridi -->
+        @if (content().lifecycle; as steps) {
+          <section class="stack">
+            <span class="eyebrow">{{ 'pc.help.sectionLifecycle' | t }}</span>
+            <div class="lifecycle">
+              @for (s of steps; track s; let last = $last) {
+                <span class="lifecycle-step">{{ s }}</span>
+                @if (!last) { <span class="lifecycle-arrow" aria-hidden="true">→</span> }
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Alan / kolon sözlüğü -->
+        @if (content().fields.length) {
+          <section class="stack">
+            <span class="eyebrow">{{ 'pc.help.sectionFields' | t }}</span>
+            <dl class="help-list">
+              @for (f of content().fields; track f.labelKey) {
+                <dt>{{ f.labelKey | t }}</dt>
+                <dd>{{ f.descKey | t }}</dd>
+              }
+            </dl>
+          </section>
+        }
+
+        <!-- İş kuralları -->
+        @if (content().rules; as rules) {
+          @if (rules.length) {
+            <section class="stack">
+              <span class="eyebrow">{{ 'pc.help.sectionRules' | t }}</span>
+              <dl class="help-list">
+                @for (r of rules; track r.labelKey) {
+                  <dt>{{ r.labelKey | t }}</dt>
+                  <dd>{{ r.descKey | t }}</dd>
+                }
+              </dl>
+            </section>
+          }
+        }
+
+        <!-- Dikkat -->
+        @if (content().notesKey; as notes) {
+          <div class="alert alert-warn">{{ notes | t }}</div>
+        }
+      </div>
+
+      <div class="panel-body help-actions">
+        <button class="btn btn-primary btn-sm" type="button" (click)="close()">
+          {{ 'pc.close' | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

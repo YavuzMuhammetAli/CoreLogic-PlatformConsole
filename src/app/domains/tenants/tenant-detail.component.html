@@ -14,7 +14,10 @@
         <span class="muted">{{ d.name }}</span>
       </div>
       <div class="detail-right">
-        <app-status-badge [tone]="tone(d.status)" [label]="d.status" />
+        <div class="cluster">
+          <app-status-badge [tone]="tone(d.status)" [label]="d.status" />
+          <app-help-button topic="tenantDetail" />
+        </div>
         @if (availableActions().length > 0) {
           <div class="cluster actions">
             @for (a of availableActions(); track a.key) {

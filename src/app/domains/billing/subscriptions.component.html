@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
-    <h1>{{ 'pc.billing.subs' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.billing' | t }}</span>
+      <h1>{{ 'pc.billing.subs' | t }}</h1>
+    </div>
+    <app-help-button topic="subscriptions" />
   </header>
 
   <nav class="subnav">
@@ -19,10 +22,11 @@
       <div class="panel-body">
         <div class="cluster wrap">
           <input class="input" [(ngModel)]="form.tenantCode" [placeholder]="'pc.billing.tenantCode' | t" />
-          <select class="input" [(ngModel)]="form.planId">
-            <option [ngValue]="0">{{ 'pc.billing.selectPlan' | t }}</option>
-            @for (p of plans(); track p.id) { <option [ngValue]="p.id">{{ p.name }} ({{ p.code }})</option> }
-          </select>
+          <app-select
+            [options]="planOptions()"
+            [value]="String(form.planId)"
+            (valueChange)="form.planId = +$event"
+            [ariaLabel]="'pc.billing.selectPlan' | t" />
           <input class="input narrow" type="number" min="1" [(ngModel)]="form.seats" [placeholder]="'pc.billing.seats' | t" />
           <input class="input narrow" type="number" min="0" [(ngModel)]="form.trialDays" [placeholder]="'pc.billing.trialDays' | t" />
           <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.tenantCode || !form.planId" (click)="create()">
@@ -36,10 +40,11 @@
   <div class="panel">
     <div class="panel-head filters">
       <div class="cluster">
-        <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
-          <option value="">{{ 'pc.billing.allStatuses' | t }}</option>
-          @for (s of statuses; track s) { <option [value]="s">{{ s }}</option> }
-        </select>
+        <app-select
+          [options]="statusOptions()"
+          [value]="status"
+          (valueChange)="status = $event; applyFilter()"
+          [ariaLabel]="'pc.billing.allStatuses' | t" />
         <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
       </div>
     </div>

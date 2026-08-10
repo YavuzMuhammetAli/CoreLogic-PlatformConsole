@@ -4,7 +4,13 @@
       <span class="eyebrow">{{ 'pc.nav.access' | t }}</span>
       <h1>{{ 'pc.users.title' | t }}</h1>
     </div>
-    <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    <div class="cluster">
+      <app-help-button topic="platformUsers" />
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      @if (canManage) {
+        <a class="btn btn-primary btn-sm" routerLink="/access/platform-users/new">{{ 'pc.users.new' | t }}</a>
+      }
+    </div>
   </header>
 
   <nav class="subnav">
@@ -32,12 +38,17 @@
               <th>{{ 'pc.users.mfa' | t }}</th>
               <th>{{ 'pc.users.status' | t }}</th>
               <th>{{ 'pc.users.lastLogin' | t }}</th>
+              @if (canManage) { <th class="td-actions">{{ 'pc.actions' | t }}</th> }
             </tr>
           </thead>
           <tbody>
             @for (u of users(); track u.id) {
               <tr>
-                <td>{{ u.email }}</td>
+                <td>
+                  @if (canManage) {
+                    <a [routerLink]="['/access/platform-users', u.id]">{{ u.email }}</a>
+                  } @else { {{ u.email }} }
+                </td>
                 <td>{{ (u.name || '') + ' ' + (u.surname || '') }}</td>
                 <td>
                   <div class="cluster">
@@ -59,6 +70,13 @@
                 <td class="mono">
                   {{ u.lastLoginAt ? (u.lastLoginAt | date:'short') : ('pc.users.never' | t) }}
                 </td>
+                @if (canManage) {
+                  <td class="td-actions">
+                    <a class="btn btn-ghost btn-sm" [routerLink]="['/access/platform-users', u.id]">
+                      {{ 'pc.edit' | t }}
+                    </a>
+                  </td>
+                }
               </tr>
             }
           </tbody>

@@ -15,8 +15,23 @@ export interface PlanItem {
   status: string; // Draft | Active | Retired
   version: number;
   isPublic: boolean;
+  /** Yeni tenant provision edilirken otomatik atanan plan (aynı anda tek olabilir). */
+  isDefaultForNewTenants: boolean;
+  /** Otomatik/elle atamada Trial penceresinin gün sayısı. */
+  trialDays: number;
   features: PlanFeatureItem[];
 }
+
+/**
+ * Kapalı özellik kataloğu — backend `Entities.Concrete.Master.FeatureKeys` ile birebir.
+ * PlanManager katalog dışı anahtarı reddeder, bu yüzden UI serbest metin sunmaz.
+ */
+export const FEATURE_KEYS = [
+  'max_users', 'max_models', 'max_storage_gb', 'api_requests_per_day',
+  'ai_tokens_per_month', 'feature_reports', 'feature_api_access'
+] as const;
+
+export const PLAN_STATUSES = ['Draft', 'Active', 'Retired'] as const;
 
 export interface SubscriptionItem {
   id: number;

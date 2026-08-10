@@ -13,6 +13,7 @@ import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dialog.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'summary' | 'provisioning' | 'history' | 'licensing' | 'backups' | 'models' | 'tables';
@@ -37,7 +38,7 @@ interface PendingAction {
 @Component({
   selector: 'app-tenant-detail',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './tenant-detail.component.html',
   styleUrl: './tenant-detail.component.scss'
 })

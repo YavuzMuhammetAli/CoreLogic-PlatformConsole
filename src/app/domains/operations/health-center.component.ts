@@ -4,13 +4,14 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HealthService, healthTone } from './health.service';
 import { HealthTree } from '../../core/models/health.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Health Center (M24) — bileşen sağlık ağacı (platform prob'ları). */
 @Component({
   selector: 'app-health-center',
   standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './health-center.component.html',
   styleUrl: './health-center.component.scss'
 })

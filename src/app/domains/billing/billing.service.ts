@@ -16,13 +16,36 @@ export class BillingService {
   plans(): Observable<ListResponseModel<PlanItem>> {
     return this.http.get<ListResponseModel<PlanItem>>(`${this.base}/plans`);
   }
-  createPlan(dto: { code: string; name: string; description?: string; isPublic: boolean })
+  getPlan(id: number): Observable<DataResponseModel<PlanItem>> {
+    return this.http.get<DataResponseModel<PlanItem>>(`${this.base}/plans/${id}`);
+  }
+  createPlan(dto: { code: string; name: string; description?: string; isPublic: boolean; trialDays: number })
     : Observable<DataResponseModel<number>> {
     return this.http.post<DataResponseModel<number>>(`${this.base}/plans`, dto);
+  }
+  /** Code ve Version değişmez — sürümleme sözleşmesi gereği kimlik sabittir. */
+  updatePlan(id: number, dto: { name: string; description?: string; isPublic: boolean; trialDays: number })
+    : Observable<ResponseModel> {
+    return this.http.put<ResponseModel>(`${this.base}/plans/${id}`, dto);
+  }
+  /** Yalnız abonesi olmayan Draft planlarda başarılı olur. */
+  deletePlan(id: number): Observable<ResponseModel> {
+    return this.http.delete<ResponseModel>(`${this.base}/plans/${id}`);
   }
   setPlanStatus(id: number, status: string): Observable<ResponseModel> {
     const params = new HttpParams().set('status', status);
     return this.http.post<ResponseModel>(`${this.base}/plans/${id}/status`, {}, { params });
+  }
+  setDefaultPlan(id: number): Observable<ResponseModel> {
+    return this.http.post<ResponseModel>(`${this.base}/plans/${id}/set-default`, {});
+  }
+  upsertFeature(planId: number, dto: { featureKey: string; limitValue?: number | null; unit?: string | null })
+    : Observable<ResponseModel> {
+    return this.http.post<ResponseModel>(`${this.base}/plans/${planId}/features`, dto);
+  }
+  removeFeature(planId: number, featureKey: string): Observable<ResponseModel> {
+    return this.http.delete<ResponseModel>(
+      `${this.base}/plans/${planId}/features/${encodeURIComponent(featureKey)}`);
   }
 
   // ── Abonelikler (M36) ──

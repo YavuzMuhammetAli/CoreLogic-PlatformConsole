@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.tenants' | t }}</span>
-    <h1>{{ 'pc.tenants.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.tenants' | t }}</span>
+      <h1>{{ 'pc.tenants.title' | t }}</h1>
+    </div>
+    <app-help-button topic="tenants" />
   </header>
 
   @if (error()) {
@@ -14,12 +17,11 @@
         <input class="input search" type="search" [(ngModel)]="search"
                (keyup.enter)="applyFilter()"
                [placeholder]="'pc.tenants.search' | t" [attr.aria-label]="'pc.tenants.search' | t" />
-        <select class="input" [(ngModel)]="status" (ngModelChange)="applyFilter()">
-          <option value="">{{ 'pc.tenants.allStatuses' | t }}</option>
-          @for (s of statuses; track s) {
-            <option [value]="s">{{ s }}</option>
-          }
-        </select>
+        <app-select
+          [options]="statusOptions()"
+          [value]="status"
+          (valueChange)="status = $event; applyFilter()"
+          [ariaLabel]="'pc.tenants.allStatuses' | t" />
         <button class="btn btn-secondary btn-sm" type="button" (click)="applyFilter()">{{ 'pc.search' | t }}</button>
       </div>
     </div>

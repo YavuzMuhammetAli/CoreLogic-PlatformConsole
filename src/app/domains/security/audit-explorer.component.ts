@@ -1,22 +1,26 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuditService } from './audit.service';
 import { PlatformAuditLogItem } from '../../core/models/platform.models';
 import { StatusBadgeComponent, BadgeTone } from '../../shared/ui/status-badge.component';
+import { SelectComponent, withAllOption } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Denetim kayıtları görüntüleyici (M20) — temel filtre + liste ([06 §6]). */
 @Component({
   selector: 'app-audit-explorer',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './audit-explorer.component.html',
   styleUrl: './audit-explorer.component.scss'
 })
 export class AuditExplorerComponent implements OnInit {
   private readonly service = inject(AuditService);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -31,6 +35,10 @@ export class AuditExplorerComponent implements OnInit {
     'Identity', 'Iam', 'TenantLifecycle', 'Configuration',
     'Commercial', 'Security', 'Operations', 'Support', 'Data'
   ];
+
+  /** Dil değişince etiket de değişsin diye computed. */
+  readonly categoryOptions = computed(() =>
+    withAllOption(this.language.t('pc.audit.filterCategory'), this.categories));
 
   ngOnInit(): void {
     this.load();

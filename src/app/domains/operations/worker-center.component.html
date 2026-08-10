@@ -1,0 +1,131 @@
+<div class="stack page">
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+      <h1>{{ 'pc.workers.title' | t }}</h1>
+    </div>
+    <app-help-button topic="workers" />
+  </header>
+
+  <nav class="subnav">
+    <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/workers" routerLinkActive="active">{{ 'pc.workers.title' | t }}</a>
+    <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
+    <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
+    <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
+    <a routerLink="/operations/registry" routerLinkActive="active">{{ 'pc.registry.title' | t }}</a>
+    <a routerLink="/operations/migrations" routerLinkActive="active">{{ 'pc.mig.title' | t }}</a>
+  </nav>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+  @if (success()) { <div class="alert alert-success" role="status">{{ success() }}</div> }
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>{{ 'pc.workers.list' | t }}</h2>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state"><span class="spinner"></span></div>
+    } @else if (workers().length === 0) {
+      <div class="empty-state">{{ 'pc.workers.empty' | t }}</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.workers.name' | t }}</th>
+              <th>{{ 'pc.workers.status' | t }}</th>
+              <th>{{ 'pc.workers.interval' | t }}</th>
+              <th>{{ 'pc.workers.heartbeat' | t }}</th>
+              <th>{{ 'pc.workers.lastRun' | t }}</th>
+              <th>{{ 'pc.workers.lastError' | t }}</th>
+              <th class="td-actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (w of workers(); track w.name) {
+              <tr>
+                <td>
+                  <div class="worker-name">
+                    <span class="mono">{{ w.name }}</span>
+                    @if (w.lastOwner) { <span class="worker-owner">{{ w.lastOwner }}</span> }
+                    @if (w.isCritical && !w.enabled) {
+                      <span class="critical-flag">{{ 'pc.workers.criticalPaused' | t }}</span>
+                    }
+                  </div>
+                </td>
+
+                <td><app-status-badge [tone]="tone(w.status)" [label]="'pc.workers.state.' + w.status | t" /></td>
+
+                <td>
+                  @if (canManage) {
+                    <div class="interval-cell">
+                      <input class="input interval-input" type="number" inputmode="numeric"
+                             [attr.aria-label]="'pc.workers.interval' | t"
+                             [placeholder]="w.defaultIntervalSeconds"
+                             [ngModel]="intervalDraft(w.name)"
+                             (ngModelChange)="onIntervalChange(w.name, $event)" />
+                      <button class="btn btn-ghost btn-sm" type="button"
+                              [disabled]="busyName() === w.name" (click)="saveInterval(w)">
+                        {{ 'pc.save' | t }}
+                      </button>
+                      <span class="interval-hint">
+                        {{ 'pc.workers.defaultHint' | t:{ seconds: w.defaultIntervalSeconds } }}
+                      </span>
+                    </div>
+                  } @else {
+                    <span class="mono">{{ w.effectiveIntervalSeconds }}{{ 'pc.workers.secondsSuffix' | t }}</span>
+                  }
+                </td>
+
+                <td class="mono nowrap">{{ w.lastHeartbeatAt ? (w.lastHeartbeatAt | date:'short') : '—' }}</td>
+                <td class="mono nowrap">{{ w.lastRunAt ? (w.lastRunAt | date:'short') : '—' }}</td>
+
+                <td>
+                  @if (w.lastError) {
+                    <span class="error-cell" [title]="w.lastError">{{ w.lastError }}</span>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+
+                <td class="td-actions">
+                  @if (canManage) {
+                    <button class="btn btn-sm" [class.btn-secondary]="w.enabled" [class.btn-primary]="!w.enabled"
+                            type="button" [disabled]="busyName() === w.name" (click)="toggleEnabled(w)">
+                      {{ (w.enabled ? 'pc.workers.pause' : 'pc.workers.resume') | t }}
+                    </button>
+                    <button class="btn btn-ghost btn-sm" type="button"
+                            [disabled]="busyName() === w.name || !w.enabled" (click)="reset(w)">
+                      {{ 'pc.workers.reset' | t }}
+                    </button>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel-body">
+        <p class="muted">{{ 'pc.workers.resetHint' | t }}</p>
+        <p class="muted">{{ 'pc.workers.heartbeatHint' | t }}</p>
+      </div>
+    }
+  </div>
+</div>
+
+@if (confirmTarget(); as target) {
+  <app-confirm-danger-dialog
+    [title]="'pc.workers.confirmTitle' | t:{ name: target.name }"
+    [message]="target.impact"
+    [confirmLabel]="'pc.workers.pause' | t"
+    [danger]="true"
+    [busy]="busyName() === target.name"
+    (confirmed)="confirmDisable()"
+    (cancelled)="cancelConfirm()" />
+}

@@ -1,11 +1,15 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
-    <h1>{{ 'pc.mig.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.operations' | t }}</span>
+      <h1>{{ 'pc.mig.title' | t }}</h1>
+    </div>
+    <app-help-button topic="migrations" />
   </header>
 
   <nav class="subnav">
     <a routerLink="/operations/jobs" routerLinkActive="active">{{ 'pc.jobs.title' | t }}</a>
+    <a routerLink="/operations/workers" routerLinkActive="active">{{ 'pc.workers.title' | t }}</a>
     <a routerLink="/operations/health" routerLinkActive="active">{{ 'pc.health.title' | t }}</a>
     <a routerLink="/operations/alerts" routerLinkActive="active">{{ 'pc.alerts.title' | t }}</a>
     <a routerLink="/operations/notifications" routerLinkActive="active">{{ 'pc.notif.title' | t }}</a>
@@ -14,6 +18,7 @@
   </nav>
 
   @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+  @if (success()) { <div class="alert alert-success" role="status">{{ success() }}</div> }
 
   @if (canManage) {
     <section class="panel">
@@ -22,11 +27,67 @@
         <div class="cluster wrap">
           <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.takePreBackup" /> {{ 'pc.mig.preBackup' | t }}</label>
           <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.stopOnFailure" /> {{ 'pc.mig.stopOnFailure' | t }}</label>
-          <button class="btn btn-primary btn-sm" [disabled]="running()" (click)="start()">
-            {{ running() ? ('pc.mig.running' | t) : ('pc.mig.start' | t) }}
+          <button class="btn btn-primary btn-sm" [disabled]="submitting()" (click)="start()">
+            {{ submitting() ? ('pc.mig.queueing' | t) : ('pc.mig.start' | t) }}
           </button>
         </div>
         <p class="muted">{{ 'pc.mig.waveHint' | t }}</p>
+        <p class="muted">{{ 'pc.mig.asyncHint' | t }}</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.mig.schedule' | t }}</h2></div>
+      <div class="panel-body stack">
+        <div class="cluster wrap">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="scheduleForm.enabled" /> {{ 'pc.mig.scheduleEnabled' | t }}
+          </label>
+        </div>
+
+        <div class="cluster wrap">
+          <div class="field">
+            <label for="mig-cron">{{ 'pc.mig.cron' | t }}</label>
+            <input id="mig-cron" class="input mono" type="text" [(ngModel)]="scheduleForm.cronExpression" />
+            <span class="field-help">{{ 'pc.mig.cronHint' | t }}</span>
+          </div>
+          <div class="field">
+            <label for="mig-tz">{{ 'pc.mig.timeZone' | t }}</label>
+            <input id="mig-tz" class="input mono" type="text" [(ngModel)]="scheduleForm.timeZoneId" />
+            <span class="field-help">{{ 'pc.mig.timeZoneHint' | t }}</span>
+          </div>
+        </div>
+
+        <div class="cluster wrap">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="scheduleForm.takePreBackup" /> {{ 'pc.mig.preBackup' | t }}
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="scheduleForm.stopOnFailure" /> {{ 'pc.mig.stopOnFailure' | t }}
+          </label>
+          <button class="btn btn-primary btn-sm" [disabled]="savingSchedule()" (click)="saveSchedule()">
+            {{ 'pc.save' | t }}
+          </button>
+        </div>
+
+        @if (schedule(); as s) {
+          @if (s.nextOccurrences.length > 0) {
+            <div>
+              <span class="muted">{{ 'pc.mig.nextRuns' | t }}</span>
+              <ul class="next-runs">
+                @for (n of s.nextOccurrences; track n) {
+                  <li class="mono">{{ n | date:'medium' }}</li>
+                }
+              </ul>
+            </div>
+          }
+          @if (s.lastRunAt) {
+            <p class="muted">{{ 'pc.mig.scheduleLastRun' | t }} {{ s.lastRunAt | date:'short' }}</p>
+          }
+          @if (!s.enabled) {
+            <p class="muted">{{ 'pc.mig.scheduleOffHint' | t }}</p>
+          }
+        }
       </div>
     </section>
   }
@@ -43,9 +104,11 @@
           <thead>
             <tr>
               <th>{{ 'pc.mig.status' | t }}</th>
+              <th>{{ 'pc.mig.trigger' | t }}</th>
               <th class="num">{{ 'pc.mig.total' | t }}</th>
               <th class="num">{{ 'pc.mig.ok' | t }}</th>
               <th class="num">{{ 'pc.mig.failed' | t }}</th>
+              <th class="num">{{ 'pc.mig.skipped' | t }}</th>
               <th>{{ 'pc.mig.started' | t }}</th>
               <th class="td-actions"></th>
             </tr>
@@ -53,10 +116,12 @@
           <tbody>
             @for (r of runs(); track r.id) {
               <tr>
-                <td><app-status-badge [tone]="tone(r.status)" [label]="r.status" /></td>
+                <td><app-status-badge [tone]="tone(r.status)" [label]="'pc.mig.state.' + r.status | t" /></td>
+                <td class="muted">{{ 'pc.mig.trigger.' + r.trigger | t }}</td>
                 <td class="mono num">{{ r.totalTenants }}</td>
                 <td class="mono num">{{ r.succeededCount }}</td>
                 <td class="mono num">{{ r.failedCount }}</td>
+                <td class="mono num">{{ r.skippedCount }}</td>
                 <td class="mono nowrap">{{ r.startedAt | date:'short' }}</td>
                 <td class="td-actions">
                   <button class="btn btn-ghost btn-sm" type="button" (click)="open(r)">{{ 'pc.mig.detail' | t }}</button>
@@ -95,7 +160,7 @@
                 <td class="mono">{{ i.tenantId }}</td>
                 <td class="mono num">{{ i.fromVersion }}</td>
                 <td class="mono num">{{ i.toVersion }}</td>
-                <td><app-status-badge [tone]="tone(i.status)" [label]="i.status" /></td>
+                <td><app-status-badge [tone]="tone(i.status)" [label]="'pc.mig.state.' + i.status | t" /></td>
                 <td class="muted">{{ i.error || '—' }}</td>
               </tr>
             }

@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
-    <h1>{{ 'pc.comp.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.security' | t }}</span>
+      <h1>{{ 'pc.comp.title' | t }}</h1>
+    </div>
+    <app-help-button topic="compliance" />
   </header>
 
   <nav class="subnav">
@@ -17,9 +20,10 @@
       <div class="panel-head"><h2>{{ 'pc.comp.newRequest' | t }}</h2></div>
       <div class="panel-body">
         <div class="cluster wrap">
-          <select class="input" [(ngModel)]="form.type">
-            @for (t of types; track t) { <option [value]="t">{{ t }}</option> }
-          </select>
+          <app-select
+            [options]="types"
+            [(value)]="form.type"
+            [ariaLabel]="'pc.comp.type' | t" />
           <input class="input" [(ngModel)]="form.tenantId" [placeholder]="'pc.comp.tenant' | t" />
           <input class="input" [(ngModel)]="form.subjectRef" [placeholder]="'pc.comp.subject' | t" />
           <input class="input grow" [(ngModel)]="form.reason" [placeholder]="'pc.comp.reason' | t" />
@@ -31,13 +35,11 @@
 
   <div class="panel">
     <div class="panel-head filters">
-      <select class="input" [(ngModel)]="status" (ngModelChange)="load()">
-        <option value="">{{ 'pc.comp.allStatuses' | t }}</option>
-        <option value="Open">Open</option>
-        <option value="InProgress">InProgress</option>
-        <option value="Completed">Completed</option>
-        <option value="Rejected">Rejected</option>
-      </select>
+      <app-select
+        [options]="statusOptions()"
+        [value]="status"
+        (valueChange)="status = $event; load()"
+        [ariaLabel]="'pc.comp.allStatuses' | t" />
       <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
     </div>
     @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }

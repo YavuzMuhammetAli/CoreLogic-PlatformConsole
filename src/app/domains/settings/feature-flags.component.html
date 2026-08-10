@@ -1,7 +1,10 @@
 <div class="stack page">
-  <header class="page-head">
-    <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
-    <h1>{{ 'pc.flags.title' | t }}</h1>
+  <header class="page-head page-head-row">
+    <div>
+      <span class="eyebrow">{{ 'pc.nav.settings' | t }}</span>
+      <h1>{{ 'pc.flags.title' | t }}</h1>
+    </div>
+    <app-help-button topic="flags" />
   </header>
 
   <nav class="subnav">
@@ -68,9 +71,10 @@
           <input class="input" [(ngModel)]="createForm.key" [placeholder]="'pc.flags.key' | t" />
           <input class="input" [(ngModel)]="createForm.description" [placeholder]="'pc.flags.desc' | t" />
           <div class="cluster">
-            <select class="input" [(ngModel)]="createForm.defaultState">
-              @for (s of states; track s) { <option [value]="s">{{ s }}</option> }
-            </select>
+            <app-select
+              [options]="states"
+              [(value)]="createForm.defaultState"
+              [ariaLabel]="'pc.flags.state' | t" />
             @if (createForm.defaultState === 'Percentage') {
               <input class="input narrow" type="number" min="0" max="100" [(ngModel)]="createForm.percentage" placeholder="%" />
             }
@@ -87,10 +91,10 @@
           <input class="input" [(ngModel)]="ovForm.key" [placeholder]="'pc.flags.flagKey' | t" />
           <input class="input" [(ngModel)]="ovForm.tenantId" [placeholder]="'pc.flags.tenantCode' | t" />
           <div class="cluster">
-            <select class="input" [(ngModel)]="ovForm.state">
-              <option value="On">On</option>
-              <option value="Off">Off</option>
-            </select>
+            <app-select
+              [options]="overrideStates"
+              [(value)]="ovForm.state"
+              [ariaLabel]="'pc.flags.state' | t" />
             <input class="input grow" [(ngModel)]="ovForm.reason" [placeholder]="'pc.flags.reason' | t" />
             <button class="btn btn-primary btn-sm" [disabled]="!ovForm.key || !ovForm.tenantId" (click)="addOverride()">
               {{ 'pc.flags.apply' | t }}

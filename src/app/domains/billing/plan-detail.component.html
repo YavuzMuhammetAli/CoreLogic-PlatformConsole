@@ -1,0 +1,180 @@
+<div class="stack page">
+  <a class="back" routerLink="/billing/plans">← {{ 'pc.billing.plans' | t }}</a>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+  @if (notice()) { <div class="alert alert-success" role="status">{{ notice() }}</div> }
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else {
+  @if (plan(); as p) {
+    <header class="detail-head">
+      <div class="stack" style="gap: var(--space-1)">
+        <span class="eyebrow">{{ 'pc.billing.plans' | t }}</span>
+        <h1>{{ p.name }}</h1>
+        <span class="muted mono">{{ p.code }} v{{ p.version }}</span>
+      </div>
+      <div class="cluster">
+        @if (p.isDefaultForNewTenants) {
+          <span class="badge badge-meta">{{ 'pc.billing.isDefault' | t }}</span>
+        }
+        <app-status-badge [tone]="tone(p.status)" [label]="p.status" />
+        <app-help-button topic="plans" />
+      </div>
+    </header>
+
+    <!-- ── Kimlik ────────────────────────────────────────────────────────────
+         Kod ve sürüm salt-okur: UQ_Plan_Code_Version gereği plan kimliği sabittir,
+         limit/fiyat değişimi yeni bir sürüm satırı olarak açılır. -->
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.billing.planInfo' | t }}</h2></div>
+      <div class="panel-body stack">
+        <div class="grid2">
+          <div class="field">
+            <label for="plan-name">{{ 'pc.billing.name' | t }}</label>
+            <input id="plan-name" class="input" [(ngModel)]="form.name" [disabled]="!canWrite" />
+          </div>
+          <div class="field">
+            <label for="plan-trial">{{ 'pc.billing.trialDays' | t }}</label>
+            <input id="plan-trial" class="input" type="number" min="0"
+                   [(ngModel)]="form.trialDays" [disabled]="!canWrite" />
+            <span class="field-help">{{ 'pc.billing.trialDaysHelp' | t }}</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="plan-desc">{{ 'pc.billing.desc' | t }}</label>
+          <input id="plan-desc" class="input" [(ngModel)]="form.description" [disabled]="!canWrite" />
+        </div>
+        <div class="field">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="form.isPublic" [disabled]="!canWrite" />
+            {{ 'pc.billing.public' | t }}
+          </label>
+        </div>
+        <div class="cluster">
+          <span class="muted">{{ 'pc.billing.code' | t }}: <span class="mono">{{ p.code }}</span></span>
+          <span class="muted">{{ 'pc.billing.version' | t }}: <span class="mono">v{{ p.version }}</span></span>
+          <span class="field-help">{{ 'pc.billing.identityLocked' | t }}</span>
+        </div>
+        @if (canWrite) {
+          <div class="cluster">
+            <button class="btn btn-primary btn-sm" [disabled]="busy() || !form.name" (click)="save()">
+              {{ 'pc.save' | t }}
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ── Özellik / kota editörü ───────────────────────────────────────────── -->
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.billing.features' | t }}</h2></div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'pc.billing.featureKey' | t }}</th>
+              <th>{{ 'pc.billing.limit' | t }}</th>
+              <th>{{ 'pc.billing.unit' | t }}</th>
+              @if (canWrite) { <th class="td-actions">{{ 'pc.actions' | t }}</th> }
+            </tr>
+          </thead>
+          <tbody>
+            @for (f of p.features; track f.featureKey) {
+              <tr>
+                <td class="mono">{{ f.featureKey }}</td>
+                <td>{{ featureLabel(f) }}</td>
+                <td class="muted">{{ f.unit || '—' }}</td>
+                @if (canWrite) {
+                  <td class="td-actions">
+                    <button class="btn btn-ghost btn-sm" [disabled]="busy()" (click)="editFeature(f)">
+                      {{ 'pc.edit' | t }}
+                    </button>
+                    <button class="btn btn-danger btn-sm" [disabled]="busy()" (click)="removeFeature(f)">
+                      {{ 'pc.delete' | t }}
+                    </button>
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td [attr.colspan]="canWrite ? 4 : 3" class="muted">{{ 'pc.billing.noFeatures' | t }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (canWrite) {
+        <div class="panel-body">
+          <div class="cluster wrap">
+            <!-- Katalog kapalı: backend katalog dışı anahtarı reddediyor. -->
+            <app-select
+              [options]="featureKeys"
+              [(value)]="featureForm.featureKey"
+              [ariaLabel]="'pc.billing.featureKey' | t" />
+            <input class="input narrow" type="number" [(ngModel)]="featureForm.limitValue"
+                   [placeholder]="'pc.billing.limit' | t" />
+            <input class="input narrow" [(ngModel)]="featureForm.unit"
+                   [placeholder]="'pc.billing.unit' | t" />
+            <button class="btn btn-primary btn-sm" [disabled]="busy()" (click)="saveFeature()">
+              {{ 'pc.billing.saveFeature' | t }}
+            </button>
+          </div>
+          <span class="field-help">{{ 'pc.billing.limitHelp' | t }}</span>
+        </div>
+      }
+    </section>
+
+    <!-- ── Yaşam döngüsü ────────────────────────────────────────────────────── -->
+    @if (canWrite) {
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.billing.lifecycle' | t }}</h2></div>
+        <div class="panel-body stack">
+          <div class="cluster wrap">
+            @if (p.status !== 'Active') {
+              <button class="btn btn-secondary btn-sm" [disabled]="busy()" (click)="setStatus('Active')">
+                {{ 'pc.billing.activate' | t }}
+              </button>
+            }
+            @if (p.status !== 'Retired' && canLeaveActive()) {
+              <button class="btn btn-ghost btn-sm" [disabled]="busy()" (click)="setStatus('Retired')">
+                {{ 'pc.billing.retire' | t }}
+              </button>
+            }
+            @if (p.status === 'Active' && !p.isDefaultForNewTenants) {
+              <button class="btn btn-secondary btn-sm" [disabled]="busy()" (click)="setDefault()">
+                {{ 'pc.billing.makeDefault' | t }}
+              </button>
+            }
+            @if (p.status === 'Draft') {
+              <button class="btn btn-danger btn-sm" [disabled]="busy()" (click)="confirmDelete.set(true)">
+                {{ 'pc.delete' | t }}
+              </button>
+            }
+          </div>
+
+          @if (p.isDefaultForNewTenants) {
+            <div class="alert alert-info">{{ 'pc.billing.defaultPlanNote' | t }}</div>
+          }
+          @if (p.status !== 'Draft') {
+            <span class="field-help">{{ 'pc.billing.deleteOnlyDraft' | t }}</span>
+          }
+        </div>
+      </section>
+    }
+  }
+  }
+</div>
+
+@if (confirmDelete()) {
+  <app-confirm-danger-dialog
+    [title]="'pc.billing.deletePlanTitle' | t"
+    [message]="'pc.billing.deletePlanMsg' | t"
+    [confirmLabel]="'pc.delete' | t"
+    [confirmCode]="plan()?.code ?? null"
+    [danger]="true"
+    [busy]="busy()"
+    (confirmed)="deletePlan()"
+    (cancelled)="confirmDelete.set(false)" />
+}

@@ -292,6 +292,19 @@ a { color: var(--accent); text-decoration: none; }
 .alert-info { background: var(--meta-bg); color: var(--meta); border-color: var(--alert-info-border); }
 
 /* ---- Yardımcılar ---- */
+/* Her route şablonu `.stack.page` ile başlar. Sayfa, shell'in içerik kolonunu
+   (grid `1fr`) tamamen doldurur — component SCSS'lerinde max-width KOYMA:
+   yatay ortalama olmadığı için sağda ölü alan bırakır. */
+.page { width: 100%; }
+/* Başlık + sağda "Nasıl çalışır?" düğmesi. `.page-head`'in kendisi her component'te
+   ayrı stillendiği için yerleşim ayrı bir sınıfa alındı. */
+.page-head-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
 .stack { display: flex; flex-direction: column; gap: var(--space-4); }
 .cluster { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
 .eyebrow {

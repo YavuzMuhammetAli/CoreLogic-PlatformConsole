@@ -1,22 +1,26 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TenantsService, tenantStatusTone, healthTone } from './tenants.service';
 import { PagedResult, TenantSummary, TENANT_STATUSES } from '../../core/models/tenant.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent, withAllOption } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Tenant Directory listesi (M02) — arama/durum filtresi + sayfalama. */
 @Component({
   selector: 'app-tenant-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './tenant-list.component.html',
   styleUrl: './tenant-list.component.scss'
 })
 export class TenantListComponent implements OnInit {
   private readonly service = inject(TenantsService);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -25,6 +29,9 @@ export class TenantListComponent implements OnInit {
   readonly statuses = TENANT_STATUSES;
   readonly tone = tenantStatusTone;
   readonly hTone = healthTone;
+  /** Dil değişince etiket de değişsin diye computed. */
+  readonly statusOptions = computed(() =>
+    withAllOption(this.language.t('pc.tenants.allStatuses'), this.statuses));
 
   search = '';
   status = '';

@@ -6,13 +6,14 @@ import { PlanItem } from '../../core/models/commerce.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Plan kataloğu (M35) — liste + özellik/kota + durum geçişi + yeni plan taslağı. */
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './plans.component.html',
   styleUrl: './billing.component.scss'
 })
@@ -29,7 +30,7 @@ export class PlansComponent implements OnInit {
   readonly tone = planStatusTone;
   readonly canWrite = this.store.has(Cap.BillingWrite);
 
-  form = { code: '', name: '', description: '', isPublic: true };
+  form = { code: '', name: '', description: '', isPublic: true, trialDays: 14 };
 
   ngOnInit(): void { this.load(); }
 
@@ -50,7 +51,7 @@ export class PlansComponent implements OnInit {
     if (!this.form.code || !this.form.name) return;
     this.creating.set(true);
     this.service.createPlan({ ...this.form }).subscribe({
-      next: () => { this.creating.set(false); this.form = { code: '', name: '', description: '', isPublic: true }; this.load(); },
+      next: () => { this.creating.set(false); this.form = { code: '', name: '', description: '', isPublic: true, trialDays: 14 }; this.load(); },
       error: err => { this.creating.set(false); this.error.set(err?.error?.message ?? 'Oluşturulamadı'); }
     });
   }

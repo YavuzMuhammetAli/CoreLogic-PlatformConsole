@@ -1,0 +1,154 @@
+<div class="stack page">
+  <a class="back" routerLink="/access/platform-users">← {{ 'pc.users.title' | t }}</a>
+
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+  @if (notice()) { <div class="alert alert-success" role="status">{{ notice() }}</div> }
+
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else {
+    <header class="detail-head">
+      <div class="stack" style="gap: var(--space-1)">
+        <span class="eyebrow">{{ 'pc.nav.access' | t }}</span>
+        <h1>{{ isNew() ? ('pc.users.new' | t) : (user()?.email) }}</h1>
+      </div>
+      <div class="cluster">
+        @if (!isNew() && user(); as u) {
+          <app-status-badge [tone]="u.active ? 'success' : 'danger'"
+                            [label]="u.active ? ('pc.users.active' | t) : ('pc.users.inactive' | t)" />
+          <app-status-badge [tone]="u.mfaEnrolled ? 'success' : 'warn'"
+                            [label]="u.mfaEnrolled ? ('pc.users.mfaOn' | t) : ('pc.users.mfaOff' | t)" />
+        }
+        <app-help-button topic="platformUsers" />
+      </div>
+    </header>
+
+    <!-- ── Kimlik ────────────────────────────────────────────────────────────── -->
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.users.identity' | t }}</h2></div>
+      <div class="panel-body stack">
+        <div class="grid2">
+          <div class="field">
+            <label for="u-email">{{ 'pc.users.email' | t }}</label>
+            <input id="u-email" class="input" type="email" [(ngModel)]="form.email" autocomplete="off" />
+          </div>
+          @if (isNew()) {
+            <div class="field">
+              <label for="u-pass">{{ 'pc.users.password' | t }}</label>
+              <input id="u-pass" class="input" type="password" [(ngModel)]="form.password" autocomplete="new-password" />
+              <span class="field-help">{{ 'pc.users.passwordHelp' | t }}</span>
+            </div>
+          }
+          <div class="field">
+            <label for="u-name">{{ 'pc.users.name' | t }}</label>
+            <input id="u-name" class="input" [(ngModel)]="form.name" />
+          </div>
+          <div class="field">
+            <label for="u-surname">{{ 'pc.users.surname' | t }}</label>
+            <input id="u-surname" class="input" [(ngModel)]="form.surname" />
+          </div>
+        </div>
+        @if (isNew()) {
+          <div class="alert alert-info">{{ 'pc.users.mfaEnrollNote' | t }}</div>
+        }
+      </div>
+    </section>
+
+    <!-- ── Roller + canlı yetenek önizlemesi ─────────────────────────────────── -->
+    <section class="panel">
+      <div class="panel-head"><h2>{{ 'pc.users.roles' | t }}</h2></div>
+      <div class="panel-body stack">
+        <div class="role-grid">
+          @for (r of roleCatalog(); track r.role) {
+            <label class="role-option" [class.is-on]="hasRole(r.role)">
+              @if (isNew()) {
+                <input type="checkbox" [checked]="hasRole(r.role)" (change)="toggleRole(r.role)" />
+              } @else {
+                <input type="checkbox" [checked]="hasRole(r.role)" [disabled]="busy()"
+                       (change)="hasRole(r.role) ? revokeRole(r.role) : grantRole(r.role)" />
+              }
+              <span class="role-name">{{ r.role }}</span>
+              <span class="role-count">{{ 'pc.users.capCount' | t:{ n: r.capabilities.length } }}</span>
+            </label>
+          } @empty { <span class="muted">{{ 'pc.users.noRoles' | t }}</span> }
+        </div>
+
+        <!-- Matris backend'de derlenmiş; burada yalnızca gösterilir. -->
+        <div class="cap-preview stack">
+          <strong>{{ 'pc.users.effectiveCaps' | t:{ n: effectiveCapabilities().length } }}</strong>
+          <div class="cluster wrap">
+            @for (c of effectiveCapabilities(); track c) {
+              <span class="badge badge-meta mono">{{ c }}</span>
+            } @empty { <span class="muted">{{ 'pc.users.noCaps' | t }}</span> }
+          </div>
+        </div>
+
+        @if (isSelf()) {
+          <div class="alert alert-warn">{{ 'pc.users.selfEditWarn' | t }}</div>
+        }
+      </div>
+    </section>
+
+    <!-- ── Eylemler ──────────────────────────────────────────────────────────── -->
+    @if (isNew()) {
+      <div class="cluster">
+        <button class="btn btn-primary" [disabled]="busy() || !form.email || !form.password" (click)="create()">
+          {{ 'pc.users.create' | t }}
+        </button>
+        <a class="btn btn-ghost" routerLink="/access/platform-users">{{ 'pc.cancel' | t }}</a>
+      </div>
+    } @else {
+    @if (user(); as u) {
+      <div class="cluster">
+        <button class="btn btn-primary" [disabled]="busy() || !form.email" (click)="save()">
+          {{ 'pc.save' | t }}
+        </button>
+      </div>
+
+      <section class="panel">
+        <div class="panel-head"><h2>{{ 'pc.users.accountActions' | t }}</h2></div>
+        <div class="panel-body stack">
+          <div class="cluster wrap">
+            @if (u.active) {
+              <button class="btn btn-danger btn-sm" [disabled]="busy() || isSelf()"
+                      (click)="pending.set('deactivate')">
+                {{ 'pc.users.deactivate' | t }}
+              </button>
+            } @else {
+              <button class="btn btn-secondary btn-sm" [disabled]="busy()" (click)="activate()">
+                {{ 'pc.users.activate' | t }}
+              </button>
+            }
+            <button class="btn btn-ghost btn-sm" [disabled]="busy() || !u.mfaEnrolled"
+                    (click)="pending.set('reset-mfa')">
+              {{ 'pc.users.resetMfa' | t }}
+            </button>
+          </div>
+          <span class="field-help">{{ 'pc.users.resetMfaHelp' | t }}</span>
+
+          <div class="cluster wrap">
+            <input class="input narrow" type="password" [(ngModel)]="newPassword"
+                   autocomplete="new-password" [placeholder]="'pc.users.newPassword' | t" />
+            <button class="btn btn-ghost btn-sm" [disabled]="busy() || !newPassword"
+                    (click)="pending.set('reset-password')">
+              {{ 'pc.users.resetPassword' | t }}
+            </button>
+          </div>
+          <span class="field-help">{{ 'pc.users.resetPasswordHelp' | t }}</span>
+        </div>
+      </section>
+    }
+    }
+  }
+</div>
+
+@if (pending(); as action) {
+  <app-confirm-danger-dialog
+    [title]="('pc.users.confirm.' + action + '.title') | t"
+    [message]="('pc.users.confirm.' + action + '.msg') | t"
+    [confirmLabel]="'pc.confirm' | t"
+    [danger]="true"
+    [busy]="busy()"
+    (confirmed)="confirmPending()"
+    (cancelled)="pending.set(null)" />
+}

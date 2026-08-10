@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { RegistryService } from './registry.service';
 import { TenantModelSummaryItem, TenantDriftItem } from '../../core/models/registry.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'drift' | 'matrix';
@@ -12,7 +13,7 @@ type Tab = 'drift' | 'matrix';
 @Component({
   selector: 'app-model-registry',
   standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './model-registry.component.html',
   styleUrl: './alert-center.component.scss'
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -7,19 +7,23 @@ import { ImpersonationGrantItem } from '../../core/models/impersonation.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent, withAllOption } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Support & Impersonation (M17) — talep/onay/basım/iptal iş akışı (görev ayrılığı). */
 @Component({
   selector: 'app-impersonation',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './impersonation.component.html',
   styleUrl: './impersonation.component.scss'
 })
 export class ImpersonationComponent implements OnInit {
   private readonly service = inject(ImpersonationService);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -30,6 +34,10 @@ export class ImpersonationComponent implements OnInit {
   readonly tone = grantStatusTone;
   readonly canRequest = this.store.has(Cap.ImpersonationRequest);
   readonly canApprove = this.store.has(Cap.ImpersonationApprove);
+  /** Talep FSM durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
+  readonly statusOptions = computed(() =>
+    withAllOption(this.language.t('pc.imp.allStatuses'),
+      ['Requested', 'Approved', 'ActiveUse', 'Expired', 'Revoked', 'Denied']));
 
   status = '';
   form = { tenantId: '', targetUserId: null as number | null, reason: '', hours: 1 };

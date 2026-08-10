@@ -1,0 +1,55 @@
+<button
+  #trigger
+  type="button"
+  class="select-trigger"
+  role="combobox"
+  aria-haspopup="listbox"
+  [class.is-open]="open()"
+  [disabled]="disabled()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="listId"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.aria-activedescendant]="open() && activeIndex() >= 0 ? optionId(activeIndex()) : null"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)">
+  <span class="select-value" [class.is-placeholder]="!selected()">
+    {{ selected()?.label ?? placeholder() }}
+  </span>
+  <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 9l6 6 6-6"></path>
+  </svg>
+</button>
+
+<!-- position: fixed — panel/tablo/shell kaydırma kaplarının kırpmasından kaçar.
+     Koordinatlar TS'te hesaplanır ve viewport'a kelepçelenir. -->
+@if (open()) {
+  <ul
+    #list
+    class="select-list"
+    role="listbox"
+    [id]="listId"
+    [style.top.px]="top()"
+    [style.left.px]="left()"
+    [style.width.px]="width()"
+    [style.max-height.px]="maxHeight()">
+    @for (option of normalized(); track option.value; let i = $index) {
+      <li
+        class="select-option"
+        role="option"
+        [id]="optionId(i)"
+        [class.is-active]="i === activeIndex()"
+        [attr.aria-selected]="option.value === value()"
+        (mouseenter)="activeIndex.set(i)"
+        (click)="choose(i)">
+        <span class="select-option-label">{{ option.label }}</span>
+        @if (option.value === value()) {
+          <svg class="select-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        }
+      </li>
+    }
+  </ul>
+}

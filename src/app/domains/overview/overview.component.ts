@@ -10,6 +10,7 @@ import { HealthTree } from '../../core/models/health.models';
 import { AlertItem } from '../../core/models/alert.models';
 import { RouteMetric } from '../../core/models/telemetry.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /**
@@ -20,7 +21,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -7,6 +7,9 @@ import { LoginAttemptItem, SecurityEventItem, IpAccessRuleItem } from '../../cor
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent, withAllOption } from '../../shared/ui/select/select.component';
+import { LanguageService } from '../../services/language.service';
+import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'attempts' | 'events' | 'iprules';
@@ -15,13 +18,14 @@ type Tab = 'attempts' | 'events' | 'iprules';
 @Component({
   selector: 'app-security-center',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './security-center.component.html',
   styleUrl: './security-center.component.scss'
 })
 export class SecurityCenterComponent implements OnInit {
   private readonly service = inject(SecurityCenterService);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
 
   readonly tab = signal<Tab>('events');
   readonly loading = signal(true);
@@ -33,6 +37,11 @@ export class SecurityCenterComponent implements OnInit {
 
   readonly evtTone = eventStatusTone;
   readonly canManage = this.store.has(Cap.SecurityManage);
+  /** Tehdit olayı durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
+  readonly eventStatusOptions = computed(() =>
+    withAllOption(this.language.t('pc.sec.allStatuses'),
+      ['Open', 'Reviewed', 'Dismissed', 'Escalated']));
+  readonly ipActions = ['Deny', 'Allow'];
 
   attemptEmail = '';
   attemptIp = '';

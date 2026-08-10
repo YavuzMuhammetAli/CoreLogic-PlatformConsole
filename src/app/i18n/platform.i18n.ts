@@ -10,7 +10,14 @@ export const PLATFORM_I18N: Translations = {
   'pc.logout': { tr: 'Çıkış', en: 'Sign out' },
   'pc.cancel': { tr: 'İptal', en: 'Cancel' },
   'pc.save': { tr: 'Kaydet', en: 'Save' },
+  'pc.edit': { tr: 'Düzenle', en: 'Edit' },
+  'pc.delete': { tr: 'Sil', en: 'Delete' },
+  'pc.confirm': { tr: 'Onayla', en: 'Confirm' },
+  'pc.close': { tr: 'Kapat', en: 'Close' },
   'pc.actions': { tr: 'İşlemler', en: 'Actions' },
+  'pc.loadFailed': { tr: 'Yüklenemedi.', en: 'Could not load.' },
+  'pc.actionFailed': { tr: 'İşlem başarısız.', en: 'Action failed.' },
+  'pc.createFailed': { tr: 'Oluşturulamadı.', en: 'Could not create.' },
   'pc.comingSoon': { tr: 'Yakında', en: 'Coming soon' },
   'pc.comingSoonDesc': { tr: 'Bu modül sonraki fazlarda kullanıma açılacak.', en: 'This module will arrive in a later phase.' },
   'pc.noData': { tr: 'Kayıt yok', en: 'No records' },
@@ -76,6 +83,58 @@ export const PLATFORM_I18N: Translations = {
   'pc.users.enrolled': { tr: 'Kurulu', en: 'Enrolled' },
   'pc.users.notEnrolled': { tr: 'Kurulu değil', en: 'Not enrolled' },
   'pc.users.never': { tr: 'Hiç', en: 'Never' },
+  'pc.users.new': { tr: 'Yeni kullanıcı', en: 'New user' },
+  'pc.users.create': { tr: 'Kullanıcı oluştur', en: 'Create user' },
+  'pc.users.identity': { tr: 'Kimlik', en: 'Identity' },
+  'pc.users.surname': { tr: 'Soyad', en: 'Surname' },
+  'pc.users.password': { tr: 'Başlangıç parolası', en: 'Initial password' },
+  'pc.users.passwordHelp': {
+    tr: 'Parolayı siz belirlersiniz ve kullanıcıya kendi kanalınızdan iletirsiniz; kullanıcı profilinden değiştirebilir.',
+    en: 'You set the password and share it through your own channel; the user can change it from their profile.'
+  },
+  'pc.users.mfaOn': { tr: 'MFA kurulu', en: 'MFA enrolled' },
+  'pc.users.mfaOff': { tr: 'MFA kurulu değil', en: 'MFA not enrolled' },
+  'pc.users.mfaEnrollNote': {
+    tr: 'MFA kurulumu burada yapılmaz: kullanıcı ilk girişinde kendi authenticator kaydını oluşturur.',
+    en: 'MFA is not set up here: the user enrolls their own authenticator at first sign-in.'
+  },
+  'pc.users.noRoles': { tr: 'Rol kataloğu yüklenemedi.', en: 'Role catalog could not be loaded.' },
+  'pc.users.capCount': { tr: '{n} yetenek', en: '{n} capabilities' },
+  'pc.users.effectiveCaps': { tr: 'Bu seçimle verilen yetkiler ({n})', en: 'Capabilities granted by this selection ({n})' },
+  'pc.users.noCaps': { tr: 'Rol seçilmedi — kullanıcı hiçbir ekranı göremez.', en: 'No roles selected — the user will see no screens.' },
+  'pc.users.selfEditWarn': {
+    tr: 'Kendi hesabınızı düzenliyorsunuz. Kendinizi pasifleştiremez ve kendi PlatformOwner rolünüzü kaldıramazsınız.',
+    en: 'You are editing your own account. You cannot deactivate yourself or remove your own PlatformOwner role.'
+  },
+  'pc.users.accountActions': { tr: 'Hesap eylemleri', en: 'Account actions' },
+  'pc.users.deactivate': { tr: 'Pasifleştir', en: 'Deactivate' },
+  'pc.users.activate': { tr: 'Aktifleştir', en: 'Activate' },
+  'pc.users.resetMfa': { tr: 'MFA sıfırla', en: 'Reset MFA' },
+  'pc.users.resetMfaHelp': {
+    tr: 'Authenticator\'ını kaybeden kullanıcı için. Kayıt silinir, oturumları sonlandırılır ve ilk girişinde yeniden kaydolur.',
+    en: 'For a user who lost their authenticator. The enrollment is deleted, sessions are revoked and they re-enroll at next sign-in.'
+  },
+  'pc.users.newPassword': { tr: 'Yeni parola', en: 'New password' },
+  'pc.users.resetPassword': { tr: 'Parolayı sıfırla', en: 'Reset password' },
+  'pc.users.resetPasswordHelp': {
+    tr: 'Parola sıfırlanınca kullanıcının tüm oturumları sonlandırılır.',
+    en: 'Resetting the password revokes all of the user\'s sessions.'
+  },
+  'pc.users.confirm.deactivate.title': { tr: 'Kullanıcıyı pasifleştir', en: 'Deactivate user' },
+  'pc.users.confirm.deactivate.msg': {
+    tr: 'Kullanıcı giriş yapamaz ve açık oturumları anında sonlandırılır. Daha sonra yeniden aktifleştirebilirsiniz.',
+    en: 'The user cannot sign in and their open sessions are revoked immediately. You can reactivate them later.'
+  },
+  'pc.users.confirm.reset-mfa.title': { tr: 'MFA kaydını sıfırla', en: 'Reset MFA enrollment' },
+  'pc.users.confirm.reset-mfa.msg': {
+    tr: 'Mevcut authenticator kaydı silinir. Kullanıcı bir sonraki girişinde yeni bir TOTP sırrıyla yeniden kaydolur.',
+    en: 'The current authenticator enrollment is deleted. The user re-enrolls with a new TOTP secret at next sign-in.'
+  },
+  'pc.users.confirm.reset-password.title': { tr: 'Parolayı sıfırla', en: 'Reset password' },
+  'pc.users.confirm.reset-password.msg': {
+    tr: 'Kullanıcının parolası girdiğiniz değerle değiştirilir ve tüm oturumları sonlandırılır.',
+    en: 'The user\'s password is replaced with the value you entered and all their sessions are revoked.'
+  },
 
   // Audit (M20)
   'pc.audit.title': { tr: 'Denetim Kayıtları', en: 'Audit Logs' },
@@ -191,6 +250,42 @@ export const PLATFORM_I18N: Translations = {
   'pc.billing.activate': { tr: 'Aktifleştir', en: 'Activate' },
   'pc.billing.retire': { tr: 'Emekliye ayır', en: 'Retire' },
   'pc.billing.newPlan': { tr: 'Yeni plan taslağı', en: 'New plan draft' },
+  'pc.billing.manage': { tr: 'Yönet', en: 'Manage' },
+  'pc.billing.planInfo': { tr: 'Plan bilgileri', en: 'Plan details' },
+  'pc.billing.version': { tr: 'Sürüm', en: 'Version' },
+  'pc.billing.identityLocked': {
+    tr: 'Kod ve sürüm değiştirilemez — mevcut aboneler eski sürümde kalabilsin diye limit/fiyat değişimi yeni bir sürüm satırı olarak açılır.',
+    en: 'Code and version are immutable — limit/price changes open a new version row so existing subscribers can stay on the old one.'
+  },
+  'pc.billing.trialDaysHelp': {
+    tr: 'Bu plan atandığında Trial penceresinin uzunluğu. Varsayılan planda yeni tenant\'lar bu süreyle başlar.',
+    en: 'Length of the trial window when this plan is assigned. New tenants start with this period on the default plan.'
+  },
+  'pc.billing.features': { tr: 'Özellikler ve kotalar', en: 'Features and quotas' },
+  'pc.billing.featureKey': { tr: 'Özellik anahtarı', en: 'Feature key' },
+  'pc.billing.unit': { tr: 'Birim', en: 'Unit' },
+  'pc.billing.saveFeature': { tr: 'Özelliği kaydet', en: 'Save feature' },
+  'pc.billing.unlimited': { tr: 'Sınırsız', en: 'Unlimited' },
+  'pc.billing.limitHelp': {
+    tr: 'Limit boş bırakılırsa özellik sınırsız (bool) olur. Aynı anahtarla kaydetmek mevcut satırı günceller.',
+    en: 'Leaving the limit empty makes the feature unlimited (boolean). Saving with the same key updates the existing row.'
+  },
+  'pc.billing.lifecycle': { tr: 'Yaşam döngüsü', en: 'Lifecycle' },
+  'pc.billing.isDefault': { tr: 'Varsayılan', en: 'Default' },
+  'pc.billing.makeDefault': { tr: 'Varsayılan yap', en: 'Make default' },
+  'pc.billing.defaultPlanNote': {
+    tr: 'Yeni kaydolan şirketler kurulum sırasında otomatik olarak bu plana Trial abonelikle bağlanır. Aynı anda yalnız bir plan varsayılan olabilir ve varsayılan plan aktiflikten çıkarılamaz.',
+    en: 'Newly registered companies are automatically given a trial subscription to this plan during provisioning. Only one plan can be the default at a time, and the default plan cannot leave Active.'
+  },
+  'pc.billing.deleteOnlyDraft': {
+    tr: 'Yalnız abonesi olmayan taslak planlar kalıcı silinebilir; yayına çıkmış planlar "Emekliye ayır" ile kapatılır.',
+    en: 'Only draft plans without subscribers can be deleted permanently; published plans are closed with "Retire".'
+  },
+  'pc.billing.deletePlanTitle': { tr: 'Planı kalıcı sil', en: 'Delete plan permanently' },
+  'pc.billing.deletePlanMsg': {
+    tr: 'Plan ve tüm özellik/kota satırları kalıcı olarak silinir. Bu işlem geri alınamaz. Onaylamak için plan kodunu yazın.',
+    en: 'The plan and all its feature/quota rows are permanently deleted. This cannot be undone. Type the plan code to confirm.'
+  },
   'pc.billing.code': { tr: 'Kod', en: 'Code' },
   'pc.billing.name': { tr: 'Ad', en: 'Name' },
   'pc.billing.desc': { tr: 'Açıklama', en: 'Description' },
@@ -283,6 +378,79 @@ export const PLATFORM_I18N: Translations = {
   'pc.mig.from': { tr: 'Eski', en: 'From' },
   'pc.mig.to': { tr: 'Yeni', en: 'To' },
   'pc.mig.error': { tr: 'Hata', en: 'Error' },
+  'pc.mig.skipped': { tr: 'Atlanan', en: 'Skipped' },
+  'pc.mig.queueing': { tr: 'Kuyruğa alınıyor…', en: 'Queueing…' },
+  'pc.mig.asyncHint': {
+    tr: 'Koşu arka planda yürür; bu sayfa sürdüğü sürece kendini yeniler.',
+    en: 'The run executes in the background; this page refreshes itself while it lasts.'
+  },
+
+  // Koşu ve öğe durumları (sunucudan gelen sabitler)
+  'pc.mig.state.Queued': { tr: 'Kuyrukta', en: 'Queued' },
+  'pc.mig.state.Running': { tr: 'Çalışıyor', en: 'Running' },
+  'pc.mig.state.Completed': { tr: 'Tamamlandı', en: 'Completed' },
+  'pc.mig.state.Stopped': { tr: 'Durduruldu', en: 'Stopped' },
+  'pc.mig.state.Failed': { tr: 'Hata', en: 'Failed' },
+  'pc.mig.state.Succeeded': { tr: 'Başarılı', en: 'Succeeded' },
+  'pc.mig.state.Skipped': { tr: 'Atlandı', en: 'Skipped' },
+
+  'pc.mig.trigger': { tr: 'Tetikleyici', en: 'Trigger' },
+  'pc.mig.trigger.Manual': { tr: 'Elle', en: 'Manual' },
+  'pc.mig.trigger.Scheduled': { tr: 'Zamanlanmış', en: 'Scheduled' },
+
+  // Otomatik (cron) yükseltme zamanlaması
+  'pc.mig.schedule': { tr: 'Otomatik yükseltme', en: 'Automatic upgrade' },
+  'pc.mig.scheduleEnabled': { tr: 'Otomatik yükseltmeyi etkinleştir', en: 'Enable automatic upgrade' },
+  'pc.mig.cron': { tr: 'Cron ifadesi', en: 'Cron expression' },
+  'pc.mig.cronHint': {
+    tr: '5 alan: dakika saat gün ay hafta-günü (örn. 0 3 * * 0 → her pazar 03:00).',
+    en: '5 fields: minute hour day month weekday (e.g. 0 3 * * 0 → every Sunday 03:00).'
+  },
+  'pc.mig.timeZone': { tr: 'Saat dilimi', en: 'Time zone' },
+  'pc.mig.timeZoneHint': {
+    tr: 'Boş bırakılırsa cron UTC yorumlanır.',
+    en: 'If left blank, the cron expression is interpreted as UTC.'
+  },
+  'pc.mig.nextRuns': { tr: 'Sonraki koşular:', en: 'Next runs:' },
+  'pc.mig.scheduleLastRun': { tr: 'Son tetikleme:', en: 'Last triggered:' },
+  'pc.mig.scheduleOffHint': {
+    tr: 'Zamanlama kapalı — yükseltmeler yalnızca elle başlatılır.',
+    en: 'Schedule is off — upgrades only start manually.'
+  },
+
+  // Worker kontrol düzlemi (migrasyon 025)
+  'pc.workers.title': { tr: 'Worker\'lar', en: 'Workers' },
+  'pc.workers.list': { tr: 'Arka plan worker\'ları', en: 'Background workers' },
+  'pc.workers.empty': { tr: 'Worker yok.', en: 'No workers.' },
+  'pc.workers.name': { tr: 'Ad', en: 'Name' },
+  'pc.workers.status': { tr: 'Durum', en: 'Status' },
+  'pc.workers.interval': { tr: 'Aralık (sn)', en: 'Interval (s)' },
+  'pc.workers.heartbeat': { tr: 'Son sinyal', en: 'Last heartbeat' },
+  'pc.workers.lastRun': { tr: 'Son koşu', en: 'Last run' },
+  'pc.workers.lastError': { tr: 'Son hata', en: 'Last error' },
+  'pc.workers.pause': { tr: 'Duraklat', en: 'Pause' },
+  'pc.workers.resume': { tr: 'Sürdür', en: 'Resume' },
+  'pc.workers.reset': { tr: 'Döngüyü yenile', en: 'Reset loop' },
+  'pc.workers.secondsSuffix': { tr: ' sn', en: ' s' },
+  'pc.workers.defaultHint': { tr: 'varsayılan: {seconds} sn', en: 'default: {seconds} s' },
+  'pc.workers.criticalPaused': {
+    tr: 'KRİTİK — duraklatıldı',
+    en: 'CRITICAL — paused'
+  },
+  'pc.workers.confirmTitle': { tr: '{name} duraklatılsın mı?', en: 'Pause {name}?' },
+  'pc.workers.resetHint': {
+    tr: 'Döngüyü yenile: worker bir sonraki turda kapanış ve başlangıç adımlarını yeniden koşar (JobWorker\'da terk edilmiş işler Pending\'e döner). Uygulama süreci yeniden başlatılmaz.',
+    en: 'Reset loop: the worker re-runs its shutdown and startup steps on the next cycle (in JobWorker, abandoned jobs return to Pending). The application process is not restarted.'
+  },
+  'pc.workers.heartbeatHint': {
+    tr: 'Son sinyal döngünün ayakta olduğunu, son koşu ise gerçekten iş yapıldığını gösterir — seyrek çalışan bir worker uzun süre iş yapmadan sağlıklı kalabilir.',
+    en: 'Last heartbeat means the loop is alive; last run means work actually happened — an infrequent worker can stay healthy without running for a long time.'
+  },
+
+  'pc.workers.state.Running': { tr: 'Çalışıyor', en: 'Running' },
+  'pc.workers.state.Disabled': { tr: 'Duraklatıldı', en: 'Paused' },
+  'pc.workers.state.Stale': { tr: 'Yanıt yok', en: 'Not responding' },
+  'pc.workers.state.Error': { tr: 'Hata', en: 'Error' },
 
   // Security Center (M18/M19)
   'pc.sec.title': { tr: 'Güvenlik Merkezi', en: 'Security Center' },
@@ -518,6 +686,14 @@ export const PLATFORM_I18N: Translations = {
   'pc.config.updated': { tr: 'Güncelleme', en: 'Updated' },
   'pc.config.secret': { tr: 'gizli', en: 'secret' },
   'pc.config.empty': { tr: 'Henüz ayar yok.', en: 'No settings yet.' },
+  'pc.config.save': { tr: 'Kaydet', en: 'Save' },
+  'pc.config.saving': { tr: 'Kaydediliyor…', en: 'Saving…' },
+  'pc.config.currentlySet': { tr: 'Tanımlı', en: 'Set' },
+  'pc.config.keepSecret': {
+    tr: 'Değiştirmemek için boş bırakın',
+    en: 'Leave blank to keep unchanged'
+  },
+  'pc.config.enterSecret': { tr: 'Değer girin', en: 'Enter a value' },
 
   // API Monitoring (M27)
   'pc.api.title': { tr: 'API İzleme', en: 'API Monitoring' },
