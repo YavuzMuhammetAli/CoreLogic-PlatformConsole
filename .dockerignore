@@ -1,0 +1,7 @@
+# Sunucuda Docker içinde `npm ci` + `ng build` ile yeniden üretilir.
+node_modules/
+dist/
+.angular/
+.git/
+.claude/
+.vscode/
