@@ -23,12 +23,15 @@ export interface PlanItem {
 }
 
 /**
- * Kapalı özellik kataloğu — backend `Entities.Concrete.Master.FeatureKeys` ile birebir.
- * PlanManager katalog dışı anahtarı reddeder, bu yüzden UI serbest metin sunmaz.
+ * Kapalı özellik kataloğu — backend `Entities.Concrete.Master.FeatureKeys` ve
+ * `PlanManager.ValidFeatureKeys` ile birebir. PlanManager katalog dışı anahtarı reddeder,
+ * bu yüzden UI serbest metin sunmaz. Yeni anahtar backend'e eklenince buraya ve
+ * `i18n/enum.i18n.ts`'e (`pc.feature.*`) de eklenmeli — check-i18n eksik çeviriyi yakalar.
  */
 export const FEATURE_KEYS = [
   'max_users', 'max_models', 'max_storage_gb', 'api_requests_per_day',
-  'ai_tokens_per_month', 'feature_reports', 'feature_api_access'
+  'ai_tokens_per_month', 'feature_reports', 'feature_api_access',
+  'workflow_definitions', 'workflow_runs_per_month'
 ] as const;
 
 export const PLAN_STATUSES = ['Draft', 'Active', 'Retired'] as const;

@@ -3,8 +3,19 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DataResponseModel, ListResponseModel, PagedResult, ResponseModel } from '../../core/models/api.models';
-import { PlanItem, SubscriptionItem, EntitlementSnapshot } from '../../core/models/commerce.models';
+import { PlanItem, PlanFeatureItem, SubscriptionItem, EntitlementSnapshot } from '../../core/models/commerce.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
+import { LanguageService } from '../../services/language.service';
+
+/**
+ * Kota limitinin okunur hâli, ör. "1.000.000 token". Limit boşsa (bool özellik /
+ * sınırsız) null — çağıran kendi bağlamına uygun metni koyar.
+ */
+export function formatQuota(language: LanguageService, f: PlanFeatureItem): string | null {
+  if (f.limitValue == null) return null;
+  const amount = f.limitValue.toLocaleString(language.lang() === 'en' ? 'en-US' : 'tr-TR');
+  return f.unit ? `${amount} ${language.unitLabel(f.unit)}` : amount;
+}
 
 /** Billing (M35/M36/M12) servisi — /plans + /subscriptions uçları. */
 @Injectable({ providedIn: 'root' })

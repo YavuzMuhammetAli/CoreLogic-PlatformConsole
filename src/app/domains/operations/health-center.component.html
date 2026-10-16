@@ -48,10 +48,17 @@
           <tbody>
             @for (c of tr.components; track c.name) {
               <tr>
-                <td class="mono">{{ c.name }}</td>
+                <td>
+                  <div class="comp-name">{{ componentLabel(c.name) }}</div>
+                  @if (componentDescription(c.name); as desc) {
+                    <div class="muted comp-desc">{{ desc }}</div>
+                  }
+                </td>
                 <td><app-status-badge [tone]="tone(c.status)" [label]="c.status" /></td>
-                <td class="mono num">{{ c.latencyMs }} ms</td>
-                <td class="muted">{{ c.error || '—' }}</td>
+                <td class="mono num">
+                  @if (c.status === 'NotConfigured') { — } @else { {{ c.latencyMs }} ms }
+                </td>
+                <td class="muted">{{ detail(c) }}</td>
                 <td class="mono nowrap">{{ c.checkedAt | date:'HH:mm:ss' }}</td>
               </tr>
             } @empty {

@@ -38,7 +38,7 @@ export class SubscriptionsComponent implements OnInit {
 
   /** Dil değişince "Tümü" etiketi de değişsin diye computed. */
   readonly statusOptions = computed(() =>
-    withAllOption(this.language.t('pc.billing.allStatuses'), this.statuses));
+    withAllOption(this.language.t('pc.billing.allStatuses'), this.statuses, v => this.language.enumLabel(v)));
 
   /** app-select değerleri string; planId sayı olduğu için iki uçta da çevrilir. */
   readonly planOptions = computed(() => [

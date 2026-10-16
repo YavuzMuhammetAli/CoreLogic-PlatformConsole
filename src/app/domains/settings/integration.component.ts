@@ -6,6 +6,7 @@ import { IntegrationService, deliveryTone } from './integration.service';
 import { WebhookItem, WebhookDeliveryItem, ApiKeyItem } from '../../core/models/integration.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
+import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'webhooks' | 'apikeys';
@@ -20,6 +21,7 @@ type Tab = 'webhooks' | 'apikeys';
 })
 export class IntegrationComponent implements OnInit {
   private readonly service = inject(IntegrationService);
+  private readonly language = inject(LanguageService);
 
   readonly tab = signal<Tab>('webhooks');
   readonly loading = signal(true);
@@ -37,6 +39,11 @@ export class IntegrationComponent implements OnInit {
   keyForm = { name: '', scopes: '' };
 
   ngOnInit(): void { this.loadWebhooks(); }
+
+  /** Teslimat tablosu için — olay tipi sunucudan ham gelir (ör. TenantSuspended). */
+  enumLabel(value: string): string {
+    return this.language.enumLabel(value);
+  }
 
   selectTab(t: Tab): void { this.tab.set(t); this.secretOnce.set(null); t === 'webhooks' ? this.loadWebhooks() : this.loadApiKeys(); }
 

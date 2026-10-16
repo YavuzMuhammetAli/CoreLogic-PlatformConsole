@@ -5,7 +5,7 @@ import {
   PLATFORM_ID,
   provideZoneChangeDetection
 } from '@angular/core';
-import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { isPlatformBrowser, registerLocaleData } from '@angular/common';
 import localeTr from '@angular/common/locales/tr';
@@ -24,6 +24,11 @@ import { PlatformSessionStore } from './core/auth/platform-session.store';
  * olduğundan sayfa yenilemesinde silinir; refresh token varsa refresh ile yeni
  * access + kullanıcı yüklenir, böylece guard'lar (platformAuthGuard/capabilityGuard)
  * senkron store'u dolu okur — yarış durumu yok.
+ *
+ * Bu garanti router'ın varsayılan (non-blocking) ilk navigasyonuna dayanır: o modda
+ * navigasyon tüm APP_INITIALIZER'lar bittikten sonra bootstrap listener'da başlar.
+ * withEnabledBlockingInitialNavigation() EKLEME — navigasyonu kendi APP_INITIALIZER'ında
+ * bununla paralel başlatır, guard refresh dönmeden koşar ve her F5 /login'e düşer.
  */
 function sessionInitializerFactory(
   auth: PlatformAuthService,
@@ -45,7 +50,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     { provide: LOCALE_ID, useValue: 'tr' },
-    provideRouter(routes, withEnabledBlockingInitialNavigation()),
+    provideRouter(routes),
     // Interceptor sırası: correlation + language header'ları ekler, sonra error
     // (401'de refresh+retry) platformAuth'u sarar — retry'da taze token eklenir.
     provideHttpClient(withFetch(), withInterceptors([

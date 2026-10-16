@@ -37,7 +37,8 @@ export class ImpersonationComponent implements OnInit {
   /** Talep FSM durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.imp.allStatuses'),
-      ['Requested', 'Approved', 'ActiveUse', 'Expired', 'Revoked', 'Denied']));
+      ['Requested', 'Approved', 'ActiveUse', 'Expired', 'Revoked', 'Denied'],
+      v => this.language.enumLabel(v)));
 
   status = '';
   form = { tenantId: '', targetUserId: null as number | null, reason: '', hours: 1 };

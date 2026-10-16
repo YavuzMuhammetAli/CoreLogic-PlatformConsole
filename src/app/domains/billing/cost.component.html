@@ -59,7 +59,7 @@
                       <tbody>
                         @for (l of r.lines; track l.metricKey) {
                           <tr>
-                            <td class="mono">{{ l.metricKey }}</td>
+                            <td [title]="l.metricKey">{{ metricLabel(l.metricKey) }}</td>
                             <td class="mono num">{{ l.quantity }}</td>
                             <td class="mono num">${{ l.unitCost | number:'1.2-8' }}</td>
                             <td class="mono num">${{ l.cost | number:'1.2-4' }}</td>

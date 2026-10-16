@@ -12,3 +12,5 @@
 .nowrap { white-space: nowrap; }
 .pager { border-top: 1px solid var(--border-soft); border-bottom: none; }
 .err { color: var(--danger); font-size: var(--text-xs); max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.job-type { font-size: var(--text-xs); }
+.td-actions { text-align: right; white-space: nowrap; }

@@ -38,7 +38,12 @@ export class AuditExplorerComponent implements OnInit {
 
   /** Dil değişince etiket de değişsin diye computed. */
   readonly categoryOptions = computed(() =>
-    withAllOption(this.language.t('pc.audit.filterCategory'), this.categories));
+    withAllOption(this.language.t('pc.audit.filterCategory'), this.categories, v => this.language.enumLabel(v)));
+
+  /** Tablo hücresi için — kategori sunucudan ham gelir. */
+  enumLabel(value: string): string {
+    return this.language.enumLabel(value);
+  }
 
   ngOnInit(): void {
     this.load();

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DataResponseModel, PagedResult } from '../../core/models/api.models';
+import { DataResponseModel, PagedResult, ResponseModel } from '../../core/models/api.models';
 import { JobSummary } from '../../core/models/job.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
@@ -17,6 +17,16 @@ export class JobsService {
     if (status) params = params.set('status', status);
     if (type) params = params.set('type', type);
     return this.http.get<DataResponseModel<PagedResult<JobSummary>>>(this.baseUrl, { params });
+  }
+
+  /** Askıya alınmış işi deneme hakkı sıfırlanmış olarak yeniden kuyruğa alır (Ops.Manage). */
+  retry(id: string): Observable<ResponseModel> {
+    return this.http.post<ResponseModel>(`${this.baseUrl}/${id}/retry`, {});
+  }
+
+  /** Tüm askıya alınmış işleri yeniden kuyruğa alır (Ops.Manage). */
+  retryAllParked(): Observable<ResponseModel> {
+    return this.http.post<ResponseModel>(`${this.baseUrl}/retry-parked`, {});
   }
 }
 

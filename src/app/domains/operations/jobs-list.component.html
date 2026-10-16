@@ -20,6 +20,9 @@
   @if (error()) {
     <div class="alert alert-danger" role="alert">{{ error() }}</div>
   }
+  @if (notice()) {
+    <div class="alert alert-success" role="status">{{ notice() }}</div>
+  }
 
   <div class="panel">
     <div class="panel-head filters">
@@ -31,6 +34,12 @@
           [ariaLabel]="'pc.jobs.allStatuses' | t" />
         <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
       </div>
+      @if (canRetryAll()) {
+        <button class="btn btn-primary btn-sm" type="button" [disabled]="busyId() !== null"
+                (click)="confirmRetryAll.set(true)">
+          {{ 'pc.jobs.retryAll' | t }}
+        </button>
+      }
     </div>
 
     @if (loading()) {
@@ -48,17 +57,31 @@
               <th>{{ 'pc.jobs.tenant' | t }}</th>
               <th>{{ 'pc.jobs.created' | t }}</th>
               <th>{{ 'pc.jobs.error' | t }}</th>
+              @if (canManage) { <th class="td-actions">{{ 'pc.jobs.actions' | t }}</th> }
             </tr>
           </thead>
           <tbody>
             @for (j of result()!.items; track j.id) {
               <tr>
-                <td class="mono">{{ j.type }}</td>
+                <td>
+                  <div>{{ typeLabel(j.type) }}</div>
+                  <div class="mono muted job-type">{{ j.type }}</div>
+                </td>
                 <td><app-status-badge [tone]="tone(j.status)" [label]="j.status" /></td>
                 <td class="mono">{{ j.attemptCount }}/{{ j.maxAttempts }}</td>
                 <td class="mono">{{ j.tenantId || '—' }}</td>
                 <td class="mono nowrap">{{ j.createdDate | date:'short' }}</td>
-                <td class="err">{{ j.lastError || '' }}</td>
+                <td class="err" [title]="j.lastError || ''">{{ j.lastError || '' }}</td>
+                @if (canManage) {
+                  <td class="td-actions">
+                    @if (j.status === 'Parked') {
+                      <button class="btn btn-secondary btn-sm" type="button"
+                              [disabled]="busyId() !== null" (click)="retry(j)">
+                        {{ 'pc.jobs.retry' | t }}
+                      </button>
+                    }
+                  </td>
+                }
               </tr>
             }
           </tbody>
@@ -80,3 +103,13 @@
     }
   </div>
 </div>
+
+@if (confirmRetryAll()) {
+  <app-confirm-danger-dialog
+    [title]="'pc.jobs.retryAllTitle' | t"
+    [message]="'pc.jobs.retryAllMsg' | t:{ count: result()?.total ?? 0 }"
+    [confirmLabel]="'pc.jobs.retryAll' | t"
+    [busy]="busyId() === 'all'"
+    (confirmed)="retryAll()"
+    (cancelled)="confirmRetryAll.set(false)" />
+}

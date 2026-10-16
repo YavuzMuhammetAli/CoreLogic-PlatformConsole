@@ -86,6 +86,15 @@ export class AlertCenterComponent implements OnInit {
 
   applyFilter(): void { this.page = 1; this.load(); }
 
+  /**
+   * Kuralın neyi ölçtüğünü düz dille anlatır. Kural adları seed'den Türkçe gelir ve
+   * "Askıya alınmış iş var" gibi iç terimler taşır; açıklaması olmayan (operatörün
+   * sonradan eklediği) metrikte boş döner, satır gösterilmez.
+   */
+  metricDescription(metricKey: string): string {
+    return this.language.tOr(`pc.alerts.metricDesc.${metricKey}`, '');
+  }
+
   /** Uyarının bağlam panelini açar/kapatır. */
   toggleDetails(a: AlertItem): void {
     this.expandedId.set(this.expandedId() === a.id ? null : a.id);

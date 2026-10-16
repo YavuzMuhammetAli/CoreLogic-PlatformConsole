@@ -82,9 +82,12 @@
           <tbody>
             @for (f of p.features; track f.featureKey) {
               <tr>
-                <td class="mono">{{ f.featureKey }}</td>
-                <td>{{ featureLabel(f) }}</td>
-                <td class="muted">{{ f.unit || '—' }}</td>
+                <td>
+                  <div>{{ featureName(f.featureKey) }}</div>
+                  <div class="mono muted feature-key">{{ f.featureKey }}</div>
+                </td>
+                <td>{{ limitLabel(f) }}</td>
+                <td class="muted">{{ unitLabel(f.unit) }}</td>
                 @if (canWrite) {
                   <td class="td-actions">
                     <button class="btn btn-ghost btn-sm" [disabled]="busy()" (click)="editFeature(f)">
@@ -110,7 +113,7 @@
           <div class="cluster wrap">
             <!-- Katalog kapalı: backend katalog dışı anahtarı reddediyor. -->
             <app-select
-              [options]="featureKeys"
+              [options]="featureKeys()"
               [(value)]="featureForm.featureKey"
               [ariaLabel]="'pc.billing.featureKey' | t" />
             <input class="input narrow" type="number" [(ngModel)]="featureForm.limitValue"

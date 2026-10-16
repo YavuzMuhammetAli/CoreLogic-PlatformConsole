@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -6,6 +6,7 @@ import { FlagsService, flagStateTone } from './flags.service';
 import { FeatureFlagItem, FLAG_STATES } from '../../core/models/flag.models';
 import { SelectComponent } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
+import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Feature Flags (M39) — liste + durum/yüzde + tenant override + ölü flag işareti. */
@@ -18,6 +19,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 })
 export class FeatureFlagsComponent implements OnInit {
   private readonly service = inject(FlagsService);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -25,9 +27,14 @@ export class FeatureFlagsComponent implements OnInit {
   readonly busyKey = signal<string | null>(null);
 
   readonly tone = flagStateTone;
-  readonly states = FLAG_STATES;
+  // Değer sunucu sabiti (On/Off/Percentage), etiket çeviriden.
+  readonly states = computed(() => FLAG_STATES.map(v => ({ value: v, label: this.enumLabel(v) })));
   /** Tenant override'ı yüzdelik olamaz — yalnız açık/kapalı. */
-  readonly overrideStates = ['On', 'Off'];
+  readonly overrideStates = computed(() => ['On', 'Off'].map(v => ({ value: v, label: this.enumLabel(v) })));
+
+  enumLabel(value: string): string {
+    return this.language.enumLabel(value);
+  }
 
   createForm = { key: '', description: '', defaultState: 'Off', percentage: 0 };
   ovForm = { key: '', tenantId: '', state: 'On', reason: '' };

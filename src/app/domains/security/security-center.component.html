@@ -49,7 +49,7 @@
             <tbody>
               @for (e of events(); track e.id) {
                 <tr>
-                  <td><span class="badge badge-danger">{{ e.type }}</span></td>
+                  <td><span class="badge badge-danger">{{ enumLabel(e.type) }}</span></td>
                   <td class="mono">{{ e.subjectType }}:{{ e.subjectId }}</td>
                   <td><app-status-badge [tone]="evtTone(e.status)" [label]="e.status" /></td>
                   <td class="mono nowrap">{{ e.occurredAt | date:'short' }}</td>
@@ -116,7 +116,7 @@
           <div class="cluster wrap">
             <input class="input" [(ngModel)]="ipForm.cidr" [placeholder]="'pc.sec.cidr' | t" />
             <app-select
-              [options]="ipActions"
+              [options]="ipActionOptions()"
               [(value)]="ipForm.action"
               [ariaLabel]="'pc.sec.action' | t" />
             <input class="input grow" [(ngModel)]="ipForm.reason" [placeholder]="'pc.sec.reason' | t" />
@@ -144,7 +144,7 @@
               @for (r of ipRules(); track r.id) {
                 <tr>
                   <td class="mono">{{ r.cidr }}</td>
-                  <td><span class="badge" [class.badge-danger]="r.action === 'Deny'" [class.badge-success]="r.action === 'Allow'">{{ r.action }}</span></td>
+                  <td><span class="badge" [class.badge-danger]="r.action === 'Deny'" [class.badge-success]="r.action === 'Allow'">{{ enumLabel(r.action) }}</span></td>
                   <td class="muted">{{ r.reason || '—' }}</td>
                   <td class="mono nowrap">{{ r.expiresAt ? (r.expiresAt | date:'short') : '—' }}</td>
                   <td class="td-actions">

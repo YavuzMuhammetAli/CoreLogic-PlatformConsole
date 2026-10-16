@@ -232,6 +232,14 @@ export const PLATFORM_I18N: Translations = {
   'pc.jobs.tenant': { tr: 'Tenant', en: 'Tenant' },
   'pc.jobs.created': { tr: 'Oluşturma', en: 'Created' },
   'pc.jobs.error': { tr: 'Hata', en: 'Error' },
+  'pc.jobs.actions': { tr: 'Eylemler', en: 'Actions' },
+  'pc.jobs.retry': { tr: 'Yeniden dene', en: 'Retry' },
+  'pc.jobs.retryAll': { tr: 'Tümünü yeniden dene', en: 'Retry all' },
+  'pc.jobs.retryAllTitle': { tr: 'Askıya alınmış işler yeniden denensin mi?', en: 'Retry parked jobs?' },
+  'pc.jobs.retryAllMsg': {
+    tr: '{count} askıya alınmış iş, deneme hakkı sıfırlanarak yeniden kuyruğa alınacak. Hatanın nedeni giderilmediyse işler denemeler bitince yine askıya alınır.',
+    en: '{count} parked jobs will be re-queued with their attempts reset. If the cause of the error has not been fixed, they will be parked again once attempts run out.'
+  },
 
   // Health Center (M24)
   'pc.health.title': { tr: 'Sağlık', en: 'Health' },
@@ -242,6 +250,37 @@ export const PLATFORM_I18N: Translations = {
   'pc.health.detail': { tr: 'Ayrıntı', en: 'Detail' },
   'pc.health.checked': { tr: 'Kontrol', en: 'Checked' },
   'pc.health.empty': { tr: 'Henüz prob sonucu yok.', en: 'No probe results yet.' },
+
+  // Sağlık bileşenleri (prob adları sunucudan sabit gelir)
+  'pc.health.comp.MasterDb': { tr: 'Ana veritabanı', en: 'Master database' },
+  'pc.health.comp.MasterDb.desc': {
+    tr: 'Şirketlerin, planların ve platform ayarlarının tutulduğu merkez veritabanı.',
+    en: 'The central database holding companies, plans and platform settings.'
+  },
+  'pc.health.comp.TelemetryDb': { tr: 'Telemetri veritabanı', en: 'Telemetry database' },
+  'pc.health.comp.TelemetryDb.desc': {
+    tr: 'İstek ölçümlerinin ve performans verilerinin yazıldığı veritabanı.',
+    en: 'The database where request measurements and performance data are written.'
+  },
+  'pc.health.comp.Disk': { tr: 'Disk', en: 'Disk' },
+  'pc.health.comp.Disk.desc': {
+    tr: 'Sunucu diskinin doluluk oranı. %75 üstü yavaş, %90 üstü erişilemiyor sayılır.',
+    en: 'How full the server disk is. Above 75% counts as degraded, above 90% as unhealthy.'
+  },
+  'pc.health.comp.Tenants': { tr: 'Şirket veritabanları', en: 'Tenant databases' },
+  'pc.health.comp.Tenants.desc': {
+    tr: 'Her şirketin kendi veritabanına bağlanılabildiği. Tek bir şirketin sorunu platformu yalnız "yavaş / kısmi" yapar.',
+    en: 'Whether each company\'s own database is reachable. A single company\'s problem only marks the platform as degraded.'
+  },
+  'pc.health.comp.Canary': { tr: 'Canary (test şirketi)', en: 'Canary (test company)' },
+  'pc.health.comp.Canary.desc': {
+    tr: 'Gerçek müşteri olmayan, platformun kendini denetlemek için tuttuğu test şirketinin (kod: canary) kontrolü. Migrasyonlarda ilk dalga da bu şirkettir.',
+    en: 'Check of the test company (code: canary) the platform keeps to monitor itself; it is not a real customer. It is also the first wave in migrations.'
+  },
+  'pc.health.comp.Canary.notConfigured': {
+    tr: '"canary" kodlu test şirketi kurulmamış. Kontrol devre dışı ve genel durumu etkilemez.',
+    en: 'No test company with code "canary" exists. The check is off and does not affect the overall status.'
+  },
 
   // Billing — Plans + Subscriptions (M35/M36)
   'pc.billing.plans': { tr: 'Planlar', en: 'Plans' },
@@ -362,7 +401,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.mig.stopOnFailure': { tr: 'İlk hatada durdur', en: 'Stop on first failure' },
   'pc.mig.start': { tr: 'Başlat', en: 'Start' },
   'pc.mig.running': { tr: 'Çalışıyor…', en: 'Running…' },
-  'pc.mig.waveHint': { tr: 'Sıra: canary → %10 → tümü. Script\'ler idempotenttir.', en: 'Order: canary → 10% → all. Scripts are idempotent.' },
+  'pc.mig.waveHint': { tr: 'Sıra: canary (test şirketi) → %10 → tümü. Script\'ler idempotenttir.', en: 'Order: canary (test company) → 10% → all. Scripts are idempotent.' },
   'pc.mig.runs': { tr: 'Koşular', en: 'Runs' },
   'pc.mig.empty': { tr: 'Koşu yok.', en: 'No runs.' },
   'pc.mig.status': { tr: 'Durum', en: 'Status' },
@@ -398,20 +437,55 @@ export const PLATFORM_I18N: Translations = {
   'pc.mig.trigger.Manual': { tr: 'Elle', en: 'Manual' },
   'pc.mig.trigger.Scheduled': { tr: 'Zamanlanmış', en: 'Scheduled' },
 
-  // Otomatik (cron) yükseltme zamanlaması
+  // Otomatik yükseltme zamanlaması — kullanıcı cron yazmaz, sıklık seçer
   'pc.mig.schedule': { tr: 'Otomatik yükseltme', en: 'Automatic upgrade' },
   'pc.mig.scheduleEnabled': { tr: 'Otomatik yükseltmeyi etkinleştir', en: 'Enable automatic upgrade' },
-  'pc.mig.cron': { tr: 'Cron ifadesi', en: 'Cron expression' },
-  'pc.mig.cronHint': {
-    tr: '5 alan: dakika saat gün ay hafta-günü (örn. 0 3 * * 0 → her pazar 03:00).',
-    en: '5 fields: minute hour day month weekday (e.g. 0 3 * * 0 → every Sunday 03:00).'
+  'pc.mig.frequency': { tr: 'Ne sıklıkla', en: 'How often' },
+  'pc.mig.freq.hourly': { tr: 'Saatte bir', en: 'Every hour' },
+  'pc.mig.freq.everyNHours': { tr: 'Birkaç saatte bir', en: 'Every few hours' },
+  'pc.mig.freq.daily': { tr: 'Her gün', en: 'Every day' },
+  'pc.mig.freq.everyNDays': { tr: 'Birkaç günde bir', en: 'Every few days' },
+  'pc.mig.freq.weekly': { tr: 'Haftada bir', en: 'Once a week' },
+  'pc.mig.freq.monthly': { tr: 'Ayda bir', en: 'Once a month' },
+  'pc.mig.freq.custom': { tr: 'Özel (cron ifadesi)', en: 'Custom (cron expression)' },
+  'pc.mig.hourInterval': { tr: 'Kaç saatte bir', en: 'Every how many hours' },
+  'pc.mig.hourIntervalOption': { tr: '{n} saatte bir', en: 'Every {n} hours' },
+  'pc.mig.dayInterval': { tr: 'Kaç günde bir', en: 'Every how many days' },
+  'pc.mig.dayOfWeek': { tr: 'Gün', en: 'Day' },
+  'pc.mig.dayOfMonth': { tr: 'Ayın günü', en: 'Day of month' },
+  'pc.mig.time': { tr: 'Saat', en: 'Time' },
+  'pc.mig.minute': { tr: 'Saatin kaçıncı dakikası', en: 'Minute past the hour' },
+  'pc.mig.rawCron': { tr: 'Cron ifadesi', en: 'Cron expression' },
+  'pc.mig.rawCronHelp': {
+    tr: 'İleri düzey: 5 alan — dakika saat gün ay haftanın-günü (ör. 0 3 * * 0 = her Pazar 03:00).',
+    en: 'Advanced: 5 fields — minute hour day month weekday (e.g. 0 3 * * 0 = every Sunday 03:00).'
   },
+  'pc.mig.rawCronInvalid': {
+    tr: 'Geçersiz cron ifadesi. 5 alan olmalı: dakika saat gün ay haftanın-günü.',
+    en: 'Invalid cron expression. It needs 5 fields: minute hour day month weekday.'
+  },
+  'pc.mig.shortMonthWarning': {
+    tr: 'Ayın 29\'u ve sonrası seçildi: bu günü olmayan aylarda yükseltme çalışmaz.',
+    en: 'Day 29 or later selected: the upgrade will not run in months without that day.'
+  },
+  'pc.mig.summary.hourly': { tr: 'Her saatin {minute}. dakikasında', en: 'Every hour at minute {minute}' },
+  'pc.mig.summary.everyNHours': { tr: '{n} saatte bir, saatin {minute}. dakikasında', en: 'Every {n} hours at minute {minute}' },
+  'pc.mig.summary.daily': { tr: 'Her gün {time}', en: 'Every day at {time}' },
+  'pc.mig.summary.everyNDays': { tr: '{n} günde bir, {time}', en: 'Every {n} days at {time}' },
+  'pc.mig.summary.weekly': { tr: 'Her {day} {time}', en: 'Every {day} at {time}' },
+  'pc.mig.summary.monthly': { tr: 'Her ayın {day}. günü {time}', en: 'On day {day} of every month at {time}' },
   'pc.mig.timeZone': { tr: 'Saat dilimi', en: 'Time zone' },
   'pc.mig.timeZoneHint': {
-    tr: 'Boş bırakılırsa cron UTC yorumlanır.',
-    en: 'If left blank, the cron expression is interpreted as UTC.'
+    tr: 'Seçilen saat bu saat dilimine göredir.',
+    en: 'The selected time is in this time zone.'
   },
+  'pc.mig.tz.turkey': { tr: 'Türkiye saati', en: 'Turkey time' },
+  'pc.mig.tz.utc': { tr: 'UTC (evrensel saat)', en: 'UTC (universal time)' },
   'pc.mig.nextRuns': { tr: 'Sonraki koşular:', en: 'Next runs:' },
+  'pc.mig.nextRunsStale': {
+    tr: 'Bu liste kayıtlı zamanlamaya göre; değişiklikleriniz kaydedince yansır.',
+    en: 'This list reflects the saved schedule; your changes show up after you save.'
+  },
   'pc.mig.scheduleLastRun': { tr: 'Son tetikleme:', en: 'Last triggered:' },
   'pc.mig.scheduleOffHint': {
     tr: 'Zamanlama kapalı — yükseltmeler yalnızca elle başlatılır.',
@@ -618,6 +692,8 @@ export const PLATFORM_I18N: Translations = {
   'pc.flags.tenantCode': { tr: 'Tenant kodu', en: 'Tenant code' },
   'pc.flags.reason': { tr: 'Gerekçe', en: 'Reason' },
   'pc.flags.apply': { tr: 'Uygula', en: 'Apply' },
+  'pc.flags.turnOn': { tr: 'Aç', en: 'Turn on' },
+  'pc.flags.turnOff': { tr: 'Kapat', en: 'Turn off' },
 
   // Performance (M28)
   'pc.perf.title': { tr: 'Performans', en: 'Performance' },
@@ -655,8 +731,8 @@ export const PLATFORM_I18N: Translations = {
   'pc.alerts.off': { tr: 'Kapalı', en: 'Off' },
   'pc.alerts.empty': { tr: 'Uyarı yok.', en: 'No alerts.' },
   'pc.alerts.noRules': { tr: 'Kural yok.', en: 'No rules.' },
-  'pc.alerts.filter.open': { tr: 'Açık (Firing + Üstlenilmiş)', en: 'Open (Firing + Acked)' },
-  'pc.alerts.filter.Firing': { tr: 'Firing', en: 'Firing' },
+  'pc.alerts.filter.open': { tr: 'Açık (Tetiklendi + Üstlenildi)', en: 'Open (Firing + Acked)' },
+  'pc.alerts.filter.Firing': { tr: 'Tetiklendi', en: 'Firing' },
   'pc.alerts.filter.Acknowledged': { tr: 'Üstlenilmiş', en: 'Acknowledged' },
   'pc.alerts.filter.Resolved': { tr: 'Çözümlenmiş', en: 'Resolved' },
   // Uyarı bağlam paneli — "ne oldu"
@@ -677,6 +753,29 @@ export const PLATFORM_I18N: Translations = {
   'pc.alerts.noDetails': {
     tr: 'Bu uyarı için bağlam kaydedilmemiş (yalnız api.* metriklerinde üretilir).',
     en: 'No context recorded for this alert (produced for api.* metrics only).'
+  },
+  'pc.alerts.viewParkedJobs': { tr: 'Askıya alınmış işleri gör →', en: 'View parked jobs →' },
+
+  // Kuralın ölçtüğü metrik — düz dille (anahtar: metrik adı)
+  'pc.alerts.metricDesc.api.error.rate': {
+    tr: 'Son dakikalarda API isteklerinin yüzde kaçı hatayla döndü.',
+    en: 'What percentage of API requests failed in the last few minutes.'
+  },
+  'pc.alerts.metricDesc.api.latency.p95': {
+    tr: 'İsteklerin %95\'inin tamamlandığı süre (ms). Yükseliyorsa kullanıcılar sistemi yavaş görüyordur.',
+    en: 'The time (ms) within which 95% of requests complete. If it rises, users are experiencing slowness.'
+  },
+  'pc.alerts.metricDesc.job.parked.count': {
+    tr: 'Deneme hakkını bitirip askıya alınan arka plan işlerinin sayısı (yedekleme, e-posta, bildirim vb.). Bu işler kendiliğinden denenmez; İşler ekranında hata mesajı nedenini söyler ve "Yeniden dene" ile tekrar kuyruğa alınabilir.',
+    en: 'Number of background jobs (backups, emails, notifications etc.) that used up their retries and were parked. They are not retried automatically; the Jobs screen shows the error and lets you re-queue them with "Retry".'
+  },
+  'pc.alerts.metricDesc.outbox.parked.count': {
+    tr: 'Platformun olay kuyruğunda (outbox) 5 denemede işlenemeyip askıya alınan olay sayısı.',
+    en: 'Number of events in the platform event queue (outbox) that failed 5 attempts and were set aside.'
+  },
+  'pc.alerts.metricDesc.tenant.unhealthy.count': {
+    tr: 'Veritabanına bağlanılamayan şirket sayısı. Hangi şirket olduğu Şirketler listesindeki sağlık rozetinde görünür.',
+    en: 'Number of companies whose database cannot be reached. The health badge on the Tenants list shows which ones.'
   },
 
   // Config (M41)

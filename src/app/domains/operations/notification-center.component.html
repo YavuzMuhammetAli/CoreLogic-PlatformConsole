@@ -70,7 +70,7 @@
           <div class="cluster wrap">
             <input class="input" [(ngModel)]="ruleForm.name" [placeholder]="'pc.notif.name' | t" />
             <app-select
-              [options]="channelTypes"
+              [options]="channelTypes()"
               [(value)]="ruleForm.channelType"
               [ariaLabel]="'pc.notif.channel' | t" />
             <input class="input" [(ngModel)]="ruleForm.triggerFilter" placeholder='["Critical","Warning"]' />
@@ -102,8 +102,8 @@
               @for (r of rules(); track r.id) {
                 <tr>
                   <td>{{ r.name }}</td>
-                  <td class="mono">{{ r.triggerType }}</td>
-                  <td class="mono">{{ r.channelType }}</td>
+                  <td>{{ enumLabel(r.triggerType) }}</td>
+                  <td>{{ enumLabel(r.channelType) }}</td>
                   <td class="mono">{{ r.triggerFilter || '—' }}</td>
                   <td><app-status-badge [tone]="r.enabled ? 'success' : 'neutral'" [label]="(r.enabled ? 'pc.alerts.on' : 'pc.alerts.off') | t" /></td>
                   <td class="td-actions">

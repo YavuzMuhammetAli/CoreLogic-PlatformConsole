@@ -40,8 +40,15 @@ export class SecurityCenterComponent implements OnInit {
   /** Tehdit olayı durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
   readonly eventStatusOptions = computed(() =>
     withAllOption(this.language.t('pc.sec.allStatuses'),
-      ['Open', 'Reviewed', 'Dismissed', 'Escalated']));
-  readonly ipActions = ['Deny', 'Allow'];
+      ['Open', 'Reviewed', 'Dismissed', 'Escalated'],
+      v => this.language.enumLabel(v)));
+  readonly ipActionOptions = computed(() =>
+    ['Deny', 'Allow'].map(v => ({ value: v, label: this.language.enumLabel(v) })));
+
+  /** Tablo hücreleri için — olay tipi ve IP eylemi sunucudan ham gelir. */
+  enumLabel(value: string): string {
+    return this.language.enumLabel(value);
+  }
 
   attemptEmail = '';
   attemptIp = '';

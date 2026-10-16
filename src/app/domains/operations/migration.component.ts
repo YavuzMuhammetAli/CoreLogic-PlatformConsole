@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -8,28 +8,51 @@ import {
 } from '../../core/models/migration.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
+import {
+  CRON_FREQUENCIES, CronFrequency, CronSpec, HOUR_INTERVALS,
+  buildCron, isShortMonthRisk, isValidCron, parseCron
+} from '../../core/utils/cron-builder';
 import { LanguageService } from '../../services/language.service';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
+import { SelectComponent, SelectOption } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Aktif koşu varken yenileme aralığı. */
 const POLL_INTERVAL_MS = 5000;
 
+/** Sunucunun varsayılan zamanlaması (MigrationOrchestratorManager.GetSchedule): her pazar 03:00. */
+const DEFAULT_CRON = '0 3 * * 0';
+const TURKEY_TIME_ZONE = 'Turkey Standard Time';
+
+/** Sıklığa göre hangi alanların gösterileceği — şablon bunu okur. */
+interface ScheduleFieldVisibility {
+  minute: boolean;
+  time: boolean;
+  hourInterval: boolean;
+  dayInterval: boolean;
+  dayOfWeek: boolean;
+  dayOfMonth: boolean;
+  raw: boolean;
+}
+
 /**
  * Migration Orchestrator (M10) — dalga koşusu başlatma, koşu listesi/detayı ve
- * otomatik (cron) yükseltme zamanlaması.
+ * otomatik yükseltme zamanlaması.
  *
  * Koşu artık HTTP isteğinde değil kuyrukta yürüdüğü için sayfa AKTİF KOŞU
  * VARKEN kendini yeniler; "başlat" isteği artık yalnızca kuyruğa alındığını
  * bildirir (bu yüzden `submitting`, `running` değil).
+ *
+ * Zamanlamada kullanıcı cron yazmaz: sıklık + saat/gün seçer, `cron-builder`
+ * ifadeyi üretir. Ham cron yalnız "Özel" seçeneğinde görünür.
  */
 @Component({
   selector: 'app-migration',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
   templateUrl: './migration.component.html',
-  styleUrl: './alert-center.component.scss'
+  styleUrls: ['./alert-center.component.scss', './migration.component.scss']
 })
 export class MigrationComponent implements OnInit, OnDestroy {
   private readonly service = inject(MigrationService);
@@ -53,14 +76,82 @@ export class MigrationComponent implements OnInit, OnDestroy {
 
   form = { takePreBackup: false, stopOnFailure: true };
 
-  /** Zamanlama formu — schedule() yüklenince doldurulur. */
+  /** Zamanlama formunun onay kutuları — schedule() yüklenince doldurulur. */
   scheduleForm = {
     enabled: false,
-    cronExpression: '0 3 * * 0',
-    timeZoneId: 'Turkey Standard Time',
     takePreBackup: true,
     stopOnFailure: true
   };
+
+  /** Ne zaman çalışacağı — cron ifadesi bundan üretilir. */
+  readonly scheduleSpec = signal<CronSpec>(parseCron(DEFAULT_CRON));
+  /** '' = UTC (sunucu boş saat dilimini UTC yorumlar). */
+  readonly scheduleTimeZone = signal(TURKEY_TIME_ZONE);
+
+  readonly cronExpression = computed(() => buildCron(this.scheduleSpec()));
+  readonly cronValid = computed(() => isValidCron(this.cronExpression()));
+  readonly shortMonthWarning = computed(() => isShortMonthRisk(this.scheduleSpec()));
+
+  readonly fields = computed<ScheduleFieldVisibility>(() => {
+    const frequency = this.scheduleSpec().frequency;
+    return {
+      minute: frequency === 'hourly' || frequency === 'everyNHours',
+      time: ['daily', 'everyNDays', 'weekly', 'monthly'].includes(frequency),
+      hourInterval: frequency === 'everyNHours',
+      dayInterval: frequency === 'everyNDays',
+      dayOfWeek: frequency === 'weekly',
+      dayOfMonth: frequency === 'monthly',
+      raw: frequency === 'custom'
+    };
+  });
+
+  // Seçenek listeleri computed: dil değişince etiketler de değişsin.
+  readonly frequencyOptions = computed<SelectOption[]>(() =>
+    CRON_FREQUENCIES.map(f => ({ value: f, label: this.language.t(`pc.mig.freq.${f}`) })));
+
+  readonly hourIntervalOptions = computed<SelectOption[]>(() =>
+    HOUR_INTERVALS.map(n => ({ value: String(n), label: this.language.t('pc.mig.hourIntervalOption', { n }) })));
+
+  /** Pazartesi'den başlar; değerler cron sırasıyla (0 = Pazar). */
+  readonly weekDayOptions = computed<SelectOption[]>(() =>
+    [1, 2, 3, 4, 5, 6, 0].map(d => ({ value: String(d), label: this.weekDayLabel(d) })));
+
+  readonly monthDayOptions: SelectOption[] =
+    Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: String(i + 1) }));
+
+  /** Kayıtlı saat dilimi listede yoksa ham hâliyle eklenir — kaydedince kaybolmasın. */
+  readonly timeZoneOptions = computed<SelectOption[]>(() => {
+    const options: SelectOption[] = [
+      { value: TURKEY_TIME_ZONE, label: this.language.t('pc.mig.tz.turkey') },
+      { value: '', label: this.language.t('pc.mig.tz.utc') }
+    ];
+    const current = this.scheduleTimeZone();
+    if (!options.some(o => o.value === current)) options.push({ value: current, label: current });
+    return options;
+  });
+
+  /** Seçimin okunur karşılığı, ör. "Her Pazar 03:00 · Türkiye saati". Özel ifadede boş. */
+  readonly scheduleSummary = computed(() => {
+    const s = this.scheduleSpec();
+    if (s.frequency === 'custom' || !this.cronValid()) return '';
+
+    const params = {
+      minute: s.minute,
+      time: `${this.pad(s.hour)}:${this.pad(s.minute)}`,
+      n: s.frequency === 'everyNHours' ? s.hourInterval : s.dayInterval,
+      day: s.frequency === 'weekly' ? this.weekDayLabel(s.dayOfWeek) : s.dayOfMonth
+    };
+    const zone = this.timeZoneOptions().find(o => o.value === this.scheduleTimeZone())?.label ?? '';
+    return `${this.language.t(`pc.mig.summary.${s.frequency}`, params)} · ${zone}`;
+  });
+
+  /** Form kayıtlı zamanlamadan farklıysa sunucunun "sonraki koşular" listesi henüz eski. */
+  readonly scheduleDirty = computed(() => {
+    const saved = this.schedule();
+    if (!saved) return false;
+    return this.cronExpression() !== saved.cronExpression.trim()
+      || this.scheduleTimeZone() !== (saved.timeZoneId ?? '');
+  });
 
   private timer: ReturnType<typeof setInterval> | null = null;
 
@@ -125,21 +216,54 @@ export class MigrationComponent implements OnInit, OnDestroy {
         this.schedule.set(r.data);
         this.scheduleForm = {
           enabled: r.data.enabled,
-          cronExpression: r.data.cronExpression,
-          timeZoneId: r.data.timeZoneId ?? '',
           takePreBackup: r.data.takePreBackup,
           stopOnFailure: r.data.stopOnFailure
         };
+        // Tanınmayan ifade "Özel"e düşer ve ham hâliyle korunur.
+        this.scheduleSpec.set(parseCron(r.data.cronExpression));
+        this.scheduleTimeZone.set(r.data.timeZoneId ?? '');
       },
       error: () => {}
     });
   }
 
+  onFrequencyChange(value: string): void {
+    const frequency = value as CronFrequency;
+    const current = this.scheduleSpec();
+    // "Özel"e geçerken mevcut seçimin cron karşılığı taşınır — sıfırdan yazılmasın.
+    const raw = frequency === 'custom' ? buildCron(current) : current.raw;
+    this.scheduleSpec.set({ ...current, frequency, raw });
+  }
+
+  patchSpec(patch: Partial<CronSpec>): void {
+    this.scheduleSpec.set({ ...this.scheduleSpec(), ...patch });
+  }
+
+  /** `<input type="time">` değeri ("HH:mm"). */
+  timeValue(): string {
+    const s = this.scheduleSpec();
+    return `${this.pad(s.hour)}:${this.pad(s.minute)}`;
+  }
+
+  onTimeChange(value: string): void {
+    const [hour, minute] = (value ?? '').split(':').map(Number);
+    if (Number.isInteger(hour) && Number.isInteger(minute)) this.patchSpec({ hour, minute });
+  }
+
   saveSchedule(): void {
+    if (!this.cronValid()) {
+      this.error.set(this.language.t('pc.mig.rawCronInvalid'));
+      return;
+    }
     this.savingSchedule.set(true);
     this.error.set(null);
     this.success.set(null);
-    this.service.saveSchedule({ ...this.scheduleForm, nextOccurrences: [] }).subscribe({
+    this.service.saveSchedule({
+      ...this.scheduleForm,
+      cronExpression: this.cronExpression(),
+      timeZoneId: this.scheduleTimeZone() || null,
+      nextOccurrences: []
+    }).subscribe({
       next: r => {
         this.savingSchedule.set(false);
         // Yeniden yükle: sonraki koşu önizlemesini sunucu hesaplıyor.
@@ -193,5 +317,19 @@ export class MigrationComponent implements OnInit, OnDestroy {
 
   private stopPolling(): void {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }
+  }
+
+  // ── Görüntüleme yardımcıları ──────────────────────────────────────────────
+
+  /** Haftanın gününü aktif dilde yazar (0 = Pazar) — ayrı çeviri anahtarı gerekmez. */
+  private weekDayLabel(day: number): string {
+    // 2026-08-02 bir Pazar; gün eklenerek 0 = Pazar sırası korunur.
+    const reference = new Date(2026, 7, 2 + day);
+    return reference.toLocaleDateString(
+      this.language.lang() === 'en' ? 'en-US' : 'tr-TR', { weekday: 'long' });
+  }
+
+  private pad(value: number): string {
+    return String(value).padStart(2, '0');
   }
 }

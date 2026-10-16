@@ -21,7 +21,8 @@
             <span class="eyebrow">{{ 'pc.help.sectionLifecycle' | t }}</span>
             <div class="lifecycle">
               @for (s of steps; track s; let last = $last) {
-                <span class="lifecycle-step">{{ s }}</span>
+                <!-- Adımlar sunucu durum sabitleridir; pc.enum.* kapsamını check-i18n denetler. -->
+                <span class="lifecycle-step">{{ ('pc.enum.' + s) | t }}</span>
                 @if (!last) { <span class="lifecycle-arrow" aria-hidden="true">→</span> }
               }
             </div>

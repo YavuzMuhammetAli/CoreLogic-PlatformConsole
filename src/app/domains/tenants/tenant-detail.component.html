@@ -179,7 +179,10 @@
                 </thead>
                 <tbody>
                   @for (f of entitlementFeatures(); track f.key) {
-                    <tr><td class="mono">{{ f.key }}</td><td class="mono num">{{ f.limit == null ? '✓' : f.limit }}</td></tr>
+                    <tr>
+                      <td>{{ featureLabel(f.key) }} <span class="mono muted feature-key">{{ f.key }}</span></td>
+                      <td class="mono num">{{ f.limit == null ? '✓' : (f.limit | number) }}</td>
+                    </tr>
                   }
                 </tbody>
               </table>
@@ -222,7 +225,7 @@
               <tbody>
                 @for (b of backups(); track b.id) {
                   <tr>
-                    <td class="mono">{{ b.type }}</td>
+                    <td>{{ enumLabel(b.type) }}</td>
                     <td>
                       <app-status-badge [tone]="b.status === 'Completed' ? 'success' : b.status === 'Failed' ? 'danger' : 'meta'" [label]="b.status" />
                       @if (b.error) { <span class="muted" [title]="b.error">⚠</span> }

@@ -90,6 +90,32 @@ for (const key of keysOf(FALLBACK_TOPIC)) {
   if (!TRANSLATIONS[key]) problems.push(`Sözlükte yok (fallback): ${key}`);
 }
 
+// ── 5) Sunucu sabitlerinin görünen adı var mı? ───────────────────────────────
+// Rozetler/seçim kutuları bu değerleri `pc.enum.*` ve `pc.feature.*` üzerinden
+// çevirir; karşılığı yoksa ekranda ham İngilizce sabit görünür.
+const model = file => loadTs(path.join(SRC, 'app/core/models', file));
+const enumSources = {
+  JOB_STATUSES: model('job.models.ts').JOB_STATUSES,
+  PLAN_STATUSES: model('commerce.models.ts').PLAN_STATUSES,
+  SUBSCRIPTION_STATUSES: model('commerce.models.ts').SUBSCRIPTION_STATUSES,
+  TENANT_STATUSES: model('tenant.models.ts').TENANT_STATUSES,
+  ANNOUNCEMENT_SEVERITIES: model('announcement.models.ts').ANNOUNCEMENT_SEVERITIES,
+  FLAG_STATES: model('flag.models.ts').FLAG_STATES,
+  COMPLIANCE_TYPES: model('compliance.models.ts').COMPLIANCE_TYPES
+};
+for (const topic of Object.values(PAGE_HELP)) {
+  if (topic.lifecycle) enumSources[`lifecycle(${topic.titleKey})`] = topic.lifecycle;
+}
+for (const [source, values] of Object.entries(enumSources)) {
+  if (!Array.isArray(values)) { problems.push(`Sabit okunamadı: ${source}`); continue; }
+  for (const v of values) {
+    if (!TRANSLATIONS[`pc.enum.${v}`]) problems.push(`Görünen ad yok: ${source} → pc.enum.${v}`);
+  }
+}
+for (const k of model('commerce.models.ts').FEATURE_KEYS ?? []) {
+  if (!TRANSLATIONS[`pc.feature.${k}`]) problems.push(`Görünen ad yok: FEATURE_KEYS → pc.feature.${k}`);
+}
+
 // ── Sonuç ────────────────────────────────────────────────────────────────────
 if (problems.length) {
   console.error(`\n✖ ${problems.length} sorun bulundu:\n`);

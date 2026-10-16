@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -10,6 +10,7 @@ import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { SelectComponent } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
+import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'inbox' | 'rules';
@@ -25,6 +26,7 @@ type Tab = 'inbox' | 'rules';
 export class NotificationCenterComponent implements OnInit {
   private readonly service = inject(NotificationsService);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
 
   readonly tab = signal<Tab>('inbox');
   readonly loading = signal(true);
@@ -35,7 +37,13 @@ export class NotificationCenterComponent implements OnInit {
 
   readonly sevTone = severityTone;
   readonly canManage = this.store.has(Cap.OpsManage);
-  readonly channelTypes = ['InApp', 'Email'];
+  readonly channelTypes = computed(() =>
+    ['InApp', 'Email'].map(v => ({ value: v, label: this.enumLabel(v) })));
+
+  /** Tablo hücreleri için — tetikleyici ve kanal tipi sunucudan ham gelir. */
+  enumLabel(value: string): string {
+    return this.language.enumLabel(value);
+  }
 
   unreadOnly = false;
   ruleForm = { name: '', triggerType: 'Alert', triggerFilter: '["Critical"]', channelType: 'InApp', targets: '', throttleMinutes: 0 };

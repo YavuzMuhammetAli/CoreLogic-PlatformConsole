@@ -97,7 +97,7 @@
               <tbody>
                 @for (d of deliveries(); track d.id) {
                   <tr>
-                    <td class="mono">{{ d.eventType }}</td>
+                    <td [title]="d.eventType">{{ enumLabel(d.eventType) }}</td>
                     <td><app-status-badge [tone]="delTone(d.status)" [label]="d.status" /></td>
                     <td class="mono num">{{ d.attemptCount }}</td>
                     <td class="mono num">{{ d.responseCode ?? '—' }}</td>

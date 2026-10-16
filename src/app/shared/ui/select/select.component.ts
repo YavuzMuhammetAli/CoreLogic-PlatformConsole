@@ -17,9 +17,14 @@ let nextSelectId = 0;
  * Filtre select'lerinin başına boş değerli "Tümü" seçeneğini ekler — konsolda
  * yedi ayrı listede tekrarlanan kalıp. `label` çağıran tarafta çevrilir, bu yüzden
  * dil değişiminde yeniden hesaplanması için `computed()` içinde kullanılmalıdır.
+ * `labelOf` verilirse değerlerin görünen adı ondan gelir (ör. `language.enumLabel`).
  */
-export function withAllOption(label: string, values: readonly string[]): SelectOption[] {
-  return [{ value: '', label }, ...values.map(v => ({ value: v, label: v }))];
+export function withAllOption(
+  label: string,
+  values: readonly string[],
+  labelOf: (value: string) => string = v => v
+): SelectOption[] {
+  return [{ value: '', label }, ...values.map(v => ({ value: v, label: labelOf(v) }))];
 }
 
 /**

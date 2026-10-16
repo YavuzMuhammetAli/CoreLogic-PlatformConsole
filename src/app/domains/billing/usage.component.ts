@@ -7,6 +7,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
+import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 interface UsageSummary { tenantId: string; metricKey: string; total: number; }
@@ -22,6 +23,7 @@ interface UsageSummary { tenantId: string; metricKey: string; total: number; }
 export class UsageComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly store = inject(PlatformSessionStore);
+  private readonly language = inject(LanguageService);
   private readonly base = `${environment.platformApiBaseUrl}/usage`;
 
   readonly loading = signal(true);
@@ -33,6 +35,11 @@ export class UsageComponent implements OnInit {
   form = { tenantCode: '', metricKey: 'ai_tokens_per_month', quantity: 0 };
 
   ngOnInit(): void { this.load(); }
+
+  /** Metrik anahtarı plan özellik anahtarıyla aynıdır (kota tüketimi); tanınmayan ham kalır. */
+  metricLabel(key: string): string {
+    return this.language.featureLabel(key);
+  }
 
   load(): void {
     this.loading.set(true);

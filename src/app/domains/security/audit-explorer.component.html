@@ -66,7 +66,7 @@
                 <td class="mono nowrap">{{ a.occurredAt | date:'short' }}</td>
                 <td>{{ a.actorName || a.actorType }}</td>
                 <td class="mono">{{ a.action }}</td>
-                <td>{{ a.category }}</td>
+                <td>{{ enumLabel(a.category) }}</td>
                 <td><app-status-badge [tone]="resultTone(a.result)" [label]="a.result" /></td>
                 <td><app-status-badge [tone]="severityTone(a.severity)" [label]="a.severity" /></td>
                 <td class="mono corr">

@@ -66,3 +66,6 @@
   .detail-right { align-items: flex-start; }
   .model-path { max-width: 18ch; }
 }
+
+/* Hak tablosunda çevrilmiş adın yanında operatörün tanıdığı ham anahtar. */
+.feature-key { margin-left: var(--space-1); font-size: var(--text-xs); }

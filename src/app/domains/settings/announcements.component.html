@@ -22,7 +22,7 @@
       <div class="cluster wrap">
         <input class="input" [(ngModel)]="form.title" [placeholder]="'pc.ann.titleField' | t" />
         <app-select
-          [options]="severities"
+          [options]="severities()"
           [(value)]="form.severity"
           [ariaLabel]="'pc.ann.severity' | t" />
         <input class="input grow" [(ngModel)]="form.body" [placeholder]="'pc.ann.body' | t" />

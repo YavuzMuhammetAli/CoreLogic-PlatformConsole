@@ -14,3 +14,5 @@
 .table-scroll { overflow-x: auto; }
 .nowrap { white-space: nowrap; }
 .num { text-align: right; }
+.comp-name { font-weight: 600; }
+.comp-desc { font-size: var(--text-xs); max-width: 48ch; }

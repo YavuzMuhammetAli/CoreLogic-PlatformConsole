@@ -31,12 +31,20 @@ export class ComplianceComponent implements OnInit {
   readonly busyId = signal<number | null>(null);
 
   readonly tone = complianceStatusTone;
-  readonly types = COMPLIANCE_TYPES;
   readonly canManage = this.store.has(Cap.SecurityManage);
+  /** Talep türleri — değer sunucu sabiti, etiket çeviriden. */
+  readonly typeOptions = computed(() =>
+    COMPLIANCE_TYPES.map(v => ({ value: v, label: this.language.enumLabel(v) })));
   /** FSM durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.comp.allStatuses'),
-      ['Open', 'InProgress', 'Completed', 'Rejected']));
+      ['Open', 'InProgress', 'Completed', 'Rejected'],
+      v => this.language.enumLabel(v)));
+
+  /** Tablo hücresi için — tür sunucudan ham gelir. */
+  enumLabel(value: string): string {
+    return this.language.enumLabel(value);
+  }
 
   status = '';
   form = { type: 'DSAR', tenantId: '', subjectRef: '', reason: '' };

@@ -2,7 +2,8 @@
 export interface HealthComponent {
   name: string;
   category: string;
-  status: string; // Healthy | Degraded | Unhealthy | Unknown
+  /** Healthy | Degraded | Unhealthy | Unknown | NotConfigured (hedef yok — genel durumu etkilemez) */
+  status: string;
   latencyMs: number;
   error?: string | null;
   checkedAt: string;

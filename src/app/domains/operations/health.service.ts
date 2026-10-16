@@ -22,6 +22,7 @@ export function healthTone(status: string): BadgeTone {
     case 'Healthy': return 'success';
     case 'Degraded': return 'warn';
     case 'Unhealthy': return 'danger';
+    case 'NotConfigured': return 'neutral'; // izlenecek hedef yok — sorun değil
     default: return 'neutral';
   }
 }

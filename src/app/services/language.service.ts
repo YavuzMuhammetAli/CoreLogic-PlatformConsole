@@ -52,4 +52,27 @@ export class LanguageService {
     }
     return text;
   }
+
+  /** Anahtar sözlükte yoksa `fallback` döner — ekranda ham anahtar metni görünmesin. */
+  tOr(key: string, fallback: string): string {
+    return TRANSLATIONS[key] ? this.t(key) : fallback;
+  }
+
+  // Sunucudan sabit İngilizce gelen değerlerin görünen adları. Tanınmayan (sonradan
+  // eklenmiş) değer ham hâliyle görünür; kapsamı scripts/check-i18n.js denetler.
+
+  /** Durum / önem / sonuç / tür sabiti, ör. 'Active' → 'Aktif' (`pc.enum.*`). */
+  enumLabel(value: string): string {
+    return this.tOr(`pc.enum.${value}`, value);
+  }
+
+  /** Plan özellik / kota anahtarı, ör. 'ai_tokens_per_month' (`pc.feature.*`). */
+  featureLabel(key: string): string {
+    return this.tOr(`pc.feature.${key}`, key);
+  }
+
+  /** Kota birimi, ör. 'tokens' (`pc.unit.*`). */
+  unitLabel(unit: string): string {
+    return this.tOr(`pc.unit.${unit}`, unit);
+  }
 }

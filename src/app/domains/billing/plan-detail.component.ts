@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { BillingService, planStatusTone } from './billing.service';
+import { BillingService, formatQuota, planStatusTone } from './billing.service';
 import { ResponseModel } from '../../core/models/api.models';
 import { PlanItem, PlanFeatureItem, FEATURE_KEYS } from '../../core/models/commerce.models';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
@@ -48,7 +48,9 @@ export class PlanDetailComponent implements OnInit {
 
   readonly tone = planStatusTone;
   readonly canWrite = this.store.has(Cap.BillingWrite);
-  readonly featureKeys = FEATURE_KEYS;
+  /** Kapalı katalog — değer anahtar, etiket çeviri (dil değişince güncellensin diye computed). */
+  readonly featureKeys = computed(() =>
+    FEATURE_KEYS.map(k => ({ value: k, label: this.language.featureLabel(k) })));
 
   private planId = 0;
 
@@ -146,10 +148,16 @@ export class PlanDetailComponent implements OnInit {
     });
   }
 
-  featureLabel(f: PlanFeatureItem): string {
-    return f.limitValue == null
-      ? this.language.t('pc.billing.unlimited')
-      : `${f.limitValue}${f.unit ? ' ' + f.unit : ''}`;
+  featureName(key: string): string {
+    return this.language.featureLabel(key);
+  }
+
+  limitLabel(f: PlanFeatureItem): string {
+    return formatQuota(this.language, f) ?? this.language.t('pc.billing.unlimited');
+  }
+
+  unitLabel(unit: string | null | undefined): string {
+    return unit ? this.language.unitLabel(unit) : '—';
   }
 
   /** Tüm mutasyonlar aynı sonuç/yenileme kalıbını paylaşır. */

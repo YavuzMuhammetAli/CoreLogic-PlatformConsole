@@ -41,21 +41,21 @@
                 </td>
                 <td>
                   <span class="badge" [class.badge-success]="f.defaultState === 'On'" [class.badge-meta]="f.defaultState === 'Percentage'">
-                    {{ f.defaultState }}@if (f.defaultState === 'Percentage') { <span> {{ f.percentage }}%</span> }
+                    {{ enumLabel(f.defaultState) }}@if (f.defaultState === 'Percentage') { <span> {{ f.percentage }}%</span> }
                   </span>
                 </td>
                 <td>
                   @if (f.overrides.length === 0) { <span class="muted">—</span> }
                   @for (o of f.overrides; track o.tenantId) {
                     <span class="badge ov">
-                      {{ o.tenantId }}: {{ o.state }}
+                      {{ o.tenantId }}: {{ enumLabel(o.state) }}
                       <button class="x" type="button" (click)="removeOverride(f.key, o.tenantId)" title="kaldır">×</button>
                     </span>
                   }
                 </td>
                 <td class="td-actions">
-                  @if (f.defaultState !== 'On') { <button class="btn btn-secondary btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'On')">On</button> }
-                  @if (f.defaultState !== 'Off') { <button class="btn btn-ghost btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'Off')">Off</button> }
+                  @if (f.defaultState !== 'On') { <button class="btn btn-secondary btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'On')">{{ 'pc.flags.turnOn' | t }}</button> }
+                  @if (f.defaultState !== 'Off') { <button class="btn btn-ghost btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'Off')">{{ 'pc.flags.turnOff' | t }}</button> }
                 </td>
               </tr>
             }
@@ -72,7 +72,7 @@
           <input class="input" [(ngModel)]="createForm.description" [placeholder]="'pc.flags.desc' | t" />
           <div class="cluster">
             <app-select
-              [options]="states"
+              [options]="states()"
               [(value)]="createForm.defaultState"
               [ariaLabel]="'pc.flags.state' | t" />
             @if (createForm.defaultState === 'Percentage') {
@@ -92,7 +92,7 @@
           <input class="input" [(ngModel)]="ovForm.tenantId" [placeholder]="'pc.flags.tenantCode' | t" />
           <div class="cluster">
             <app-select
-              [options]="overrideStates"
+              [options]="overrideStates()"
               [(value)]="ovForm.state"
               [ariaLabel]="'pc.flags.state' | t" />
             <input class="input grow" [(ngModel)]="ovForm.reason" [placeholder]="'pc.flags.reason' | t" />

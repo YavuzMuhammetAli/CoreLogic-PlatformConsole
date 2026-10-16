@@ -36,8 +36,9 @@ export interface MigrationRunDetail extends MigrationRunItem {
 /**
  * Otomatik (cron) yükseltme ayarı — platform geneli tek ScheduledTask satırı.
  *
- * `nextOccurrences` SUNUCUDAN gelir: konsolda ikinci bir cron ayrıştırıcı
- * tutulmaz, önizlemeyi gerçekten zamanlayacak olan aynı CronSchedule hesaplar.
+ * Form ↔ cron dönüşümü konsolda (`core/utils/cron-builder.ts`), ama
+ * `nextOccurrences` SUNUCUDAN gelir: sonraki koşu önizlemesini, zamanlamayı
+ * gerçekten yürütecek olan aynı CronSchedule hesaplar (saat dilimi dahil).
  */
 export interface MigrationSchedule {
   enabled: boolean;

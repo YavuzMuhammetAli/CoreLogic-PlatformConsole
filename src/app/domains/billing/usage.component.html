@@ -54,7 +54,10 @@
             @for (r of rows(); track r.tenantId + r.metricKey) {
               <tr>
                 <td class="mono">{{ r.tenantId }}</td>
-                <td class="mono">{{ r.metricKey }}</td>
+                <td>
+                  <div>{{ metricLabel(r.metricKey) }}</div>
+                  <div class="mono muted feature-key">{{ r.metricKey }}</div>
+                </td>
                 <td class="mono num">{{ r.total }}</td>
               </tr>
             }

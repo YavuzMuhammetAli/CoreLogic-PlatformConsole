@@ -1,6 +1,7 @@
 import { Translations } from './translations.model';
 import { PLATFORM_I18N } from './platform.i18n';
 import { HELP_I18N } from './help.i18n';
+import { ENUM_I18N } from './enum.i18n';
 
 /**
  * Tüm çeviri sözlüklerinin birleşimi. Yeni bir alan çevrildiğinde burada bir
@@ -8,7 +9,8 @@ import { HELP_I18N } from './help.i18n';
  */
 export const TRANSLATIONS: Translations = {
   ...PLATFORM_I18N,
-  ...HELP_I18N
+  ...HELP_I18N,
+  ...ENUM_I18N
 };
 
 export type { TranslationEntry, Translations } from './translations.model';

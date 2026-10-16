@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -7,6 +7,7 @@ import { AnnouncementItem, DatabaseServerItem, ANNOUNCEMENT_SEVERITIES } from '.
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { SelectComponent } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
+import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Announcements & Status (M26) + DB sunucu envanteri (multi-region tohumu). */
@@ -19,6 +20,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 })
 export class AnnouncementsComponent implements OnInit {
   private readonly service = inject(AnnouncementService);
+  private readonly language = inject(LanguageService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -28,7 +30,9 @@ export class AnnouncementsComponent implements OnInit {
 
   readonly sevTone = severityTone;
   readonly stTone = announcementStatusTone;
-  readonly severities = ANNOUNCEMENT_SEVERITIES;
+  /** Değer sunucu sabiti (Info/Maintenance/Incident), etiket çeviriden. */
+  readonly severities = computed(() =>
+    ANNOUNCEMENT_SEVERITIES.map(v => ({ value: v, label: this.language.enumLabel(v) })));
 
   form = { title: '', body: '', severity: 'Info' };
 

@@ -45,18 +45,110 @@
           </label>
         </div>
 
-        <div class="cluster wrap">
+        <!-- Kullanıcı cron yazmaz: sıklık + saat/gün seçer; ham ifade yalnız "Özel"de. -->
+        <div class="schedule-grid">
           <div class="field">
-            <label for="mig-cron">{{ 'pc.mig.cron' | t }}</label>
-            <input id="mig-cron" class="input mono" type="text" [(ngModel)]="scheduleForm.cronExpression" />
-            <span class="field-help">{{ 'pc.mig.cronHint' | t }}</span>
+            <label>{{ 'pc.mig.frequency' | t }}</label>
+            <app-select
+              [options]="frequencyOptions()"
+              [value]="scheduleSpec().frequency"
+              (valueChange)="onFrequencyChange($event)"
+              [ariaLabel]="'pc.mig.frequency' | t" />
           </div>
+
+          @if (fields().hourInterval) {
+            <div class="field">
+              <label>{{ 'pc.mig.hourInterval' | t }}</label>
+              <app-select
+                [options]="hourIntervalOptions()"
+                [value]="'' + scheduleSpec().hourInterval"
+                (valueChange)="patchSpec({ hourInterval: +$event })"
+                [ariaLabel]="'pc.mig.hourInterval' | t" />
+            </div>
+          }
+
+          @if (fields().dayInterval) {
+            <div class="field">
+              <label for="mig-day-interval">{{ 'pc.mig.dayInterval' | t }}</label>
+              <input id="mig-day-interval" class="input" type="number" min="1" max="31"
+                     [ngModel]="scheduleSpec().dayInterval"
+                     (ngModelChange)="patchSpec({ dayInterval: +$event })" />
+            </div>
+          }
+
+          @if (fields().dayOfWeek) {
+            <div class="field">
+              <label>{{ 'pc.mig.dayOfWeek' | t }}</label>
+              <app-select
+                [options]="weekDayOptions()"
+                [value]="'' + scheduleSpec().dayOfWeek"
+                (valueChange)="patchSpec({ dayOfWeek: +$event })"
+                [ariaLabel]="'pc.mig.dayOfWeek' | t" />
+            </div>
+          }
+
+          @if (fields().dayOfMonth) {
+            <div class="field">
+              <label>{{ 'pc.mig.dayOfMonth' | t }}</label>
+              <app-select
+                [options]="monthDayOptions"
+                [value]="'' + scheduleSpec().dayOfMonth"
+                (valueChange)="patchSpec({ dayOfMonth: +$event })"
+                [ariaLabel]="'pc.mig.dayOfMonth' | t" />
+            </div>
+          }
+
+          @if (fields().time) {
+            <div class="field">
+              <label for="mig-time">{{ 'pc.mig.time' | t }}</label>
+              <input id="mig-time" class="input" type="time"
+                     [ngModel]="timeValue()" (ngModelChange)="onTimeChange($event)" />
+            </div>
+          }
+
+          <!-- Saatte bir / N saatte bir: saat serbest, yalnız dakika seçilir. -->
+          @if (fields().minute) {
+            <div class="field">
+              <label for="mig-minute">{{ 'pc.mig.minute' | t }}</label>
+              <input id="mig-minute" class="input" type="number" min="0" max="59"
+                     [ngModel]="scheduleSpec().minute"
+                     (ngModelChange)="patchSpec({ minute: +$event })" />
+            </div>
+          }
+
+          @if (fields().raw) {
+            <div class="field schedule-wide">
+              <label for="mig-raw-cron">{{ 'pc.mig.rawCron' | t }}</label>
+              <input id="mig-raw-cron" class="input mono" type="text" spellcheck="false"
+                     [ngModel]="scheduleSpec().raw"
+                     (ngModelChange)="patchSpec({ raw: $event })"
+                     [attr.aria-invalid]="!cronValid()"
+                     [attr.aria-describedby]="cronValid() ? 'mig-raw-cron-help' : 'mig-raw-cron-error'" />
+              @if (cronValid()) {
+                <span id="mig-raw-cron-help" class="field-help">{{ 'pc.mig.rawCronHelp' | t }}</span>
+              } @else {
+                <span id="mig-raw-cron-error" class="field-error" role="alert">{{ 'pc.mig.rawCronInvalid' | t }}</span>
+              }
+            </div>
+          }
+
           <div class="field">
-            <label for="mig-tz">{{ 'pc.mig.timeZone' | t }}</label>
-            <input id="mig-tz" class="input mono" type="text" [(ngModel)]="scheduleForm.timeZoneId" />
+            <label>{{ 'pc.mig.timeZone' | t }}</label>
+            <app-select
+              [options]="timeZoneOptions()"
+              [value]="scheduleTimeZone()"
+              (valueChange)="scheduleTimeZone.set($event)"
+              [ariaLabel]="'pc.mig.timeZone' | t" />
             <span class="field-help">{{ 'pc.mig.timeZoneHint' | t }}</span>
           </div>
         </div>
+
+        @if (scheduleSummary()) {
+          <p class="schedule-summary">{{ scheduleSummary() }}</p>
+        }
+        @if (shortMonthWarning()) {
+          <div class="alert alert-warn" role="alert">{{ 'pc.mig.shortMonthWarning' | t }}</div>
+        }
 
         <div class="cluster wrap">
           <label class="checkbox-label">
@@ -65,7 +157,7 @@
           <label class="checkbox-label">
             <input type="checkbox" [(ngModel)]="scheduleForm.stopOnFailure" /> {{ 'pc.mig.stopOnFailure' | t }}
           </label>
-          <button class="btn btn-primary btn-sm" [disabled]="savingSchedule()" (click)="saveSchedule()">
+          <button class="btn btn-primary btn-sm" [disabled]="savingSchedule() || !cronValid()" (click)="saveSchedule()">
             {{ 'pc.save' | t }}
           </button>
         </div>
@@ -79,6 +171,9 @@
                   <li class="mono">{{ n | date:'medium' }}</li>
                 }
               </ul>
+              @if (scheduleDirty()) {
+                <p class="field-help">{{ 'pc.mig.nextRunsStale' | t }}</p>
+              }
             </div>
           }
           @if (s.lastRunAt) {

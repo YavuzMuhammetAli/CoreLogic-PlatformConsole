@@ -31,7 +31,7 @@ export class TenantListComponent implements OnInit {
   readonly hTone = healthTone;
   /** Dil değişince etiket de değişsin diye computed. */
   readonly statusOptions = computed(() =>
-    withAllOption(this.language.t('pc.tenants.allStatuses'), this.statuses));
+    withAllOption(this.language.t('pc.tenants.allStatuses'), this.statuses, v => this.language.enumLabel(v)));
 
   search = '';
   status = '';

@@ -121,12 +121,13 @@ export const PAGE_HELP: Record<PageHelpId, PageHelpTopic> = {
     { rules: ['retryBackoff', 'poison'] }),
 
   health: topic('health',
-    ['component', 'status', 'latency', 'detail', 'checkedAt']),
+    ['component', 'status', 'latency', 'detail', 'checkedAt'],
+    { rules: ['overall', 'canary'] }),
 
   alerts: topic('alerts',
     ['severity', 'rule', 'valueThreshold', 'status', 'firedAt', 'context', 'runbook'],
     {
-      rules: ['window', 'condition', 'ackVsResolve', 'apiOnlyContext', 'prunedTraces'],
+      rules: ['window', 'condition', 'ackVsResolve', 'apiOnlyContext', 'prunedTraces', 'parkedJobs'],
       lifecycle: ['Firing', 'Acknowledged', 'Resolved'],
       notes: true
     }),
