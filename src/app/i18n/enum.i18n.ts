@@ -8,9 +8,10 @@ import { Translations } from './translations.model';
  * ekranda geçer ('Active' tenant, plan ve abonelikte) ve her yerde aynı okunmalı.
  *
  *   pc.enum.<Değer>      → LanguageService.enumLabel()  (StatusBadge bunu otomatik kullanır)
- *   pc.feature.<anahtar> → LanguageService.featureLabel() (plan özellik/kota anahtarları)
- *   pc.unit.<birim>      → LanguageService.unitLabel()
  *   pc.jobType.<tip>     → İş kuyruğu tipleri
+ *
+ * Plan özellik / metrik adları ve birimleri burada TUTULMAZ — sunucu, isteğin dilinde
+ * backend MetricCatalog'dan gönderir (bkz. MetricCatalogService).
  *
  * Model sabitlerindeki her değerin burada karşılığı olduğunu scripts/check-i18n.js denetler.
  */
@@ -146,26 +147,5 @@ export const ENUM_I18N: Translations = {
   'pc.jobType.platform.migration-upgrade': { tr: 'Migrasyon koşusu', en: 'Migration run' },
   'pc.jobType.notification.email': { tr: 'E-posta gönderimi', en: 'Email delivery' },
   'pc.jobType.workflow.notify': { tr: 'İş akışı bildirimi', en: 'Workflow notification' },
-  'pc.jobType.workflow.notify.email': { tr: 'İş akışı e-postası', en: 'Workflow email' },
-
-  // ── Plan özellik / kota anahtarları ────────────────────────────────────────
-  'pc.feature.max_users': { tr: 'Kullanıcı sayısı', en: 'Users' },
-  'pc.feature.max_models': { tr: 'Model sayısı', en: 'Models' },
-  'pc.feature.max_storage_gb': { tr: 'Depolama alanı', en: 'Storage' },
-  'pc.feature.storage_gb': { tr: 'Kullanılan depolama', en: 'Storage used' },
-  'pc.feature.api_requests_per_day': { tr: 'Günlük API isteği', en: 'API requests per day' },
-  'pc.feature.ai_tokens_per_month': { tr: 'Aylık AI token', en: 'AI tokens per month' },
-  'pc.feature.feature_reports': { tr: 'Raporlar modülü', en: 'Reports module' },
-  'pc.feature.feature_api_access': { tr: 'API erişimi', en: 'API access' },
-  'pc.feature.workflow_definitions': { tr: 'İş akışı tanımı sayısı', en: 'Workflow definitions' },
-  'pc.feature.workflow_runs_per_month': { tr: 'Aylık süreç başlatma', en: 'Workflow runs per month' },
-
-  // ── Kota birimleri ─────────────────────────────────────────────────────────
-  'pc.unit.tokens': { tr: 'token', en: 'tokens' },
-  'pc.unit.requests': { tr: 'istek', en: 'requests' },
-  'pc.unit.models': { tr: 'model', en: 'models' },
-  'pc.unit.GB': { tr: 'GB', en: 'GB' },
-  'pc.unit.users': { tr: 'kullanıcı', en: 'users' },
-  'pc.unit.workflows': { tr: 'akış', en: 'workflows' },
-  'pc.unit.runs': { tr: 'süreç', en: 'runs' }
+  'pc.jobType.workflow.notify.email': { tr: 'İş akışı e-postası', en: 'Workflow email' }
 };

@@ -8,6 +8,7 @@ import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
+import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 interface UsageSummary { tenantId: string; metricKey: string; total: number; }
@@ -24,6 +25,7 @@ export class UsageComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly store = inject(PlatformSessionStore);
   private readonly language = inject(LanguageService);
+  private readonly catalog = inject(MetricCatalogService);
   private readonly base = `${environment.platformApiBaseUrl}/usage`;
 
   readonly loading = signal(true);
@@ -36,9 +38,9 @@ export class UsageComponent implements OnInit {
 
   ngOnInit(): void { this.load(); }
 
-  /** Metrik anahtarı plan özellik anahtarıyla aynıdır (kota tüketimi); tanınmayan ham kalır. */
+  /** Metrik adı katalogdan (plan özelliği ya da yalnız maliyet metriği); tanınmayan ham kalır. */
   metricLabel(key: string): string {
-    return this.language.featureLabel(key);
+    return this.catalog.label(key);
   }
 
   load(): void {

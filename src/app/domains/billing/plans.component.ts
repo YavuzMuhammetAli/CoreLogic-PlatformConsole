@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BillingService, formatQuota, planStatusTone } from './billing.service';
 import { PlanFeatureItem, PlanItem } from '../../core/models/commerce.models';
 import { LanguageService } from '../../services/language.service';
+import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
@@ -22,6 +23,7 @@ export class PlansComponent implements OnInit {
   private readonly service = inject(BillingService);
   private readonly store = inject(PlatformSessionStore);
   private readonly language = inject(LanguageService);
+  private readonly catalog = inject(MetricCatalogService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -47,8 +49,8 @@ export class PlansComponent implements OnInit {
 
   /** Rozet metni, ör. "Aylık AI token: 1.000.000 token"; limitsiz özellikte yalnız adı. */
   featureLabel(f: PlanFeatureItem): string {
-    const name = this.language.featureLabel(f.featureKey);
-    const quota = formatQuota(this.language, f);
+    const name = this.catalog.label(f.featureKey);
+    const quota = formatQuota(this.language, this.catalog, f);
     return quota ? `${name}: ${quota}` : name;
   }
 

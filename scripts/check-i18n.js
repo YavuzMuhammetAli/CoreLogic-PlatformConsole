@@ -112,9 +112,7 @@ for (const [source, values] of Object.entries(enumSources)) {
     if (!TRANSLATIONS[`pc.enum.${v}`]) problems.push(`Görünen ad yok: ${source} → pc.enum.${v}`);
   }
 }
-for (const k of model('commerce.models.ts').FEATURE_KEYS ?? []) {
-  if (!TRANSLATIONS[`pc.feature.${k}`]) problems.push(`Görünen ad yok: FEATURE_KEYS → pc.feature.${k}`);
-}
+// Plan özellik / metrik adları çeviri sözlüğünde değil, sunucudaki MetricCatalog'da.
 
 // ── Sonuç ────────────────────────────────────────────────────────────────────
 if (problems.length) {

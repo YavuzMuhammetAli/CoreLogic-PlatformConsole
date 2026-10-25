@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BillingService, CostByTenant } from './billing.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
+import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /** Cost & AI Usage Analytics (M33/M34) — tenant başına maliyet dökümü (usage × birim). */
@@ -17,6 +18,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 export class CostComponent implements OnInit {
   private readonly service = inject(BillingService);
   private readonly language = inject(LanguageService);
+  private readonly catalog = inject(MetricCatalogService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -25,9 +27,9 @@ export class CostComponent implements OnInit {
 
   ngOnInit(): void { this.load(); }
 
-  /** Metrik anahtarı plan özellik anahtarıyla aynıdır; tanınmayan ham kalır. */
+  /** Metrik adı katalogdan (plan özelliği ya da yalnız maliyet metriği); tanınmayan ham kalır. */
   metricLabel(key: string): string {
-    return this.language.featureLabel(key);
+    return this.catalog.label(key);
   }
 
   load(): void {

@@ -66,13 +66,5 @@ export class LanguageService {
     return this.tOr(`pc.enum.${value}`, value);
   }
 
-  /** Plan özellik / kota anahtarı, ör. 'ai_tokens_per_month' (`pc.feature.*`). */
-  featureLabel(key: string): string {
-    return this.tOr(`pc.feature.${key}`, key);
-  }
-
-  /** Kota birimi, ör. 'tokens' (`pc.unit.*`). */
-  unitLabel(unit: string): string {
-    return this.tOr(`pc.unit.${unit}`, unit);
-  }
+  // Plan özellik / metrik adları ve birimleri burada DEĞİL: MetricCatalogService (sunucudan).
 }

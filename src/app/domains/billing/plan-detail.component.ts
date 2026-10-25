@@ -4,7 +4,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BillingService, formatQuota, planStatusTone } from './billing.service';
 import { ResponseModel } from '../../core/models/api.models';
-import { PlanItem, PlanFeatureItem, FEATURE_KEYS } from '../../core/models/commerce.models';
+import { PlanItem, PlanFeatureItem } from '../../core/models/commerce.models';
+import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
@@ -38,6 +39,7 @@ export class PlanDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly language = inject(LanguageService);
+  private readonly catalog = inject(MetricCatalogService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -48,16 +50,16 @@ export class PlanDetailComponent implements OnInit {
 
   readonly tone = planStatusTone;
   readonly canWrite = this.store.has(Cap.BillingWrite);
-  /** Kapalı katalog — değer anahtar, etiket çeviri (dil değişince güncellensin diye computed). */
+  /** Kapalı katalog (sunucudan) — değer anahtar, etiket isteğin dilinde. Backend dışı anahtarı reddeder. */
   readonly featureKeys = computed(() =>
-    FEATURE_KEYS.map(k => ({ value: k, label: this.language.featureLabel(k) })));
+    this.catalog.planFeatures().map(m => ({ value: m.key, label: m.label })));
 
   private planId = 0;
 
   /** Kimlik formu — plan yüklendiğinde doldurulur. */
   form = { name: '', description: '', isPublic: true, trialDays: 14 };
   /** Özellik ekleme/düzenleme satırı. */
-  featureForm = { featureKey: FEATURE_KEYS[0] as string, limitValue: null as number | null, unit: '' };
+  featureForm = { featureKey: '', limitValue: null as number | null, unit: '' };
 
   /** Varsayılan plan Active dışına çıkamaz — backend de reddeder, buton da gizlenir. */
   readonly canLeaveActive = computed(() => !this.plan()?.isDefaultForNewTenants);
@@ -114,7 +116,7 @@ export class PlanDetailComponent implements OnInit {
       limitValue: this.featureForm.limitValue,
       unit: this.featureForm.unit || null
     }), () => {
-      this.featureForm = { featureKey: FEATURE_KEYS[0], limitValue: null, unit: '' };
+      this.featureForm = { featureKey: '', limitValue: null, unit: '' };
     });
   }
 
@@ -149,15 +151,15 @@ export class PlanDetailComponent implements OnInit {
   }
 
   featureName(key: string): string {
-    return this.language.featureLabel(key);
+    return this.catalog.label(key);
   }
 
   limitLabel(f: PlanFeatureItem): string {
-    return formatQuota(this.language, f) ?? this.language.t('pc.billing.unlimited');
+    return formatQuota(this.language, this.catalog, f) ?? this.language.t('pc.billing.unlimited');
   }
 
   unitLabel(unit: string | null | undefined): string {
-    return unit ? this.language.unitLabel(unit) : '—';
+    return unit ? this.catalog.unitLabel(unit) : '—';
   }
 
   /** Tüm mutasyonlar aynı sonuç/yenileme kalıbını paylaşır. */

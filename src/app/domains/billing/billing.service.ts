@@ -6,15 +6,16 @@ import { DataResponseModel, ListResponseModel, PagedResult, ResponseModel } from
 import { PlanItem, PlanFeatureItem, SubscriptionItem, EntitlementSnapshot } from '../../core/models/commerce.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 import { LanguageService } from '../../services/language.service';
+import { MetricCatalogService } from '../../services/metric-catalog.service';
 
 /**
  * Kota limitinin okunur hâli, ör. "1.000.000 token". Limit boşsa (bool özellik /
  * sınırsız) null — çağıran kendi bağlamına uygun metni koyar.
  */
-export function formatQuota(language: LanguageService, f: PlanFeatureItem): string | null {
+export function formatQuota(language: LanguageService, catalog: MetricCatalogService, f: PlanFeatureItem): string | null {
   if (f.limitValue == null) return null;
   const amount = f.limitValue.toLocaleString(language.lang() === 'en' ? 'en-US' : 'tr-TR');
-  return f.unit ? `${amount} ${language.unitLabel(f.unit)}` : amount;
+  return f.unit ? `${amount} ${catalog.unitLabel(f.unit)}` : amount;
 }
 
 /** Billing (M35/M36/M12) servisi — /plans + /subscriptions uçları. */

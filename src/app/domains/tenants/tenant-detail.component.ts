@@ -15,6 +15,7 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dialog.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
+import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 type Tab = 'summary' | 'provisioning' | 'history' | 'licensing' | 'backups' | 'models' | 'tables';
@@ -50,6 +51,7 @@ export class TenantDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly store = inject(PlatformSessionStore);
   private readonly language = inject(LanguageService);
+  private readonly catalog = inject(MetricCatalogService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -216,7 +218,7 @@ export class TenantDetailComponent implements OnInit {
 
   /** Özellik/kota anahtarı ve yedek türü sunucudan ham gelir. */
   featureLabel(key: string): string {
-    return this.language.featureLabel(key);
+    return this.catalog.label(key);
   }
 
   enumLabel(value: string): string {
