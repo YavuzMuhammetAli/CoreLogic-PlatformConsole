@@ -135,6 +135,7 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Scheduled': { tr: 'Zamanlanmış', en: 'Scheduled' },
   'pc.enum.PreMigration': { tr: 'Migrasyon öncesi', en: 'Pre-migration' },
   'pc.enum.PrePurge': { tr: 'Silme öncesi', en: 'Pre-purge' },
+  'pc.enum.PreRestore': { tr: 'Geri yükleme öncesi', en: 'Pre-restore' },
 
   // ── Worker ─────────────────────────────────────────────────────────────────
   'pc.enum.Disabled': { tr: 'Duraklatıldı', en: 'Paused' },

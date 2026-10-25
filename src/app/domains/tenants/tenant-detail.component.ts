@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -52,6 +52,11 @@ export class TenantDetailComponent implements OnInit {
   private readonly store = inject(PlatformSessionStore);
   private readonly language = inject(LanguageService);
   private readonly catalog = inject(MetricCatalogService);
+  private backupPoll: ReturnType<typeof setTimeout> | null = null;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => { if (this.backupPoll !== null) clearTimeout(this.backupPoll); });
+  }
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -178,17 +183,39 @@ export class TenantDetailComponent implements OnInit {
     const code = this.detail()?.code;
     if (!code) return;
     this.backupSvc.list(code).subscribe({
-      next: res => { if (res.success) this.backups.set(res.data ?? []); this.backupsLoaded.set(true); },
+      next: res => {
+        if (res.success) this.backups.set(res.data ?? []);
+        this.backupsLoaded.set(true);
+        this.scheduleBackupPoll();
+      },
       error: () => { this.backupsLoaded.set(true); }
     });
+  }
+
+  /** Kuyrukta/süren yedek var mı — yedek artık arka planda alınır, liste yoklanır. */
+  hasActiveBackup(): boolean {
+    return this.backups().some(b => b.status === 'Queued' || b.status === 'Running');
+  }
+
+  /** Kuyrukta/süren yedek kaldıkça listeyi birkaç saniyede bir yeniden okur. */
+  private scheduleBackupPoll(): void {
+    if (this.backupPoll !== null) clearTimeout(this.backupPoll);
+    this.backupPoll = null;
+    if (!this.hasActiveBackup()) return;
+    this.backupPoll = setTimeout(() => { this.backupPoll = null; this.loadBackups(); }, 3000);
   }
 
   runBackup(): void {
     const code = this.detail()?.code;
     if (!code) return;
     this.backupBusy.set(-1);
+    // Sunucu yedeği kuyruğa alıp hemen döner; ilerleme listede yoklanarak izlenir.
     this.backupSvc.create(code).subscribe({
-      next: () => { this.backupBusy.set(null); this.loadBackups(); },
+      next: res => {
+        this.backupBusy.set(null);
+        if (!res.success) this.actionError.set(res.message);
+        this.loadBackups();
+      },
       error: e => { this.backupBusy.set(null); this.actionError.set(e?.error?.message ?? 'Yedek alınamadı'); }
     });
   }

@@ -7,7 +7,11 @@ export interface TenantBackupItem {
   sizeBytes: number;
   startedAt: string;
   completedAt?: string | null;
-  status: string; // Running | Completed | Failed
+  status: string; // Queued | Running | Completed | Failed
   error?: string | null;
   verifiedAt?: string | null;
+  /** Saklama sonu; null = süresiz. */
+  expiresAt?: string | null;
+  /** Yedeğin alındığı şema sürümü; null = bilinmiyor (geri yüklenemez). */
+  databaseVersion?: number | null;
 }
