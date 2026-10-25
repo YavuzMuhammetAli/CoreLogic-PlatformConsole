@@ -788,6 +788,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.config.save': { tr: 'Kaydet', en: 'Save' },
   'pc.config.saving': { tr: 'Kaydediliyor…', en: 'Saving…' },
   'pc.config.currentlySet': { tr: 'Tanımlı', en: 'Set' },
+  'pc.config.defaultValue': { tr: 'Boşsa varsayılan: {value}', en: 'Default when empty: {value}' },
   'pc.config.keepSecret': {
     tr: 'Değiştirmemek için boş bırakın',
     en: 'Leave blank to keep unchanged'

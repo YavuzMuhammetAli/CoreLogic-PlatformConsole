@@ -4,4 +4,8 @@ export interface PlatformConfigItem {
   value?: string | null;
   isSecret: boolean;
   updatedAt: string;
+  /** Değer boşken geçerli varsayılan (şimdilik yalnız cost.unit.* birim maliyetleri). */
+  defaultValue?: string | null;
+  /** Veritabanında satırı yok — varsayılan geçiyor; kaydedilince satır açılır. */
+  isDefault?: boolean;
 }

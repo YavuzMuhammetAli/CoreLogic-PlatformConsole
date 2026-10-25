@@ -51,14 +51,17 @@
                     [attr.aria-label]="c.key"
                     [placeholder]="c.isSecret
                       ? ((c.value ? 'pc.config.keepSecret' : 'pc.config.enterSecret') | t)
-                      : ''"
+                      : (c.defaultValue ?? '')"
                     [ngModel]="draftFor(c.key)"
                     (ngModelChange)="onDraftChange(c.key, $event)" />
                   @if (c.isSecret && c.value) {
                     <span class="hint">{{ 'pc.config.currentlySet' | t }}</span>
                   }
+                  @if (c.defaultValue) {
+                    <span class="hint">{{ 'pc.config.defaultValue' | t:{ value: c.defaultValue } }}</span>
+                  }
                 </td>
-                <td class="mono nowrap">{{ c.updatedAt | date:'short' }}</td>
+                <td class="mono nowrap">{{ c.isDefault ? '—' : (c.updatedAt | date:'short') }}</td>
                 <td class="nowrap">
                   <button
                     type="button"
