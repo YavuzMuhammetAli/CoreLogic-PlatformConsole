@@ -145,6 +145,7 @@ export const ENUM_I18N: Translations = {
   // ── İş kuyruğu tipleri ─────────────────────────────────────────────────────
   'pc.jobType.tenant.provision': { tr: 'Şirket kurulumu', en: 'Tenant provisioning' },
   'pc.jobType.tenant.backup': { tr: 'Şirket yedeği', en: 'Tenant backup' },
+  'pc.jobType.tenant.restore': { tr: 'Şirket geri yükleme', en: 'Tenant restore' },
   'pc.jobType.platform.migration-upgrade': { tr: 'Migrasyon koşusu', en: 'Migration run' },
   'pc.jobType.notification.email': { tr: 'E-posta gönderimi', en: 'Email delivery' },
   'pc.jobType.workflow.notify': { tr: 'İş akışı bildirimi', en: 'Workflow notification' },
