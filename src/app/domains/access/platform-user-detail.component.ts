@@ -11,6 +11,7 @@ import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dia
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type PendingAction = 'deactivate' | 'reset-mfa' | 'reset-password' | null;
 
@@ -28,7 +29,7 @@ type PendingAction = 'deactivate' | 'reset-mfa' | 'reset-password' | null;
 @Component({
   selector: 'app-platform-user-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe],
+  imports: [FormsModule, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './platform-user-detail.component.html',
   styleUrl: './platform-users.component.scss'
 })

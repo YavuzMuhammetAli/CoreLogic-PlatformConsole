@@ -6,6 +6,7 @@ import { ConfigService } from './config.service';
 import { PlatformConfigItem } from '../../core/models/config.models';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
  * Platform Config (M41) — listeleme + satır içi düzenleme.
@@ -18,7 +19,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 @Component({
   selector: 'app-config-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './config-list.component.html',
   styleUrl: './config-list.component.scss'
 })

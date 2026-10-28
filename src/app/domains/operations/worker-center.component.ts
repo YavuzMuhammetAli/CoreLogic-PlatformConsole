@@ -11,6 +11,7 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dialog.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Otomatik yenileme aralığı — heartbeat 30 sn'de bir yazıldığı için daha sık sormanın anlamı yok. */
 const POLL_INTERVAL_MS = 15000;
@@ -27,7 +28,7 @@ const POLL_INTERVAL_MS = 15000;
   standalone: true,
   imports: [
     DatePipe, FormsModule, RouterLink, RouterLinkActive,
-    StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe
+    StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
   ],
   templateUrl: './worker-center.component.html',
   styleUrl: './worker-center.component.scss'

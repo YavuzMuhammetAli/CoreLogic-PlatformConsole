@@ -17,6 +17,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { LanguageService } from '../../services/language.service';
 import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'summary' | 'provisioning' | 'history' | 'licensing' | 'backups' | 'models' | 'tables';
 
@@ -40,7 +41,7 @@ interface PendingAction {
 @Component({
   selector: 'app-tenant-detail',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './tenant-detail.component.html',
   styleUrl: './tenant-detail.component.scss'
 })

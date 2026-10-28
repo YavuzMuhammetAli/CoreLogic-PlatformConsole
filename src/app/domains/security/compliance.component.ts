@@ -11,12 +11,13 @@ import { SelectComponent, withAllOption } from '../../shared/ui/select/select.co
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Compliance & Data (M42) — DSAR/erasure/offboarding talep FSM (KVKK/GDPR). */
 @Component({
   selector: 'app-compliance',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './compliance.component.html',
   styleUrl: './security-center.component.scss'
 })

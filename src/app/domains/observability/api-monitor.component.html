@@ -31,7 +31,7 @@
       @if (loading() && metrics().length === 0) {
         <div class="empty-state"><span class="spinner"></span></div>
       } @else if (metrics().length === 0) {
-        <div class="empty-state">{{ 'pc.api.metricsEmpty' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.api.metricsEmpty' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -69,13 +69,13 @@
           <input type="checkbox" [(ngModel)]="auto" (ngModelChange)="toggleAuto()" />
           {{ 'pc.api.live' | t }}
         </label>
-        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       </div>
 
       @if (loading() && items().length === 0) {
         <div class="empty-state"><span class="spinner"></span></div>
       } @else if (items().length === 0) {
-        <div class="empty-state">{{ 'pc.api.empty' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.api.empty' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">

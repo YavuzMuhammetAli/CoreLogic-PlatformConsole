@@ -6,6 +6,7 @@ import { LanguageService } from '../../services/language.service';
 import { ThemeService } from '../../services/theme.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { LOGIN_STATUS_MFA_ENROLL, LOGIN_STATUS_MFA_REQUIRED } from '../../core/models/platform.models';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Step = 'login' | 'mfa' | 'enroll';
 
@@ -16,7 +17,7 @@ type Step = 'login' | 'mfa' | 'enroll';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe, IconComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

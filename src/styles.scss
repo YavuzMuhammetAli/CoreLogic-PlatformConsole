@@ -330,6 +330,15 @@ a { color: var(--accent); text-decoration: none; }
   text-align: center;
   color: var(--muted);
 }
+.empty-state .empty-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-3);
+  opacity: 0.6;
+}
+
+/* <app-icon> (Material Symbols): metin içinde satır ortasında dursun; flex kaplarda etkisiz. */
+app-icon { vertical-align: middle; }
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;

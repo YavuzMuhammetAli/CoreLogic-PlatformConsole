@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, computed, input, output } from '@angular/core';
 import { PageHelpId, PageHelpTopic, resolvePageHelp } from './page-help.data';
 import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { IconComponent } from '../icon/icon.component';
 
 /**
  * Sayfa bilgilendirme diyaloğu — "bu ekranda ne var, ne anlama geliyor, nasıl elde ediliyor".
@@ -16,7 +17,7 @@ import { TranslatePipe } from '../../../pipes/translate.pipe';
 @Component({
   selector: 'app-page-help',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, IconComponent],
   templateUrl: './page-help.component.html',
   styleUrl: './page-help.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

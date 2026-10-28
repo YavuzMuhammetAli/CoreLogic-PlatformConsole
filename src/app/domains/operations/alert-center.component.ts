@@ -12,6 +12,7 @@ import { SelectComponent } from '../../shared/ui/select/select.component';
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'alerts' | 'rules';
 
@@ -19,7 +20,7 @@ type Tab = 'alerts' | 'rules';
 @Component({
   selector: 'app-alert-center',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './alert-center.component.html',
   styleUrl: './alert-center.component.scss'
 })

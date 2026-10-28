@@ -14,6 +14,7 @@ import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dia
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
  * Plan detayı — kimlik düzenleme + özellik/kota editörü + durum geçişi + silme.
@@ -28,7 +29,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   standalone: true,
   imports: [
     FormsModule, RouterLink, StatusBadgeComponent, SelectComponent,
-    ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe
+    ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
   ],
   templateUrl: './plan-detail.component.html',
   styleUrl: './billing.component.scss'

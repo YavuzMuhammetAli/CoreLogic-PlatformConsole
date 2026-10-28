@@ -45,14 +45,15 @@
             </div>
             <div class="cluster">
               <a class="btn btn-secondary btn-sm" [routerLink]="['/billing/plans', p.id]">
+                <app-icon name="edit" size="14" />
                 {{ 'pc.billing.manage' | t }}
               </a>
               @if (canWrite) {
                 @if (p.status !== 'Active') {
-                  <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Active')">{{ 'pc.billing.activate' | t }}</button>
+                  <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Active')"><app-icon name="check_circle" size="14" />{{ 'pc.billing.activate' | t }}</button>
                 }
                 @if (p.status !== 'Retired' && !p.isDefaultForNewTenants) {
-                  <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Retired')">{{ 'pc.billing.retire' | t }}</button>
+                  <button class="btn btn-ghost btn-sm" [disabled]="busyId() === p.id" (click)="setStatus(p, 'Retired')"><app-icon name="archive" size="14" />{{ 'pc.billing.retire' | t }}</button>
                 }
               }
             </div>
@@ -73,6 +74,7 @@
                    [placeholder]="'pc.billing.trialDays' | t" />
             <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.isPublic" /> {{ 'pc.billing.public' | t }}</label>
             <button class="btn btn-primary btn-sm" [disabled]="creating() || !form.code || !form.name" (click)="create()">
+              <app-icon name="add" size="14" />
               {{ 'pc.billing.createDraft' | t }}
             </button>
           </div>

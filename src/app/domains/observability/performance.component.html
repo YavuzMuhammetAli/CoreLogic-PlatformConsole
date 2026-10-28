@@ -22,7 +22,7 @@
         <label class="muted">{{ 'pc.perf.hours' | t }}</label>
         <input class="input hours" type="number" min="1" max="168" [(ngModel)]="hours" (ngModelChange)="load()" />
       </div>
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
     </div>
   </div>
 
@@ -33,7 +33,7 @@
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.perf.slowRoutes' | t }}</h2></div>
       @if (slowRoutes().length === 0) {
-        <div class="empty-state">{{ 'pc.noData' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.noData' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -64,7 +64,7 @@
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.perf.slowRequests' | t }}</h2></div>
       @if (slowRequests().length === 0) {
-        <div class="empty-state">{{ 'pc.noData' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.noData' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">

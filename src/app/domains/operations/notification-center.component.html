@@ -30,14 +30,14 @@
       <div class="panel-head filters">
         <label class="checkbox-label"><input type="checkbox" [(ngModel)]="unreadOnly" (ngModelChange)="load()" /> {{ 'pc.notif.unreadOnly' | t }}</label>
         <div class="cluster">
-          <button class="btn btn-secondary btn-sm" type="button" (click)="markAllRead()">{{ 'pc.notif.markAll' | t }}</button>
-          <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+          <button class="btn btn-secondary btn-sm" type="button" (click)="markAllRead()"><app-icon name="done_all" size="14" />{{ 'pc.notif.markAll' | t }}</button>
+          <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
         </div>
       </div>
       @if (loading()) {
         <div class="empty-state"><span class="spinner"></span></div>
       } @else if (items().length === 0) {
-        <div class="empty-state">{{ 'pc.notif.empty' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.notif.empty' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -49,7 +49,7 @@
                   <td class="mono nowrap">{{ n.createdAt | date:'short' }}</td>
                   <td class="td-actions">
                     @if (!n.readAt) {
-                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === n.id" (click)="markRead(n)">{{ 'pc.notif.read' | t }}</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === n.id" (click)="markRead(n)"><app-icon name="check" size="14" />{{ 'pc.notif.read' | t }}</button>
                     } @else { <span class="muted">{{ 'pc.notif.wasRead' | t }}</span> }
                   </td>
                 </tr>
@@ -75,7 +75,7 @@
               [ariaLabel]="'pc.notif.channel' | t" />
             <input class="input" [(ngModel)]="ruleForm.triggerFilter" placeholder='["Critical","Warning"]' />
             <input class="input" [(ngModel)]="ruleForm.targets" [placeholder]="'pc.notif.targets' | t" />
-            <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ruleForm.name" (click)="createRule()">{{ 'pc.notif.create' | t }}</button>
+            <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ruleForm.name" (click)="createRule()"><app-icon name="add" size="14" />{{ 'pc.notif.create' | t }}</button>
           </div>
         </div>
       </section>
@@ -84,7 +84,7 @@
       @if (loading()) {
         <div class="empty-state"><span class="spinner"></span></div>
       } @else if (rules().length === 0) {
-        <div class="empty-state">{{ 'pc.notif.noRules' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.notif.noRules' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -108,7 +108,7 @@
                   <td><app-status-badge [tone]="r.enabled ? 'success' : 'neutral'" [label]="(r.enabled ? 'pc.alerts.on' : 'pc.alerts.off') | t" /></td>
                   <td class="td-actions">
                     @if (canManage) {
-                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === r.id" (click)="toggleRule(r)">{{ (r.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}</button>
+                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === r.id" (click)="toggleRule(r)"><app-icon [name]="r.enabled ? 'toggle_off' : 'toggle_on'" size="14" />{{ (r.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}</button>
                     } @else { <span class="muted">—</span> }
                   </td>
                 </tr>

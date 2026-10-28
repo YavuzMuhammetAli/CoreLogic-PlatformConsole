@@ -17,6 +17,7 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { SelectComponent, SelectOption } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Aktif koşu varken yenileme aralığı. */
 const POLL_INTERVAL_MS = 5000;
@@ -50,7 +51,7 @@ interface ScheduleFieldVisibility {
 @Component({
   selector: 'app-migration',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './migration.component.html',
   styleUrls: ['./alert-center.component.scss', './migration.component.scss']
 })

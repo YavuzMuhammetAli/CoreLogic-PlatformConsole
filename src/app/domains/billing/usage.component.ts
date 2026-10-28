@@ -10,6 +10,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { LanguageService } from '../../services/language.service';
 import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 interface UsageSummary { tenantId: string; metricKey: string; total: number; }
 
@@ -17,7 +18,7 @@ interface UsageSummary { tenantId: string; metricKey: string; total: number; }
 @Component({
   selector: 'app-usage',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './usage.component.html',
   styleUrl: './billing.component.scss'
 })

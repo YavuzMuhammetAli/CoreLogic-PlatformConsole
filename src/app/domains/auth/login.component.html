@@ -4,7 +4,7 @@
       {{ language.lang() === 'tr' ? 'TR' : 'EN' }}
     </button>
     <button class="mini-btn" type="button" (click)="theme.toggle()" aria-label="Theme">
-      {{ theme.theme() === 'dark' ? '☀' : '☾' }}
+      <app-icon [name]="theme.theme() === 'dark' ? 'light_mode' : 'dark_mode'" size="16" />
     </button>
   </div>
 
@@ -36,7 +36,7 @@
                  [attr.aria-invalid]="lf.password.invalid && lf.password.touched" />
         </div>
         <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
-          @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.login.submit' | t }} }
+          @if (loading()) { <span class="spinner"></span> } @else { <app-icon name="login" size="16" />{{ 'pc.login.submit' | t }} }
         </button>
       </form>
     }
@@ -57,10 +57,10 @@
             }
           </div>
           <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
-            @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.mfa.verify' | t }} }
+            @if (loading()) { <span class="spinner"></span> } @else { <app-icon name="verified" size="16" />{{ 'pc.mfa.verify' | t }} }
           </button>
         </form>
-        <button class="btn btn-ghost btn-sm" type="button" (click)="backToLogin()">{{ 'pc.mfa.back' | t }}</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="backToLogin()"><app-icon name="arrow_back" size="14" />{{ 'pc.mfa.back' | t }}</button>
       </div>
     }
 
@@ -85,10 +85,10 @@
             }
           </div>
           <button class="btn btn-primary btn-block" type="submit" [disabled]="loading()">
-            @if (loading()) { <span class="spinner"></span> } @else { {{ 'pc.mfa.verify' | t }} }
+            @if (loading()) { <span class="spinner"></span> } @else { <app-icon name="verified" size="16" />{{ 'pc.mfa.verify' | t }} }
           </button>
         </form>
-        <button class="btn btn-ghost btn-sm" type="button" (click)="backToLogin()">{{ 'pc.mfa.back' | t }}</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="backToLogin()"><app-icon name="arrow_back" size="14" />{{ 'pc.mfa.back' | t }}</button>
       </div>
     }
   </div>

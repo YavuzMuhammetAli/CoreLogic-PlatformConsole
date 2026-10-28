@@ -11,6 +11,7 @@ import { SelectComponent, withAllOption } from '../../shared/ui/select/select.co
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'attempts' | 'events' | 'iprules';
 
@@ -18,7 +19,7 @@ type Tab = 'attempts' | 'events' | 'iprules';
 @Component({
   selector: 'app-security-center',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './security-center.component.html',
   styleUrl: './security-center.component.scss'
 })

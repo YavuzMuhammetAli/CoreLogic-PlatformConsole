@@ -25,7 +25,7 @@
     @if (loading()) {
       <div class="empty-state"><span class="spinner"></span></div>
     } @else if (items().length === 0) {
-      <div class="empty-state">{{ 'pc.config.empty' | t }}</div>
+      <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.config.empty' | t }}</div>
     } @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -68,6 +68,7 @@
                     class="btn btn-primary btn-sm"
                     [disabled]="savingKey() !== null"
                     (click)="save(c)">
+                    <app-icon name="save" size="14" />
                     {{ (savingKey() === c.key ? 'pc.config.saving' : 'pc.config.save') | t }}
                   </button>
                 </td>

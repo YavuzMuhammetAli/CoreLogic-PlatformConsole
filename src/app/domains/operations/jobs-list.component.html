@@ -32,11 +32,12 @@
           [value]="status"
           (valueChange)="status = $event; applyFilter()"
           [ariaLabel]="'pc.jobs.allStatuses' | t" />
-        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       </div>
       @if (canRetryAll()) {
         <button class="btn btn-primary btn-sm" type="button" [disabled]="busyId() !== null"
                 (click)="confirmRetryAll.set(true)">
+          <app-icon name="refresh" size="14" />
           {{ 'pc.jobs.retryAll' | t }}
         </button>
       }
@@ -45,7 +46,7 @@
     @if (loading()) {
       <div class="empty-state"><span class="spinner"></span></div>
     } @else if (!result() || result()!.items.length === 0) {
-      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+      <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.noData' | t }}</div>
     } @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -77,6 +78,7 @@
                     @if (j.status === 'Parked') {
                       <button class="btn btn-secondary btn-sm" type="button"
                               [disabled]="busyId() !== null" (click)="retry(j)">
+                        <app-icon name="refresh" size="14" />
                         {{ 'pc.jobs.retry' | t }}
                       </button>
                     }
@@ -92,10 +94,12 @@
         <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
         <div class="cluster">
           <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">
+            <app-icon name="chevron_left" size="14" />
             {{ 'pc.tenants.prev' | t }}
           </button>
           <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
           <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">
+            <app-icon name="chevron_right" size="14" />
             {{ 'pc.tenants.next' | t }}
           </button>
         </div>

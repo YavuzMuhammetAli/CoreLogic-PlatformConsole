@@ -8,6 +8,7 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'webhooks' | 'apikeys';
 
@@ -15,7 +16,7 @@ type Tab = 'webhooks' | 'apikeys';
 @Component({
   selector: 'app-integration',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './integration.component.html',
   styleUrl: './integration.component.scss'
 })

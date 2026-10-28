@@ -19,10 +19,10 @@
   <div class="panel">
     <div class="panel-head">
       <h2>{{ 'pc.cost.byTenant' | t }} <span class="muted">· {{ 'pc.cost.grand' | t }}: ${{ grandTotal() | number:'1.2-4' }}</span></h2>
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
     </div>
     @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-    @else if (rows().length === 0) { <div class="empty-state">{{ 'pc.cost.empty' | t }}</div> }
+    @else if (rows().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.cost.empty' | t }}</div> }
     @else {
       <div class="table-scroll">
         <table class="data-table">

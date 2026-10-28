@@ -10,12 +10,13 @@ import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Plan kataloğu (M35) — liste + özellik/kota + durum geçişi + yeni plan taslağı. */
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './plans.component.html',
   styleUrl: './billing.component.scss'
 })

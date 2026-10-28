@@ -12,6 +12,7 @@ import { SelectComponent } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'inbox' | 'rules';
 
@@ -19,7 +20,7 @@ type Tab = 'inbox' | 'rules';
 @Component({
   selector: 'app-notification-center',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './notification-center.component.html',
   styleUrl: './alert-center.component.scss'
 })

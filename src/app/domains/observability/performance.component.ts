@@ -7,6 +7,7 @@ import { RequestTrace, RouteMetric } from '../../core/models/telemetry.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
  * Performance (M28, [07 §6]) — en yavaş uçlar (rollup p95) + en yavaş son istekler.
@@ -15,7 +16,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 @Component({
   selector: 'app-performance',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './performance.component.html',
   styleUrl: './performance.component.scss'
 })

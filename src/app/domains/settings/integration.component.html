@@ -35,14 +35,14 @@
           <input class="input" [(ngModel)]="whForm.name" [placeholder]="'pc.intg.name' | t" />
           <input class="input grow" [(ngModel)]="whForm.url" placeholder="https://…" />
           <input class="input" [(ngModel)]="whForm.eventTypes" [placeholder]="'pc.intg.eventTypes' | t" />
-          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !whForm.name || !whForm.url" (click)="createWebhook()">{{ 'pc.intg.create' | t }}</button>
+          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !whForm.name || !whForm.url" (click)="createWebhook()"><app-icon name="add" size="14" />{{ 'pc.intg.create' | t }}</button>
         </div>
       </div>
     </section>
 
     <div class="panel">
       @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-      @else if (webhooks().length === 0) { <div class="empty-state">{{ 'pc.intg.noWebhooks' | t }}</div> }
+      @else if (webhooks().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.intg.noWebhooks' | t }}</div> }
       @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -66,9 +66,9 @@
                     @if (w.failureCount > 0) { <span class="badge badge-warn">{{ w.failureCount }} hata</span> }
                   </td>
                   <td class="td-actions">
-                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === w.id" (click)="showDeliveries(w)">{{ 'pc.intg.deliveries' | t }}</button>
-                    <button class="btn btn-secondary btn-sm" [disabled]="busyId() === w.id" (click)="toggleWebhook(w)">{{ (w.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}</button>
-                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === w.id" (click)="deleteWebhook(w)">{{ 'pc.intg.delete' | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === w.id" (click)="showDeliveries(w)"><app-icon name="history" size="14" />{{ 'pc.intg.deliveries' | t }}</button>
+                    <button class="btn btn-secondary btn-sm" [disabled]="busyId() === w.id" (click)="toggleWebhook(w)"><app-icon [name]="w.enabled ? 'toggle_off' : 'toggle_on'" size="14" />{{ (w.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === w.id" (click)="deleteWebhook(w)"><app-icon name="delete" size="14" />{{ 'pc.intg.delete' | t }}</button>
                   </td>
                 </tr>
               }
@@ -81,7 +81,7 @@
     @if (selectedWebhook() !== null) {
       <div class="panel">
         <div class="panel-head"><h2>{{ 'pc.intg.deliveryLog' | t }} #{{ selectedWebhook() }}</h2></div>
-        @if (deliveries().length === 0) { <div class="empty-state">{{ 'pc.intg.noDeliveries' | t }}</div> }
+        @if (deliveries().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.intg.noDeliveries' | t }}</div> }
         @else {
           <div class="table-scroll">
             <table class="data-table">
@@ -120,13 +120,13 @@
         <div class="cluster wrap">
           <input class="input" [(ngModel)]="keyForm.name" [placeholder]="'pc.intg.name' | t" />
           <input class="input" [(ngModel)]="keyForm.scopes" [placeholder]="'pc.intg.scopes' | t" />
-          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !keyForm.name" (click)="createApiKey()">{{ 'pc.intg.create' | t }}</button>
+          <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !keyForm.name" (click)="createApiKey()"><app-icon name="add" size="14" />{{ 'pc.intg.create' | t }}</button>
         </div>
       </div>
     </section>
     <div class="panel">
       @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-      @else if (apiKeys().length === 0) { <div class="empty-state">{{ 'pc.intg.noKeys' | t }}</div> }
+      @else if (apiKeys().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.intg.noKeys' | t }}</div> }
       @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -148,7 +148,7 @@
                   <td class="mono nowrap">{{ k.createdAt | date:'short' }}</td>
                   <td class="td-actions">
                     @if (k.enabled) {
-                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === k.id" (click)="revokeApiKey(k)">{{ 'pc.intg.revoke' | t }}</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === k.id" (click)="revokeApiKey(k)"><app-icon name="block" size="14" />{{ 'pc.intg.revoke' | t }}</button>
                     } @else { <span class="muted">—</span> }
                   </td>
                 </tr>

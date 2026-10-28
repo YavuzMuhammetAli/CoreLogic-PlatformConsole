@@ -28,6 +28,7 @@
           <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.takePreBackup" /> {{ 'pc.mig.preBackup' | t }}</label>
           <label class="checkbox-label"><input type="checkbox" [(ngModel)]="form.stopOnFailure" /> {{ 'pc.mig.stopOnFailure' | t }}</label>
           <button class="btn btn-primary btn-sm" [disabled]="submitting()" (click)="start()">
+            <app-icon name="play_arrow" size="14" />
             {{ submitting() ? ('pc.mig.queueing' | t) : ('pc.mig.start' | t) }}
           </button>
         </div>
@@ -158,6 +159,7 @@
             <input type="checkbox" [(ngModel)]="scheduleForm.stopOnFailure" /> {{ 'pc.mig.stopOnFailure' | t }}
           </label>
           <button class="btn btn-primary btn-sm" [disabled]="savingSchedule() || !cronValid()" (click)="saveSchedule()">
+            <app-icon name="save" size="14" />
             {{ 'pc.save' | t }}
           </button>
         </div>
@@ -189,10 +191,10 @@
 
   <div class="panel">
     <div class="panel-head"><h2>{{ 'pc.mig.runs' | t }}</h2>
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
     </div>
     @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-    @else if (runs().length === 0) { <div class="empty-state">{{ 'pc.mig.empty' | t }}</div> }
+    @else if (runs().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.mig.empty' | t }}</div> }
     @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -219,7 +221,7 @@
                 <td class="mono num">{{ r.skippedCount }}</td>
                 <td class="mono nowrap">{{ r.startedAt | date:'short' }}</td>
                 <td class="td-actions">
-                  <button class="btn btn-ghost btn-sm" type="button" (click)="open(r)">{{ 'pc.mig.detail' | t }}</button>
+                  <button class="btn btn-ghost btn-sm" type="button" (click)="open(r)"><app-icon name="visibility" size="14" />{{ 'pc.mig.detail' | t }}</button>
                 </td>
               </tr>
             }

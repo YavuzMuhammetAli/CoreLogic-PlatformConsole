@@ -36,14 +36,14 @@
             [value]="status"
             (valueChange)="status = $event; applyFilter()"
             [ariaLabel]="'pc.alerts.status' | t" />
-          <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+          <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
         </div>
       </div>
 
       @if (loading()) {
         <div class="empty-state"><span class="spinner"></span></div>
       } @else if (!result() || result()!.items.length === 0) {
-        <div class="empty-state">{{ 'pc.alerts.empty' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.alerts.empty' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -66,11 +66,7 @@
                             [attr.aria-expanded]="expandedId() === a.id"
                             [attr.aria-label]="'pc.alerts.detailsToggle' | t"
                             (click)="toggleDetails(a)">
-                      <svg class="alert-caret" [class.open]="expandedId() === a.id" width="12" height="12"
-                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
+                      <app-icon class="alert-caret" [class.open]="expandedId() === a.id" name="chevron_right" size="12" />
                       <span>{{ a.ruleName }}</span>
                     </button>
                     <div>
@@ -96,11 +92,13 @@
                     @if (canManage) {
                       @if (a.status === 'Firing') {
                         <button class="btn btn-secondary btn-sm" type="button" [disabled]="busyId() === a.id" (click)="acknowledge(a)">
+                          <app-icon name="check" size="14" />
                           {{ 'pc.alerts.ack' | t }}
                         </button>
                       }
                       @if (a.status !== 'Resolved') {
                         <button class="btn btn-primary btn-sm" type="button" [disabled]="busyId() === a.id" (click)="resolve(a)">
+                          <app-icon name="task_alt" size="14" />
                           {{ 'pc.alerts.resolve' | t }}
                         </button>
                       }
@@ -190,11 +188,13 @@
           <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
           <div class="cluster">
             <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">
+              <app-icon name="chevron_left" size="14" />
               {{ 'pc.tenants.prev' | t }}
             </button>
             <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
             <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">
               {{ 'pc.tenants.next' | t }}
+              <app-icon name="chevron_right" size="14" />
             </button>
           </div>
         </div>
@@ -208,7 +208,7 @@
       @if (loading()) {
         <div class="empty-state"><span class="spinner"></span></div>
       } @else if (rules().length === 0) {
-        <div class="empty-state">{{ 'pc.alerts.noRules' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.alerts.noRules' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -243,6 +243,7 @@
                   <td class="td-actions">
                     @if (canManage) {
                       <button class="btn btn-secondary btn-sm" type="button" [disabled]="busyId() === r.id" (click)="toggleRule(r)">
+                        <app-icon [name]="r.enabled ? 'toggle_off' : 'toggle_on'" size="14" />
                         {{ (r.enabled ? 'pc.alerts.disable' : 'pc.alerts.enable') | t }}
                       </button>
                     } @else { <span class="muted">—</span> }

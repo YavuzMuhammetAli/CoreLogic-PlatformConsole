@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy, Component, ElementRef, OnDestroy,
   computed, inject, input, model, signal, viewChild
 } from '@angular/core';
+import { IconComponent } from '../icon/icon.component';
 
 /** Seçenek — düz string verilirse value=label kabul edilir. */
 export interface SelectOption {
@@ -56,6 +57,7 @@ export function withAllOption(
 @Component({
   selector: 'app-select',
   standalone: true,
+  imports: [IconComponent],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

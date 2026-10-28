@@ -8,12 +8,13 @@ import { SelectComponent } from '../../shared/ui/select/select.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Feature Flags (M39) — liste + durum/yüzde + tenant override + ölü flag işareti. */
 @Component({
   selector: 'app-feature-flags',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './feature-flags.component.html',
   styleUrl: './feature-flags.component.scss'
 })

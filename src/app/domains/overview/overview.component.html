@@ -56,7 +56,7 @@
         <a class="btn btn-ghost btn-sm" routerLink="/operations/alerts">{{ 'pc.overview.allAlerts' | t }}</a>
       </div>
       @if (openAlerts().length === 0) {
-        <div class="empty-state">{{ 'pc.overview.noAlerts' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.overview.noAlerts' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">

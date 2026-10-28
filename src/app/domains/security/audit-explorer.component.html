@@ -27,16 +27,17 @@
       </div>
       <div class="cluster">
         <button class="btn btn-secondary btn-sm" type="button" [disabled]="items().length === 0" (click)="exportCsv()">
+          <app-icon name="download" size="14" />
           {{ 'pc.audit.export' | t }}
         </button>
-        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       </div>
     </div>
 
     @if (chain(); as c) {
       <div class="panel-body chain-banner">
         <span>{{ 'pc.audit.chainOf' | t }} <span class="mono">{{ c.slice(0, 12) }}…</span></span>
-        <button class="btn btn-ghost btn-sm" type="button" (click)="clearChain()">{{ 'pc.audit.clearChain' | t }}</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="clearChain()"><app-icon name="close" size="14" />{{ 'pc.audit.clearChain' | t }}</button>
       </div>
     }
 
@@ -45,7 +46,7 @@
     } @else if (loading()) {
       <div class="empty-state"><span class="spinner"></span></div>
     } @else if (items().length === 0) {
-      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+      <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.noData' | t }}</div>
     } @else {
       <div class="table-scroll">
         <table class="data-table">

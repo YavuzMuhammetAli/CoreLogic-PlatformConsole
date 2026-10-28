@@ -9,12 +9,13 @@ import { SelectComponent, withAllOption } from '../../shared/ui/select/select.co
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Tenant Directory listesi (M02) — arama/durum filtresi + sayfalama. */
 @Component({
   selector: 'app-tenant-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './tenant-list.component.html',
   styleUrl: './tenant-list.component.scss'
 })

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 import { PageHelpComponent } from './page-help.component';
 import { PageHelpId } from './page-help.data';
 import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { IconComponent } from '../icon/icon.component';
 
 /**
  * "Nasıl çalışır?" tetikleyicisi — butonu ve diyaloğu birlikte taşır, böylece
@@ -12,17 +13,14 @@ import { TranslatePipe } from '../../../pipes/translate.pipe';
 @Component({
   selector: 'app-help-button',
   standalone: true,
-  imports: [PageHelpComponent, TranslatePipe],
+  imports: [PageHelpComponent, TranslatePipe, IconComponent],
   template: `
     <button
       class="btn btn-ghost btn-sm help-btn"
       type="button"
       (click)="open.set(true)"
       [attr.aria-label]="'pc.help.howItWorks' | t">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
-      </svg>
+      <app-icon name="info" size="14" />
       {{ 'pc.help.howItWorks' | t }}
     </button>
 
@@ -31,7 +29,6 @@ import { TranslatePipe } from '../../../pipes/translate.pipe';
   styles: [`
     :host { display: inline-flex; }
     .help-btn { white-space: nowrap; }
-    .help-btn svg { flex: none; }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

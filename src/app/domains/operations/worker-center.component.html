@@ -23,13 +23,13 @@
   <div class="panel">
     <div class="panel-head">
       <h2>{{ 'pc.workers.list' | t }}</h2>
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
     </div>
 
     @if (loading()) {
       <div class="empty-state"><span class="spinner"></span></div>
     } @else if (workers().length === 0) {
-      <div class="empty-state">{{ 'pc.workers.empty' | t }}</div>
+      <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.workers.empty' | t }}</div>
     } @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -69,6 +69,7 @@
                              (ngModelChange)="onIntervalChange(w.name, $event)" />
                       <button class="btn btn-ghost btn-sm" type="button"
                               [disabled]="busyName() === w.name" (click)="saveInterval(w)">
+                        <app-icon name="save" size="14" />
                         {{ 'pc.save' | t }}
                       </button>
                       <span class="interval-hint">
@@ -95,10 +96,12 @@
                   @if (canManage) {
                     <button class="btn btn-sm" [class.btn-secondary]="w.enabled" [class.btn-primary]="!w.enabled"
                             type="button" [disabled]="busyName() === w.name" (click)="toggleEnabled(w)">
+                      <app-icon [name]="w.enabled ? 'pause' : 'play_arrow'" size="14" />
                       {{ (w.enabled ? 'pc.workers.pause' : 'pc.workers.resume') | t }}
                     </button>
                     <button class="btn btn-ghost btn-sm" type="button"
                             [disabled]="busyName() === w.name || !w.enabled" (click)="reset(w)">
+                      <app-icon name="restart_alt" size="14" />
                       {{ 'pc.workers.reset' | t }}
                     </button>
                   } @else {

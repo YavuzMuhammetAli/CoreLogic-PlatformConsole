@@ -11,12 +11,13 @@ import { SelectComponent, withAllOption } from '../../shared/ui/select/select.co
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Support & Impersonation (M17) — talep/onay/basım/iptal iş akışı (görev ayrılığı). */
 @Component({
   selector: 'app-impersonation',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './impersonation.component.html',
   styleUrl: './impersonation.component.scss'
 })

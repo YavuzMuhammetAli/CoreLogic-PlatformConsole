@@ -12,6 +12,7 @@ import { RouteMetric } from '../../core/models/telemetry.models';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
  * Platform Overview (M01, [07 §6]) — golden signals + sağlık ağacı özeti + açık uyarılar.
@@ -21,7 +22,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })

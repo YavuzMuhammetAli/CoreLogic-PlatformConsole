@@ -29,7 +29,7 @@
   } @else if (tab() === 'drift') {
     <div class="panel">
       @if (drift().length === 0) {
-        <div class="empty-state">{{ 'pc.registry.empty' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.registry.empty' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -65,7 +65,7 @@
   } @else {
     <div class="panel">
       @if (matrix().length === 0) {
-        <div class="empty-state">{{ 'pc.registry.empty' | t }}</div>
+        <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.registry.empty' | t }}</div>
       } @else {
         <div class="table-scroll">
           <table class="data-table">

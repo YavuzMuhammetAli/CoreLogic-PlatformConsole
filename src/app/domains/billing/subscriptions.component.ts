@@ -12,12 +12,13 @@ import { SelectComponent, withAllOption } from '../../shared/ui/select/select.co
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Abonelikler (M36) — liste/filtre + tenant'a plan atama + yaşam döngüsü eylemleri. */
 @Component({
   selector: 'app-subscriptions',
   standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './subscriptions.component.html',
   styleUrl: './billing.component.scss'
 })

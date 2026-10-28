@@ -29,7 +29,7 @@
       <div class="panel-body cluster">
         <span class="eyebrow">{{ 'pc.health.overall' | t }}</span>
         <app-status-badge [tone]="tone(tr.overall)" [label]="tr.overall" />
-        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       </div>
     </div>
 

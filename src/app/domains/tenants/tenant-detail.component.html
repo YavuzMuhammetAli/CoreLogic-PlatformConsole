@@ -1,5 +1,5 @@
 <div class="stack page">
-  <a class="back mono" routerLink="/tenants">← {{ 'pc.tenants.back' | t }}</a>
+  <a class="back mono" routerLink="/tenants"><app-icon name="arrow_back" size="14" /> {{ 'pc.tenants.back' | t }}</a>
 
   @if (loading()) {
     <div class="empty-state"><span class="spinner"></span></div>
@@ -119,7 +119,7 @@
             </table>
           </div>
         } @else {
-          <div class="empty-state">{{ 'pc.tenants.noProvision' | t }}</div>
+          <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.tenants.noProvision' | t }}</div>
         }
       </div>
     }
@@ -127,7 +127,7 @@
     @if (tab() === 'history') {
       <div class="panel">
         @if (history().length === 0) {
-          <div class="empty-state">{{ 'pc.noData' | t }}</div>
+          <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.noData' | t }}</div>
         } @else {
           <div class="table-scroll">
             <table class="data-table">
@@ -163,7 +163,7 @@
           } @else if (entitlement()) {
             @if (entitlement(); as e) {
             @if (!e.planCode) {
-              <div class="empty-state">{{ 'pc.billing.noSub' | t }}</div>
+              <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.billing.noSub' | t }}</div>
             } @else {
               <dl class="kv">
                 <dt>{{ 'pc.billing.plan' | t }}</dt><dd class="mono">{{ e.planCode }}</dd>
@@ -181,7 +181,7 @@
                   @for (f of entitlementFeatures(); track f.key) {
                     <tr>
                       <td>{{ featureLabel(f.key) }} <span class="mono muted feature-key">{{ f.key }}</span></td>
-                      <td class="mono num">{{ f.limit == null ? '✓' : (f.limit | number) }}</td>
+                      <td class="mono num">@if (f.limit == null) { <app-icon name="check" size="14" /> } @else { {{ f.limit | number }} }</td>
                     </tr>
                   }
                 </tbody>
@@ -189,7 +189,7 @@
             }
             }
           } @else {
-            <div class="empty-state">{{ 'pc.billing.noSub' | t }}</div>
+            <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.billing.noSub' | t }}</div>
           }
         </div>
       </div>
@@ -201,6 +201,7 @@
           <h2>{{ 'pc.backup.title' | t }}</h2>
           @if (canOps) {
             <button class="btn btn-primary btn-sm" type="button" [disabled]="backupBusy() === -1" (click)="runBackup()">
+              <app-icon name="backup" size="14" />
               {{ 'pc.backup.run' | t }}
             </button>
           }
@@ -208,7 +209,7 @@
         @if (!backupsLoaded()) {
           <div class="empty-state"><span class="spinner"></span></div>
         } @else if (backups().length === 0) {
-          <div class="empty-state">{{ 'pc.backup.empty' | t }}</div>
+          <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.backup.empty' | t }}</div>
         } @else {
           <div class="table-scroll">
             <table class="data-table">
@@ -228,7 +229,7 @@
                     <td>{{ enumLabel(b.type) }}</td>
                     <td>
                       <app-status-badge [tone]="b.status === 'Completed' ? 'success' : b.status === 'Failed' ? 'danger' : 'meta'" [label]="b.status" />
-                      @if (b.error) { <span class="muted" [title]="b.error">⚠</span> }
+                      @if (b.error) { <app-icon class="muted" name="warning" size="14" [label]="b.error" [title]="b.error" /> }
                     </td>
                     <td class="mono num">{{ (b.sizeBytes / 1048576) | number:'1.0-1' }} MB</td>
                     <td class="mono nowrap">{{ b.startedAt | date:'short' }}</td>
@@ -236,6 +237,7 @@
                     <td class="td-actions">
                       @if (canOps && b.status === 'Completed') {
                         <button class="btn btn-secondary btn-sm" type="button" [disabled]="backupBusy() === b.id" (click)="verifyBackup(b)">
+                          <app-icon name="verified" size="14" />
                           {{ 'pc.backup.verify' | t }}
                         </button>
                       } @else { <span class="muted">—</span> }
@@ -267,7 +269,7 @@
         } @else if (modelsError()) {
           <div class="alert alert-danger" role="alert">{{ modelsError() }}</div>
         } @else if (!models() || models()!.items.length === 0) {
-          <div class="empty-state">{{ 'pc.tenants.modelsEmpty' | t }}</div>
+          <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.tenants.modelsEmpty' | t }}</div>
         } @else {
           <div class="table-scroll">
             <table class="data-table">
@@ -337,7 +339,7 @@
         } @else if (tablesError()) {
           <div class="alert alert-danger" role="alert">{{ tablesError() }}</div>
         } @else if (!tables() || tables()!.items.length === 0) {
-          <div class="empty-state">{{ 'pc.tenants.tablesEmpty' | t }}</div>
+          <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.tenants.tablesEmpty' | t }}</div>
         } @else {
           <div class="table-scroll">
             <table class="data-table">

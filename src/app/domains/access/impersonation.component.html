@@ -30,6 +30,7 @@
           <input class="input narrow" type="number" min="1" max="4" [(ngModel)]="form.hours" [placeholder]="'pc.imp.hours' | t" />
           <input class="input grow" [(ngModel)]="form.reason" [placeholder]="'pc.imp.reason' | t" />
           <button class="btn btn-primary btn-sm" [disabled]="busyId() === '__new__' || !form.tenantId || !form.reason" (click)="request()">
+            <app-icon name="add" size="14" />
             {{ 'pc.imp.request' | t }}
           </button>
         </div>
@@ -44,11 +45,11 @@
         [value]="status"
         (valueChange)="status = $event; load()"
         [ariaLabel]="'pc.imp.allStatuses' | t" />
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
     </div>
 
     @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-    @else if (grants().length === 0) { <div class="empty-state">{{ 'pc.imp.empty' | t }}</div> }
+    @else if (grants().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.imp.empty' | t }}</div> }
     @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -72,14 +73,14 @@
                 <td class="mono nowrap">{{ g.expiresAt ? (g.expiresAt | date:'short') : '—' }}</td>
                 <td class="td-actions">
                   @if (canApprove && g.status === 'Requested') {
-                    <button class="btn btn-secondary btn-sm" [disabled]="busyId() === g.id" (click)="act(g, 'approve')">{{ 'pc.imp.approve' | t }}</button>
-                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === g.id" (click)="act(g, 'deny')">{{ 'pc.imp.deny' | t }}</button>
+                    <button class="btn btn-secondary btn-sm" [disabled]="busyId() === g.id" (click)="act(g, 'approve')"><app-icon name="check" size="14" />{{ 'pc.imp.approve' | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === g.id" (click)="act(g, 'deny')"><app-icon name="close" size="14" />{{ 'pc.imp.deny' | t }}</button>
                   }
                   @if (canRequest && g.status === 'Approved') {
-                    <button class="btn btn-primary btn-sm" [disabled]="busyId() === g.id" (click)="issue(g)">{{ 'pc.imp.issue' | t }}</button>
+                    <button class="btn btn-primary btn-sm" [disabled]="busyId() === g.id" (click)="issue(g)"><app-icon name="key" size="14" />{{ 'pc.imp.issue' | t }}</button>
                   }
                   @if (canRequest && (g.status === 'Approved' || g.status === 'ActiveUse')) {
-                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === g.id" (click)="act(g, 'revoke')">{{ 'pc.imp.revoke' | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === g.id" (click)="act(g, 'revoke')"><app-icon name="block" size="14" />{{ 'pc.imp.revoke' | t }}</button>
                   }
                 </td>
               </tr>

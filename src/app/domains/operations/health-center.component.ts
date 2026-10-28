@@ -7,12 +7,13 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Health Center (M24) — bileşen sağlık ağacı (platform prob'ları). */
 @Component({
   selector: 'app-health-center',
   standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './health-center.component.html',
   styleUrl: './health-center.component.scss'
 })

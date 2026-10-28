@@ -11,12 +11,9 @@
         <a
           class="nav-item"
           [routerLink]="item.route"
-          routerLinkActive="active"
+          routerLinkActive="active" #rla="routerLinkActive"
           [attr.aria-label]="item.labelKey | t">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path [attr.d]="item.icon"></path>
-          </svg>
+          <app-icon [name]="item.icon" [filled]="rla.isActive" />
           <span>{{ item.labelKey | t }}</span>
         </a>
       }
@@ -30,9 +27,7 @@
   <!-- Topbar -->
   <header class="topbar">
     <div class="topbar-search" role="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path>
-      </svg>
+      <app-icon name="search" size="16" />
       <input class="topbar-search-input" type="search"
              [placeholder]="'pc.search' | t" [attr.aria-label]="'pc.search' | t" />
       <kbd>⌘K</kbd>
@@ -46,14 +41,9 @@
 
       <button class="icon-btn" type="button" (click)="theme.toggle()" aria-label="Theme">
         @if (theme.theme() === 'dark') {
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"></circle>
-            <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
-          </svg>
+          <app-icon name="light_mode" size="16" />
         } @else {
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
-          </svg>
+          <app-icon name="dark_mode" size="16" />
         }
       </button>
 
@@ -61,6 +51,7 @@
         <span class="avatar">{{ initials() }}</span>
         <span class="user-name">{{ user()?.name || user()?.email }}</span>
         <button class="btn btn-ghost btn-sm" type="button" (click)="logout()">
+          <app-icon name="logout" size="14" />
           {{ 'pc.logout' | t }}
         </button>
       </div>

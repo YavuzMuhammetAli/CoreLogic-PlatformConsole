@@ -6,9 +6,9 @@
     </div>
     <div class="cluster">
       <app-help-button topic="platformUsers" />
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       @if (canManage) {
-        <a class="btn btn-primary btn-sm" routerLink="/access/platform-users/new">{{ 'pc.users.new' | t }}</a>
+        <a class="btn btn-primary btn-sm" routerLink="/access/platform-users/new"><app-icon name="add" size="14" />{{ 'pc.users.new' | t }}</a>
       }
     </div>
   </header>
@@ -26,7 +26,7 @@
     @if (loading()) {
       <div class="empty-state"><span class="spinner"></span></div>
     } @else if (users().length === 0) {
-      <div class="empty-state">{{ 'pc.noData' | t }}</div>
+      <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.noData' | t }}</div>
     } @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -73,6 +73,7 @@
                 @if (canManage) {
                   <td class="td-actions">
                     <a class="btn btn-ghost btn-sm" [routerLink]="['/access/platform-users', u.id]">
+                      <app-icon name="edit" size="14" />
                       {{ 'pc.edit' | t }}
                     </a>
                   </td>

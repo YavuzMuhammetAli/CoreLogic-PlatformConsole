@@ -6,6 +6,7 @@ import { TenantModelSummaryItem, TenantDriftItem } from '../../core/models/regis
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'drift' | 'matrix';
 
@@ -13,7 +14,7 @@ type Tab = 'drift' | 'matrix';
 @Component({
   selector: 'app-model-registry',
   standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './model-registry.component.html',
   styleUrl: './alert-center.component.scss'
 })

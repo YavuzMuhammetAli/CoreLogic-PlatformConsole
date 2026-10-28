@@ -14,6 +14,7 @@ import { ConfirmDangerDialogComponent } from '../../shared/ui/confirm-danger-dia
 import { LanguageService } from '../../services/language.service';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
  * Jobs & Queue (M21) — durable iş kuyruğu listesi + askıya alınmış (Parked) işleri
@@ -24,7 +25,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   standalone: true,
   imports: [
     DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent,
-    ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe
+    ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
   ],
   templateUrl: './jobs-list.component.html',
   styleUrl: './jobs-list.component.scss'

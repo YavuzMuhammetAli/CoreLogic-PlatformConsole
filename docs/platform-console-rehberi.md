@@ -116,6 +116,12 @@ Settings          → /settings/config            | flags | integration | announ
 
 Toplam **24 sayfa**. Hepsi lazy-load edilir.
 
+**İkonlar.** Tek kaynak `<app-icon name="…">` (`src/app/shared/ui/icon/`): Google Material Symbols Outlined,
+satır içi SVG, renk `currentColor` — elle `<svg>`, ikon fontu ya da Unicode glif (`← ✕ ✓`) kullanılmaz. Yeni ikon:
+adı `icons.manifest.json`'a ekle → `npm run icons` (SVG'leri sabit sürümden indirip `icons.generated.ts`'i yazar; dosya
+commit'lenir, build ağa bağımlı değildir). Aktif menü öğesi dolu varyantla çizilir (`[filled]`). Tenant UI aynı
+bileşeni ve aynı ikon sözlüğünü kullanır (CoreLogicUI → `corelogic-design` skill'i, "İkonlar").
+
 ---
 
 ## 6. Veri nereden geliyor?

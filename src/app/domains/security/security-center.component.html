@@ -30,10 +30,10 @@
           [value]="eventStatus"
           (valueChange)="eventStatus = $event; loadEvents()"
           [ariaLabel]="'pc.sec.allStatuses' | t" />
-        <button class="btn btn-secondary btn-sm" type="button" (click)="loadEvents()">{{ 'pc.refresh' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="loadEvents()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       </div>
       @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-      @else if (events().length === 0) { <div class="empty-state">{{ 'pc.sec.noEvents' | t }}</div> }
+      @else if (events().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.sec.noEvents' | t }}</div> }
       @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -55,8 +55,8 @@
                   <td class="mono nowrap">{{ e.occurredAt | date:'short' }}</td>
                   <td class="td-actions">
                     @if (canManage && e.status === 'Open') {
-                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === e.id" (click)="review(e, 'Reviewed')">{{ 'pc.sec.markReviewed' | t }}</button>
-                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === e.id" (click)="review(e, 'Dismissed')">{{ 'pc.sec.dismiss' | t }}</button>
+                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === e.id" (click)="review(e, 'Reviewed')"><app-icon name="check" size="14" />{{ 'pc.sec.markReviewed' | t }}</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === e.id" (click)="review(e, 'Dismissed')"><app-icon name="close" size="14" />{{ 'pc.sec.dismiss' | t }}</button>
                     } @else { <span class="muted">—</span> }
                   </td>
                 </tr>
@@ -74,10 +74,10 @@
       <div class="panel-head filters">
         <input class="input" [(ngModel)]="attemptEmail" [placeholder]="'pc.sec.email' | t" />
         <input class="input" [(ngModel)]="attemptIp" [placeholder]="'pc.sec.ip' | t" />
-        <button class="btn btn-secondary btn-sm" type="button" (click)="loadAttempts()">{{ 'pc.search' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="loadAttempts()"><app-icon name="search" size="14" />{{ 'pc.search' | t }}</button>
       </div>
       @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-      @else if (attempts().length === 0) { <div class="empty-state">{{ 'pc.sec.noAttempts' | t }}</div> }
+      @else if (attempts().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.sec.noAttempts' | t }}</div> }
       @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -120,14 +120,14 @@
               [(value)]="ipForm.action"
               [ariaLabel]="'pc.sec.action' | t" />
             <input class="input grow" [(ngModel)]="ipForm.reason" [placeholder]="'pc.sec.reason' | t" />
-            <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ipForm.cidr" (click)="addIpRule()">{{ 'pc.sec.add' | t }}</button>
+            <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !ipForm.cidr" (click)="addIpRule()"><app-icon name="add" size="14" />{{ 'pc.sec.add' | t }}</button>
           </div>
         </div>
       </section>
     }
     <div class="panel">
       @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-      @else if (ipRules().length === 0) { <div class="empty-state">{{ 'pc.sec.noRules' | t }}</div> }
+      @else if (ipRules().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.sec.noRules' | t }}</div> }
       @else {
         <div class="table-scroll">
           <table class="data-table">
@@ -149,7 +149,7 @@
                   <td class="mono nowrap">{{ r.expiresAt ? (r.expiresAt | date:'short') : '—' }}</td>
                   <td class="td-actions">
                     @if (canManage) {
-                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === r.id" (click)="removeIpRule(r)">{{ 'pc.sec.remove' | t }}</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === r.id" (click)="removeIpRule(r)"><app-icon name="delete" size="14" />{{ 'pc.sec.remove' | t }}</button>
                     } @else { <span class="muted">—</span> }
                   </td>
                 </tr>

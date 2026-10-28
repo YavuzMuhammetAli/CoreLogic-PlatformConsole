@@ -26,17 +26,17 @@
           [(value)]="form.severity"
           [ariaLabel]="'pc.ann.severity' | t" />
         <input class="input grow" [(ngModel)]="form.body" [placeholder]="'pc.ann.body' | t" />
-        <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.title" (click)="create()">{{ 'pc.ann.create' | t }}</button>
+        <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.title" (click)="create()"><app-icon name="add" size="14" />{{ 'pc.ann.create' | t }}</button>
       </div>
     </div>
   </section>
 
   <div class="panel">
     <div class="panel-head"><h2>{{ 'pc.ann.list' | t }}</h2>
-      <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
     </div>
     @if (loading()) { <div class="empty-state"><span class="spinner"></span></div> }
-    @else if (rows().length === 0) { <div class="empty-state">{{ 'pc.ann.empty' | t }}</div> }
+    @else if (rows().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.ann.empty' | t }}</div> }
     @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -58,10 +58,10 @@
                 <td class="mono nowrap">{{ a.createdAt | date:'short' }}</td>
                 <td class="td-actions">
                   @if (a.status === 'Draft') {
-                    <button class="btn btn-primary btn-sm" [disabled]="busyId() === a.id" (click)="act(a, 'publish')">{{ 'pc.ann.publish' | t }}</button>
+                    <button class="btn btn-primary btn-sm" [disabled]="busyId() === a.id" (click)="act(a, 'publish')"><app-icon name="publish" size="14" />{{ 'pc.ann.publish' | t }}</button>
                   }
                   @if (a.status === 'Published') {
-                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === a.id" (click)="act(a, 'expire')">{{ 'pc.ann.expire' | t }}</button>
+                    <button class="btn btn-ghost btn-sm" [disabled]="busyId() === a.id" (click)="act(a, 'expire')"><app-icon name="timer_off" size="14" />{{ 'pc.ann.expire' | t }}</button>
                   }
                   @if (a.status === 'Expired') { <span class="muted">—</span> }
                 </td>
@@ -76,7 +76,7 @@
   <!-- ── Multi-region tohumu: DB sunucu envanteri ── -->
   <div class="panel">
     <div class="panel-head"><h2>{{ 'pc.ann.servers' | t }}</h2></div>
-    @if (servers().length === 0) { <div class="empty-state">{{ 'pc.ann.noServers' | t }}</div> }
+    @if (servers().length === 0) { <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.ann.noServers' | t }}</div> }
     @else {
       <div class="table-scroll">
         <table class="data-table">

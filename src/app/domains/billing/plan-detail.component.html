@@ -1,5 +1,5 @@
 <div class="stack page">
-  <a class="back" routerLink="/billing/plans">← {{ 'pc.billing.plans' | t }}</a>
+  <a class="back" routerLink="/billing/plans"><app-icon name="arrow_back" size="14" /> {{ 'pc.billing.plans' | t }}</a>
 
   @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
   @if (notice()) { <div class="alert alert-success" role="status">{{ notice() }}</div> }
@@ -59,6 +59,7 @@
         @if (canWrite) {
           <div class="cluster">
             <button class="btn btn-primary btn-sm" [disabled]="busy() || !form.name" (click)="save()">
+              <app-icon name="save" size="14" />
               {{ 'pc.save' | t }}
             </button>
           </div>
@@ -91,9 +92,11 @@
                 @if (canWrite) {
                   <td class="td-actions">
                     <button class="btn btn-ghost btn-sm" [disabled]="busy()" (click)="editFeature(f)">
+                      <app-icon name="edit" size="14" />
                       {{ 'pc.edit' | t }}
                     </button>
                     <button class="btn btn-danger btn-sm" [disabled]="busy()" (click)="removeFeature(f)">
+                      <app-icon name="delete" size="14" />
                       {{ 'pc.delete' | t }}
                     </button>
                   </td>
@@ -121,6 +124,7 @@
             <input class="input narrow" [(ngModel)]="featureForm.unit"
                    [placeholder]="'pc.billing.unit' | t" />
             <button class="btn btn-primary btn-sm" [disabled]="busy()" (click)="saveFeature()">
+              <app-icon name="save" size="14" />
               {{ 'pc.billing.saveFeature' | t }}
             </button>
           </div>
@@ -137,21 +141,25 @@
           <div class="cluster wrap">
             @if (p.status !== 'Active') {
               <button class="btn btn-secondary btn-sm" [disabled]="busy()" (click)="setStatus('Active')">
+                <app-icon name="check_circle" size="14" />
                 {{ 'pc.billing.activate' | t }}
               </button>
             }
             @if (p.status !== 'Retired' && canLeaveActive()) {
               <button class="btn btn-ghost btn-sm" [disabled]="busy()" (click)="setStatus('Retired')">
+                <app-icon name="archive" size="14" />
                 {{ 'pc.billing.retire' | t }}
               </button>
             }
             @if (p.status === 'Active' && !p.isDefaultForNewTenants) {
               <button class="btn btn-secondary btn-sm" [disabled]="busy()" (click)="setDefault()">
+                <app-icon name="star" size="14" />
                 {{ 'pc.billing.makeDefault' | t }}
               </button>
             }
             @if (p.status === 'Draft') {
               <button class="btn btn-danger btn-sm" [disabled]="busy()" (click)="confirmDelete.set(true)">
+                <app-icon name="delete" size="14" />
                 {{ 'pc.delete' | t }}
               </button>
             }

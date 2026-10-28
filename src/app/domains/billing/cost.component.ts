@@ -6,12 +6,13 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { LanguageService } from '../../services/language.service';
 import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Cost & AI Usage Analytics (M33/M34) — tenant başına maliyet dökümü (usage × birim). */
 @Component({
   selector: 'app-cost',
   standalone: true,
-  imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe],
+  imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './cost.component.html',
   styleUrl: './billing.component.scss'
 })

@@ -30,6 +30,7 @@
           <input class="input narrow" type="number" min="1" [(ngModel)]="form.seats" [placeholder]="'pc.billing.seats' | t" />
           <input class="input narrow" type="number" min="0" [(ngModel)]="form.trialDays" [placeholder]="'pc.billing.trialDays' | t" />
           <button class="btn btn-primary btn-sm" [disabled]="busyId() === -1 || !form.tenantCode || !form.planId" (click)="create()">
+            <app-icon name="add" size="14" />
             {{ 'pc.billing.assign' | t }}
           </button>
         </div>
@@ -45,14 +46,14 @@
           [value]="status"
           (valueChange)="status = $event; applyFilter()"
           [ariaLabel]="'pc.billing.allStatuses' | t" />
-        <button class="btn btn-secondary btn-sm" type="button" (click)="load()">{{ 'pc.refresh' | t }}</button>
+        <button class="btn btn-secondary btn-sm" type="button" (click)="load()"><app-icon name="refresh" size="14" />{{ 'pc.refresh' | t }}</button>
       </div>
     </div>
 
     @if (loading()) {
       <div class="empty-state"><span class="spinner"></span></div>
     } @else if (!result() || result()!.items.length === 0) {
-      <div class="empty-state">{{ 'pc.billing.noSubs' | t }}</div>
+      <div class="empty-state"><app-icon class="empty-icon" name="inbox" size="40" />{{ 'pc.billing.noSubs' | t }}</div>
     } @else {
       <div class="table-scroll">
         <table class="data-table">
@@ -77,13 +78,13 @@
                 <td class="td-actions">
                   @if (canWrite) {
                     @if (s.status === 'Trial' || s.status === 'PastDue') {
-                      <button class="btn btn-primary btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'pay')">{{ 'pc.billing.recordPayment' | t }}</button>
+                      <button class="btn btn-primary btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'pay')"><app-icon name="payments" size="14" />{{ 'pc.billing.recordPayment' | t }}</button>
                     }
                     @if (s.status === 'Trial') {
-                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'extend')">{{ 'pc.billing.extend' | t }}</button>
+                      <button class="btn btn-secondary btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'extend')"><app-icon name="more_time" size="14" />{{ 'pc.billing.extend' | t }}</button>
                     }
                     @if (s.status !== 'Cancelled') {
-                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'cancel')">{{ 'pc.billing.cancel' | t }}</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="busyId() === s.id" (click)="act(s, 'cancel')"><app-icon name="block" size="14" />{{ 'pc.billing.cancel' | t }}</button>
                     }
                   } @else { <span class="muted">—</span> }
                 </td>
@@ -96,9 +97,9 @@
       <div class="panel-head pager">
         <span class="muted">{{ 'pc.tenants.total' | t:{ total: result()!.total } }}</span>
         <div class="cluster">
-          <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()">{{ 'pc.tenants.prev' | t }}</button>
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="page <= 1" (click)="prev()"><app-icon name="chevron_left" size="14" />{{ 'pc.tenants.prev' | t }}</button>
           <span class="muted mono">{{ 'pc.tenants.page' | t:{ page: page } }}</span>
-          <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">{{ 'pc.tenants.next' | t }}</button>
+          <button class="btn btn-secondary btn-sm" type="button" [disabled]="!result()!.hasMore" (click)="next()">{{ 'pc.tenants.next' | t }}<app-icon name="chevron_right" size="14" /></button>
         </div>
       </div>
     }

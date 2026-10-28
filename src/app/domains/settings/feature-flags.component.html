@@ -49,13 +49,13 @@
                   @for (o of f.overrides; track o.tenantId) {
                     <span class="badge ov">
                       {{ o.tenantId }}: {{ enumLabel(o.state) }}
-                      <button class="x" type="button" (click)="removeOverride(f.key, o.tenantId)" title="kaldır">×</button>
+                      <button class="x" type="button" (click)="removeOverride(f.key, o.tenantId)" title="kaldır"><app-icon name="close" size="12" /></button>
                     </span>
                   }
                 </td>
                 <td class="td-actions">
-                  @if (f.defaultState !== 'On') { <button class="btn btn-secondary btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'On')">{{ 'pc.flags.turnOn' | t }}</button> }
-                  @if (f.defaultState !== 'Off') { <button class="btn btn-ghost btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'Off')">{{ 'pc.flags.turnOff' | t }}</button> }
+                  @if (f.defaultState !== 'On') { <button class="btn btn-secondary btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'On')"><app-icon name="toggle_on" size="14" />{{ 'pc.flags.turnOn' | t }}</button> }
+                  @if (f.defaultState !== 'Off') { <button class="btn btn-ghost btn-sm" [disabled]="busyKey() === f.key" (click)="setState(f, 'Off')"><app-icon name="toggle_off" size="14" />{{ 'pc.flags.turnOff' | t }}</button> }
                 </td>
               </tr>
             }
@@ -79,6 +79,7 @@
               <input class="input narrow" type="number" min="0" max="100" [(ngModel)]="createForm.percentage" placeholder="%" />
             }
             <button class="btn btn-primary btn-sm" [disabled]="busyKey() === '__new__' || !createForm.key" (click)="create()">
+              <app-icon name="add" size="14" />
               {{ 'pc.flags.create' | t }}
             </button>
           </div>
@@ -97,6 +98,7 @@
               [ariaLabel]="'pc.flags.state' | t" />
             <input class="input grow" [(ngModel)]="ovForm.reason" [placeholder]="'pc.flags.reason' | t" />
             <button class="btn btn-primary btn-sm" [disabled]="!ovForm.key || !ovForm.tenantId" (click)="addOverride()">
+              <app-icon name="check" size="14" />
               {{ 'pc.flags.apply' | t }}
             </button>
           </div>

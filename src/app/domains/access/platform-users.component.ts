@@ -8,12 +8,13 @@ import { Cap } from '../../core/models/capabilities';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge.component';
 import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Platform Kullanıcıları (M13) — liste; yazma işlemleri detay ekranında. */
 @Component({
   selector: 'app-platform-users',
   standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe],
+  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
   templateUrl: './platform-users.component.html',
   styleUrl: './platform-users.component.scss'
 })
