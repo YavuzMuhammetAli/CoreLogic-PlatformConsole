@@ -17,11 +17,10 @@ import { languageInterceptor } from './core/interceptors/language.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { platformAuthInterceptor } from './core/interceptors/platform-auth.interceptor';
 import { PlatformAuthService } from './core/auth/platform-auth.service';
-import { PlatformSessionStore } from './core/auth/platform-session.store';
 
 /**
  * Router etkinleşmeden önce oturumu geri yükler ([11 §4]): access token bellekte
- * olduğundan sayfa yenilemesinde silinir; refresh token varsa refresh ile yeni
+ * olduğundan sayfa yenilemesinde silinir; refresh çerezi geçerliyse yeni
  * access + kullanıcı yüklenir, böylece guard'lar (platformAuthGuard/capabilityGuard)
  * senkron store'u dolu okur — yarış durumu yok.
  *
@@ -32,12 +31,10 @@ import { PlatformSessionStore } from './core/auth/platform-session.store';
  */
 function sessionInitializerFactory(
   auth: PlatformAuthService,
-  store: PlatformSessionStore,
   platformId: Object
 ): () => Promise<void> {
   return () => {
     if (!isPlatformBrowser(platformId)) return Promise.resolve();
-    if (!store.getRefreshToken()) return Promise.resolve();
     return firstValueFrom(auth.loadSession()).then(() => {}).catch(() => {});
   };
 }
@@ -62,7 +59,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: sessionInitializerFactory,
-      deps: [PlatformAuthService, PlatformSessionStore, PLATFORM_ID],
+      deps: [PlatformAuthService, PLATFORM_ID],
       multi: true
     }
   ]

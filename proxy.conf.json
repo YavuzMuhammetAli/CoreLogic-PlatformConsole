@@ -1,0 +1,5 @@
+{
+  "/api/platform": {
+    "target": "http://localhost:5245"
+  }
+}

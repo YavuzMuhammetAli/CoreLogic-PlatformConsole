@@ -19,11 +19,10 @@ export interface PlatformLoginResult {
   otpAuthUri?: string | null;
 }
 
-/** Başarılı kimlik doğrulama — access + refresh + kullanıcı. */
+/** Başarılı kimlik doğrulama — access + kullanıcı. Refresh token HttpOnly çerezde. */
 export interface PlatformAuthResult {
   accessToken: string;
   accessTokenExpiration: string;
-  refreshToken: string;
   user: PlatformUserInfo;
 }
 

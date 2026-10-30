@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, map, catchError, finalize, tap } from 'rxjs';
+import { Observable, of, map, catchError, finalize, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DataResponseModel } from '../models/api.models';
 import { PlatformAuthResult, PlatformLoginResult, PlatformUserInfo } from '../models/platform.models';
@@ -35,15 +35,16 @@ export class PlatformAuthService {
       .pipe(tap(res => this.storeIfSuccess(res)));
   }
 
-  /** Refresh token ile yeni oturum al. Single-flight; başarı=true. */
+  /**
+   * Çerezdeki refresh token ile yeni oturum al; başarı=true. Çerez JavaScript'ten görünmez, oturum
+   * olup olmadığı yalnız sunucuya sorularak öğrenilir. Tek uçuş paylaşımlıdır: refresh token her
+   * kullanımda döner, ikinci paralel istek eski token'la reddedilip oturumu düşürürdü.
+   */
   refresh(): Observable<boolean> {
-    const refreshToken = this.store.getRefreshToken();
-    if (!refreshToken) return of(false);
-
     if (this.refreshInFlight) return this.refreshInFlight;
 
     this.refreshInFlight = this.http
-      .post<DataResponseModel<PlatformAuthResult>>(`${this.baseUrl}/refresh`, { refreshToken })
+      .post<DataResponseModel<PlatformAuthResult>>(`${this.baseUrl}/refresh`, {})
       .pipe(
         map(res => {
           if (res.success && res.data) {
@@ -53,13 +54,14 @@ export class PlatformAuthService {
           return false;
         }),
         catchError(() => of(false)),
-        finalize(() => { this.refreshInFlight = null; })
+        finalize(() => { this.refreshInFlight = null; }),
+        shareReplay(1)
       );
 
     return this.refreshInFlight;
   }
 
-  /** APP_INITIALIZER: sayfa yüklenince refresh token varsa oturumu geri yükler. */
+  /** APP_INITIALIZER: sayfa yüklenince geçerli çerez varsa oturumu geri yükler. */
   loadSession(): Observable<boolean> {
     return this.refresh();
   }
