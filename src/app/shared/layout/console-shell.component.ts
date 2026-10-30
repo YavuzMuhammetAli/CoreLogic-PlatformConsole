@@ -22,11 +22,10 @@ interface NavItem {
  * + 8-domain sol menü (yetkiye göre filtreli — kör kapı yok). CSS Grid layout.
  */
 @Component({
-  selector: 'app-console-shell',
-  standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, IconComponent],
-  templateUrl: './console-shell.component.html',
-  styleUrl: './console-shell.component.scss'
+    selector: 'app-console-shell',
+    imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, IconComponent],
+    templateUrl: './console-shell.component.html',
+    styleUrl: './console-shell.component.scss'
 })
 export class ConsoleShellComponent {
   private readonly store = inject(PlatformSessionStore);

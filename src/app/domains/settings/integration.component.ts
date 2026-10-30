@@ -14,11 +14,10 @@ type Tab = 'webhooks' | 'apikeys';
 
 /** Integration Center (M40) — webhook + teslimatlar + API key yönetimi. */
 @Component({
-  selector: 'app-integration',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './integration.component.html',
-  styleUrl: './integration.component.scss'
+    selector: 'app-integration',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './integration.component.html',
+    styleUrl: './integration.component.scss'
 })
 export class IntegrationComponent implements OnInit {
   private readonly service = inject(IntegrationService);

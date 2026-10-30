@@ -49,11 +49,10 @@ interface ScheduleFieldVisibility {
  * ifadeyi üretir. Ham cron yalnız "Özel" seçeneğinde görünür.
  */
 @Component({
-  selector: 'app-migration',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './migration.component.html',
-  styleUrls: ['./alert-center.component.scss', './migration.component.scss']
+    selector: 'app-migration',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './migration.component.html',
+    styleUrls: ['./alert-center.component.scss', './migration.component.scss']
 })
 export class MigrationComponent implements OnInit, OnDestroy {
   private readonly service = inject(MigrationService);

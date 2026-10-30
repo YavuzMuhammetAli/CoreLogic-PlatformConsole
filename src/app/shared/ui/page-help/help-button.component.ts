@@ -11,10 +11,9 @@ import { IconComponent } from '../icon/icon.component';
  *   <app-help-button topic="plans" />
  */
 @Component({
-  selector: 'app-help-button',
-  standalone: true,
-  imports: [PageHelpComponent, TranslatePipe, IconComponent],
-  template: `
+    selector: 'app-help-button',
+    imports: [PageHelpComponent, TranslatePipe, IconComponent],
+    template: `
     <button
       class="btn btn-ghost btn-sm help-btn"
       type="button"
@@ -26,11 +25,11 @@ import { IconComponent } from '../icon/icon.component';
 
     <app-page-help [open]="open()" [topic]="topic()" (closed)="open.set(false)" />
   `,
-  styles: [`
+    styles: [`
     :host { display: inline-flex; }
     .help-btn { white-space: nowrap; }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HelpButtonComponent {
   topic = input.required<PageHelpId>();

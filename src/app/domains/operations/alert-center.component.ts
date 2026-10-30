@@ -18,11 +18,10 @@ type Tab = 'alerts' | 'rules';
 
 /** Alert Center (M23, [07 §5]) — uyarı listesi (ack/resolve) + kural yönetimi (toggle). */
 @Component({
-  selector: 'app-alert-center',
-  standalone: true,
-  imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './alert-center.component.html',
-  styleUrl: './alert-center.component.scss'
+    selector: 'app-alert-center',
+    imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './alert-center.component.html',
+    styleUrl: './alert-center.component.scss'
 })
 export class AlertCenterComponent implements OnInit {
   private readonly service = inject(AlertsService);

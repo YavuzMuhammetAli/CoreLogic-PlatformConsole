@@ -12,11 +12,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Platform Kullanıcıları (M13) — liste; yazma işlemleri detay ekranında. */
 @Component({
-  selector: 'app-platform-users',
-  standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './platform-users.component.html',
-  styleUrl: './platform-users.component.scss'
+    selector: 'app-platform-users',
+    imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './platform-users.component.html',
+    styleUrl: './platform-users.component.scss'
 })
 export class PlatformUsersComponent implements OnInit {
   private readonly service = inject(PlatformUsersService);

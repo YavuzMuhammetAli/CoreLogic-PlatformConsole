@@ -18,11 +18,10 @@ type Tab = 'inbox' | 'rules';
 
 /** Notification Center (M25) — InApp gelen kutusu (okundu) + kural yönetimi. */
 @Component({
-  selector: 'app-notification-center',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './notification-center.component.html',
-  styleUrl: './alert-center.component.scss'
+    selector: 'app-notification-center',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './notification-center.component.html',
+    styleUrl: './alert-center.component.scss'
 })
 export class NotificationCenterComponent implements OnInit {
   private readonly service = inject(NotificationsService);

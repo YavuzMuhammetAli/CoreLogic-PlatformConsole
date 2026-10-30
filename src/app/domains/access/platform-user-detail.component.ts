@@ -27,11 +27,10 @@ type PendingAction = 'deactivate' | 'reset-mfa' | 'reset-password' | null;
  * PlatformAuthManager'ın lazy enrollment yoluna düşer (`mfa_enroll`).
  */
 @Component({
-  selector: 'app-platform-user-detail',
-  standalone: true,
-  imports: [FormsModule, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './platform-user-detail.component.html',
-  styleUrl: './platform-users.component.scss'
+    selector: 'app-platform-user-detail',
+    imports: [FormsModule, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './platform-user-detail.component.html',
+    styleUrl: './platform-users.component.scss'
 })
 export class PlatformUserDetailComponent implements OnInit {
   private readonly service = inject(PlatformUsersService);

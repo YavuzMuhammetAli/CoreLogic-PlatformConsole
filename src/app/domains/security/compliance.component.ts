@@ -15,11 +15,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Compliance & Data (M42) — DSAR/erasure/offboarding talep FSM (KVKK/GDPR). */
 @Component({
-  selector: 'app-compliance',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './compliance.component.html',
-  styleUrl: './security-center.component.scss'
+    selector: 'app-compliance',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './compliance.component.html',
+    styleUrl: './security-center.component.scss'
 })
 export class ComplianceComponent implements OnInit {
   private readonly service = inject(ComplianceService);

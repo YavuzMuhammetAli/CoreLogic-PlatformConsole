@@ -13,11 +13,10 @@ type Tab = 'metrics' | 'live';
 
 /** API Monitoring (M27) — metrikler (rollup) + son istek izleri (5 sn canlı akış). */
 @Component({
-  selector: 'app-api-monitor',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './api-monitor.component.html',
-  styleUrl: './api-monitor.component.scss'
+    selector: 'app-api-monitor',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './api-monitor.component.html',
+    styleUrl: './api-monitor.component.scss'
 })
 export class ApiMonitorComponent implements OnInit, OnDestroy {
   private readonly service = inject(TelemetryService);

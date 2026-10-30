@@ -12,11 +12,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Feature Flags (M39) — liste + durum/yüzde + tenant override + ölü flag işareti. */
 @Component({
-  selector: 'app-feature-flags',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './feature-flags.component.html',
-  styleUrl: './feature-flags.component.scss'
+    selector: 'app-feature-flags',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './feature-flags.component.html',
+    styleUrl: './feature-flags.component.scss'
 })
 export class FeatureFlagsComponent implements OnInit {
   private readonly service = inject(FlagsService);

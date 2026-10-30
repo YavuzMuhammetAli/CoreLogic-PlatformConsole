@@ -25,14 +25,13 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
  * satırı olarak açılır (grandfathering).
  */
 @Component({
-  selector: 'app-plan-detail',
-  standalone: true,
-  imports: [
-    FormsModule, RouterLink, StatusBadgeComponent, SelectComponent,
-    ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
-  ],
-  templateUrl: './plan-detail.component.html',
-  styleUrl: './billing.component.scss'
+    selector: 'app-plan-detail',
+    imports: [
+        FormsModule, RouterLink, StatusBadgeComponent, SelectComponent,
+        ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
+    ],
+    templateUrl: './plan-detail.component.html',
+    styleUrl: './billing.component.scss'
 })
 export class PlanDetailComponent implements OnInit {
   private readonly service = inject(BillingService);

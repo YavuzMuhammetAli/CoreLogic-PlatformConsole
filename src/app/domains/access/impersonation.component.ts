@@ -15,11 +15,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Support & Impersonation (M17) — talep/onay/basım/iptal iş akışı (görev ayrılığı). */
 @Component({
-  selector: 'app-impersonation',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './impersonation.component.html',
-  styleUrl: './impersonation.component.scss'
+    selector: 'app-impersonation',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './impersonation.component.html',
+    styleUrl: './impersonation.component.scss'
 })
 export class ImpersonationComponent implements OnInit {
   private readonly service = inject(ImpersonationService);

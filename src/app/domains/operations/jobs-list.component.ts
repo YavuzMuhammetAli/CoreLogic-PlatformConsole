@@ -21,14 +21,13 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
  * yeniden deneme. Yeniden deneme Platform.Ops.Manage ister ve denetim kaydına düşer.
  */
 @Component({
-  selector: 'app-jobs-list',
-  standalone: true,
-  imports: [
-    DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent,
-    ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
-  ],
-  templateUrl: './jobs-list.component.html',
-  styleUrl: './jobs-list.component.scss'
+    selector: 'app-jobs-list',
+    imports: [
+        DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent,
+        ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
+    ],
+    templateUrl: './jobs-list.component.html',
+    styleUrl: './jobs-list.component.scss'
 })
 export class JobsListComponent implements OnInit {
   private readonly service = inject(JobsService);

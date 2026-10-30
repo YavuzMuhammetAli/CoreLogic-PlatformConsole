@@ -15,12 +15,11 @@ import { IconComponent } from '../icon/icon.component';
  *   <app-page-help [open]="help()" topic="plans" (closed)="help.set(false)" />
  */
 @Component({
-  selector: 'app-page-help',
-  standalone: true,
-  imports: [TranslatePipe, IconComponent],
-  templateUrl: './page-help.component.html',
-  styleUrl: './page-help.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-page-help',
+    imports: [TranslatePipe, IconComponent],
+    templateUrl: './page-help.component.html',
+    styleUrl: './page-help.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageHelpComponent {
   open = input(false);

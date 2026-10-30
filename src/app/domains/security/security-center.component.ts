@@ -17,11 +17,10 @@ type Tab = 'attempts' | 'events' | 'iprules';
 
 /** Security Center (M18/M19) — giriş denemeleri + tehdit olayları + IP kuralları. */
 @Component({
-  selector: 'app-security-center',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './security-center.component.html',
-  styleUrl: './security-center.component.scss'
+    selector: 'app-security-center',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './security-center.component.html',
+    styleUrl: './security-center.component.scss'
 })
 export class SecurityCenterComponent implements OnInit {
   private readonly service = inject(SecurityCenterService);

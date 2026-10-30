@@ -39,11 +39,10 @@ interface PendingAction {
 
 /** Tenant detay (M02/M04) — özet/provisioning/tarihçe + yaşam döngüsü eylemleri. */
 @Component({
-  selector: 'app-tenant-detail',
-  standalone: true,
-  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './tenant-detail.component.html',
-  styleUrl: './tenant-detail.component.scss'
+    selector: 'app-tenant-detail',
+    imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './tenant-detail.component.html',
+    styleUrl: './tenant-detail.component.scss'
 })
 export class TenantDetailComponent implements OnInit {
   private readonly service = inject(TenantsService);

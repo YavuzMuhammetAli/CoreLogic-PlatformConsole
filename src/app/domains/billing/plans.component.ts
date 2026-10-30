@@ -14,11 +14,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Plan kataloğu (M35) — liste + özellik/kota + durum geçişi + yeni plan taslağı. */
 @Component({
-  selector: 'app-plans',
-  standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './plans.component.html',
-  styleUrl: './billing.component.scss'
+    selector: 'app-plans',
+    imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './plans.component.html',
+    styleUrl: './billing.component.scss'
 })
 export class PlansComponent implements OnInit {
   private readonly service = inject(BillingService);

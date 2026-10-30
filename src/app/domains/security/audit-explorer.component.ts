@@ -13,11 +13,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Denetim kayıtları görüntüleyici (M20) — temel filtre + liste ([06 §6]). */
 @Component({
-  selector: 'app-audit-explorer',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './audit-explorer.component.html',
-  styleUrl: './audit-explorer.component.scss'
+    selector: 'app-audit-explorer',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './audit-explorer.component.html',
+    styleUrl: './audit-explorer.component.scss'
 })
 export class AuditExplorerComponent implements OnInit {
   private readonly service = inject(AuditService);

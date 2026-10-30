@@ -13,11 +13,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Tenant Directory listesi (M02) — arama/durum filtresi + sayfalama. */
 @Component({
-  selector: 'app-tenant-list',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './tenant-list.component.html',
-  styleUrl: './tenant-list.component.scss'
+    selector: 'app-tenant-list',
+    imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './tenant-list.component.html',
+    styleUrl: './tenant-list.component.scss'
 })
 export class TenantListComponent implements OnInit {
   private readonly service = inject(TenantsService);

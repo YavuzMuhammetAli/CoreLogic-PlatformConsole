@@ -24,14 +24,13 @@ const POLL_INTERVAL_MS = 15000;
  * burada yalnız renklendirilir.
  */
 @Component({
-  selector: 'app-worker-center',
-  standalone: true,
-  imports: [
-    DatePipe, FormsModule, RouterLink, RouterLinkActive,
-    StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
-  ],
-  templateUrl: './worker-center.component.html',
-  styleUrl: './worker-center.component.scss'
+    selector: 'app-worker-center',
+    imports: [
+        DatePipe, FormsModule, RouterLink, RouterLinkActive,
+        StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
+    ],
+    templateUrl: './worker-center.component.html',
+    styleUrl: './worker-center.component.scss'
 })
 export class WorkerCenterComponent implements OnInit, OnDestroy {
   private readonly service = inject(WorkerService);

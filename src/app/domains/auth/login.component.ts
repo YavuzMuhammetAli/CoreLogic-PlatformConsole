@@ -15,11 +15,10 @@ type Step = 'login' | 'mfa' | 'enroll';
  * MFA kurulumu (mfa_enroll). Başarıda oturum store'a yazılır ve /overview'a geçilir.
  */
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, IconComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+    selector: 'app-login',
+    imports: [ReactiveFormsModule, TranslatePipe, IconComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);

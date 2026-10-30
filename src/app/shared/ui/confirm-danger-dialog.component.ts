@@ -8,10 +8,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
  * audit'lenir" notunu gösterir — kullanıcı izlendiğini eylemden önce bilir.
  */
 @Component({
-  selector: 'app-confirm-danger-dialog',
-  standalone: true,
-  imports: [FormsModule, TranslatePipe],
-  template: `
+    selector: 'app-confirm-danger-dialog',
+    imports: [FormsModule, TranslatePipe],
+    template: `
     <div class="overlay" (click)="cancelled.emit()">
       <div class="dialog panel" (click)="$event.stopPropagation()">
         <div class="panel-body stack">
@@ -48,7 +47,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       </div>
     </div>
   `,
-  styles: [`
+    styles: [`
     .overlay {
       position: fixed; inset: 0; z-index: 100;
       background: rgba(15, 23, 42, 0.55);

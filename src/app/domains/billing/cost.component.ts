@@ -10,11 +10,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Cost & AI Usage Analytics (M33/M34) — tenant başına maliyet dökümü (usage × birim). */
 @Component({
-  selector: 'app-cost',
-  standalone: true,
-  imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './cost.component.html',
-  styleUrl: './billing.component.scss'
+    selector: 'app-cost',
+    imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './cost.component.html',
+    styleUrl: './billing.component.scss'
 })
 export class CostComponent implements OnInit {
   private readonly service = inject(BillingService);

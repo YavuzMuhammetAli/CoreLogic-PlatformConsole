@@ -20,11 +20,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
  * uçları bir araya getirilir. Bir kaynak düşerse diğerleri gösterilmeye devam eder.
  */
 @Component({
-  selector: 'app-overview',
-  standalone: true,
-  imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './overview.component.html',
-  styleUrl: './overview.component.scss'
+    selector: 'app-overview',
+    imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './overview.component.html',
+    styleUrl: './overview.component.scss'
 })
 export class OverviewComponent implements OnInit {
   private readonly store = inject(PlatformSessionStore);

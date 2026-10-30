@@ -16,11 +16,10 @@ interface UsageSummary { tenantId: string; metricKey: string; total: number; }
 
 /** Usage Analytics (M32/M34) — dönem özeti (tenant × metrik) + manuel/AI kayıt girişi. */
 @Component({
-  selector: 'app-usage',
-  standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './usage.component.html',
-  styleUrl: './billing.component.scss'
+    selector: 'app-usage',
+    imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './usage.component.html',
+    styleUrl: './billing.component.scss'
 })
 export class UsageComponent implements OnInit {
   private readonly http = inject(HttpClient);

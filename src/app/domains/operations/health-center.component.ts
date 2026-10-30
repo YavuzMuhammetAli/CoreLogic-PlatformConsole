@@ -11,11 +11,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Health Center (M24) — bileşen sağlık ağacı (platform prob'ları). */
 @Component({
-  selector: 'app-health-center',
-  standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './health-center.component.html',
-  styleUrl: './health-center.component.scss'
+    selector: 'app-health-center',
+    imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './health-center.component.html',
+    styleUrl: './health-center.component.scss'
 })
 export class HealthCenterComponent implements OnInit {
   private readonly service = inject(HealthService);

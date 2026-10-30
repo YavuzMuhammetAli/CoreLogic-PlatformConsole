@@ -12,11 +12,10 @@ type Tab = 'drift' | 'matrix';
 
 /** Model/Şema Registry (M11) — drift panosu + sürüm matrisi (read-model'den). */
 @Component({
-  selector: 'app-model-registry',
-  standalone: true,
-  imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './model-registry.component.html',
-  styleUrl: './alert-center.component.scss'
+    selector: 'app-model-registry',
+    imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './model-registry.component.html',
+    styleUrl: './alert-center.component.scss'
 })
 export class ModelRegistryComponent implements OnInit {
   private readonly service = inject(RegistryService);

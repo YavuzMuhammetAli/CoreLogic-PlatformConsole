@@ -17,11 +17,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
  * maske metniyle ezilirdi.
  */
 @Component({
-  selector: 'app-config-list',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './config-list.component.html',
-  styleUrl: './config-list.component.scss'
+    selector: 'app-config-list',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './config-list.component.html',
+    styleUrl: './config-list.component.scss'
 })
 export class ConfigListComponent implements OnInit {
   private readonly service = inject(ConfigService);

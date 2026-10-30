@@ -55,12 +55,11 @@ export function withAllOption(
  *   <app-select [options]="severities" [(value)]="form.severity" [ariaLabel]="'...' | t" />
  */
 @Component({
-  selector: 'app-select',
-  standalone: true,
-  imports: [IconComponent],
-  templateUrl: './select.component.html',
-  styleUrl: './select.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-select',
+    imports: [IconComponent],
+    templateUrl: './select.component.html',
+    styleUrl: './select.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectComponent implements OnDestroy {
   private readonly host = inject(ElementRef<HTMLElement>);

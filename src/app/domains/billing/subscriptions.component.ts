@@ -16,11 +16,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /** Abonelikler (M36) — liste/filtre + tenant'a plan atama + yaşam döngüsü eylemleri. */
 @Component({
-  selector: 'app-subscriptions',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './subscriptions.component.html',
-  styleUrl: './billing.component.scss'
+    selector: 'app-subscriptions',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './subscriptions.component.html',
+    styleUrl: './billing.component.scss'
 })
 export class SubscriptionsComponent implements OnInit {
   private readonly service = inject(BillingService);

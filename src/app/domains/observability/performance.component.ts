@@ -14,11 +14,10 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
  * Mevcut telemetri uçlarından beslenir (yeni backend gerektirmez); depo evrimi ekranı kırmaz.
  */
 @Component({
-  selector: 'app-performance',
-  standalone: true,
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
-  templateUrl: './performance.component.html',
-  styleUrl: './performance.component.scss'
+    selector: 'app-performance',
+    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    templateUrl: './performance.component.html',
+    styleUrl: './performance.component.scss'
 })
 export class PerformanceComponent implements OnInit {
   private readonly service = inject(TelemetryService);
