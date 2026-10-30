@@ -181,7 +181,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./domains/billing/cost.component').then(m => m.CostComponent)
       },
-      // Settings (P1.5) — Platform Config (salt-okur)
+      // Settings (P1.5) — Platform Config
       { path: 'settings', redirectTo: 'settings/config', pathMatch: 'full' },
       {
         path: 'settings/config',

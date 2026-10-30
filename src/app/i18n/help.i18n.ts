@@ -690,20 +690,20 @@ export const HELP_I18N: Translations = {
   // ══ YAPILANDIRMA ══════════════════════════════════════════════════════════
   'pc.help.config.title': { tr: 'Platform Yapılandırması', en: 'Platform Configuration' },
   'pc.help.config.summary': {
-    tr: 'Çalışan platformun yapılandırma değerleri, salt-okur olarak. Değişiklikler yapılandırma dosyaları ve ortam değişkenleriyle yapılır, konsoldan değil.',
-    en: 'The running platform\'s configuration values, read-only. Changes are made through configuration files and environment variables, not from the console.'
+    tr: 'Platformun ayarları: SMTP, yapay zeka sağlayıcısı ve birim maliyetler. Her satır kendi Kaydet düğmesiyle yazılır.',
+    en: 'The platform\'s settings: SMTP, the AI provider and unit costs. Each row is written with its own Save button.'
   },
   'pc.help.config.field.key.label': { tr: 'Anahtar', en: 'Key' },
   'pc.help.config.field.key.desc': { tr: 'Yapılandırma anahtarının tam yolu.', en: 'The full path of the configuration key.' },
   'pc.help.config.field.value.label': { tr: 'Değer', en: 'Value' },
-  'pc.help.config.field.value.desc': { tr: 'Çalışma zamanında geçerli olan değer.', en: 'The value in effect at runtime.' },
+  'pc.help.config.field.value.desc': { tr: 'Kayıtlı değer. Boşsa varsa varsayılan geçer; gizli alanı boş bırakmak mevcut değeri korur.', en: 'The stored value. If blank, the default applies when there is one; leaving a secret field blank keeps the current value.' },
   'pc.help.config.field.isSecret.label': { tr: 'Gizli', en: 'Secret' },
   'pc.help.config.field.isSecret.desc': { tr: 'Gizli işaretli anahtarların değeri maskelenir; bağlantı dizesi, parola ve API anahtarları burada açık gösterilmez.', en: 'Values of keys marked secret are masked; connection strings, passwords and API keys are never shown in the clear here.' },
   'pc.help.config.field.updated.label': { tr: 'Güncelleme', en: 'Updated' },
-  'pc.help.config.field.updated.desc': { tr: 'Değerin en son ne zaman okunduğu/yenilendiği.', en: 'When the value was last read/refreshed.' },
+  'pc.help.config.field.updated.desc': { tr: 'Değerin en son ne zaman kaydedildiği.', en: 'When the value was last saved.' },
   'pc.help.config.notes': {
-    tr: 'Bu sayfa yalnız görüntüler. Bir değeri değiştirmek için yapılandırmayı güncelleyip uygulamayı yeniden başlatmak gerekir.',
-    en: 'This page only displays. Changing a value requires updating the configuration and restarting the application.'
+    tr: 'Değişiklik yeniden başlatma gerektirmez, sonraki işlemde geçerli olur. Yeni anahtar buradan eklenmez: liste kodun okuduğu ayarlardan oluşur.',
+    en: 'Changes need no restart and apply from the next operation. New keys are not added here: the list consists of the settings the code reads.'
   },
 
   // ══ FEATURE FLAG ══════════════════════════════════════════════════════════
