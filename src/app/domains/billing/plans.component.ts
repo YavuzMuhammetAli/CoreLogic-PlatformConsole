@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BillingService, formatQuota, planStatusTone } from './billing.service';
@@ -17,6 +17,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-plans',
     imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './plans.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './billing.component.scss'
 })
 export class PlansComponent implements OnInit {

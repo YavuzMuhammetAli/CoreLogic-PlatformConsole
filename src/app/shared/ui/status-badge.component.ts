@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 
 export type BadgeTone = 'success' | 'warn' | 'danger' | 'meta' | 'neutral';
@@ -14,6 +14,7 @@ export type BadgeTone = 'success' | 'warn' | 'danger' | 'meta' | 'neutral';
 @Component({
   selector: 'app-status-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<span
     class="badge"
     [class.badge-success]="tone === 'success'"

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { RegistryService } from './registry.service';
@@ -15,6 +15,7 @@ type Tab = 'drift' | 'matrix';
     selector: 'app-model-registry',
     imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './model-registry.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './alert-center.component.scss'
 })
 export class ModelRegistryComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -16,6 +16,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-tenant-list',
     imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './tenant-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './tenant-list.component.scss'
 })
 export class TenantListComponent implements OnInit {

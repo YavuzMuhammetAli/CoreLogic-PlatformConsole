@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlatformAuthService } from '../../core/auth/platform-auth.service';
@@ -18,6 +18,7 @@ type Step = 'login' | 'mfa' | 'enroll';
     selector: 'app-login',
     imports: [ReactiveFormsModule, TranslatePipe, IconComponent],
     templateUrl: './login.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './login.component.scss'
 })
 export class LoginComponent {

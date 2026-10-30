@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -31,6 +31,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
         ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
     ],
     templateUrl: './plan-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './billing.component.scss'
 })
 export class PlanDetailComponent implements OnInit {

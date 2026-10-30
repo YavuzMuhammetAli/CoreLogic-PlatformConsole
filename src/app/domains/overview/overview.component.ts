@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -23,6 +23,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-overview',
     imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './overview.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './overview.component.scss'
 })
 export class OverviewComponent implements OnInit {

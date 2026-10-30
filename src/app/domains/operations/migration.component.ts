@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -52,6 +52,7 @@ interface ScheduleFieldVisibility {
     selector: 'app-migration',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './migration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./alert-center.component.scss', './migration.component.scss']
 })
 export class MigrationComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -21,6 +21,7 @@ type Tab = 'alerts' | 'rules';
     selector: 'app-alert-center',
     imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './alert-center.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './alert-center.component.scss'
 })
 export class AlertCenterComponent implements OnInit {

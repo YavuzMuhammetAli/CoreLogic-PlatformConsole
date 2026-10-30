@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { PlatformSessionStore } from '../../core/auth/platform-session.store';
 import { PlatformAuthService } from '../../core/auth/platform-auth.service';
@@ -25,6 +25,7 @@ interface NavItem {
     selector: 'app-console-shell',
     imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, IconComponent],
     templateUrl: './console-shell.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './console-shell.component.scss'
 })
 export class ConsoleShellComponent {

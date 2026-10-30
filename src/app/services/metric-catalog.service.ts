@@ -32,7 +32,7 @@ export class MetricCatalogService {
     effect(() => {
       this.language.lang();
       untracked(() => this.load());
-    }, { allowSignalWrites: true });
+    });
   }
 
   /** Görünen ad; katalog henüz gelmediyse ya da anahtar tanınmıyorsa anahtarın kendisi. */

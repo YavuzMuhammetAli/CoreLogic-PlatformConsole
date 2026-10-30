@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -42,6 +42,7 @@ interface PendingAction {
     selector: 'app-tenant-detail',
     imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './tenant-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './tenant-detail.component.scss'
 })
 export class TenantDetailComponent implements OnInit {

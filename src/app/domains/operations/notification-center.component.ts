@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -21,6 +21,7 @@ type Tab = 'inbox' | 'rules';
     selector: 'app-notification-center',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './notification-center.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './alert-center.component.scss'
 })
 export class NotificationCenterComponent implements OnInit {

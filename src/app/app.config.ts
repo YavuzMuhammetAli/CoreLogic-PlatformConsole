@@ -1,12 +1,13 @@
 import {
   ApplicationConfig,
-  APP_INITIALIZER,
   LOCALE_ID,
   PLATFORM_ID,
-  provideZoneChangeDetection
+  provideZoneChangeDetection,
+  inject,
+  provideAppInitializer
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { isPlatformBrowser, registerLocaleData } from '@angular/common';
 import localeTr from '@angular/common/locales/tr';
 import { firstValueFrom } from 'rxjs';
@@ -29,14 +30,9 @@ import { PlatformAuthService } from './core/auth/platform-auth.service';
  * withEnabledBlockingInitialNavigation() EKLEME — navigasyonu kendi APP_INITIALIZER'ında
  * bununla paralel başlatır, guard refresh dönmeden koşar ve her F5 /login'e düşer.
  */
-function sessionInitializerFactory(
-  auth: PlatformAuthService,
-  platformId: Object
-): () => Promise<void> {
-  return () => {
-    if (!isPlatformBrowser(platformId)) return Promise.resolve();
-    return firstValueFrom(auth.loadSession()).then(() => {}).catch(() => {});
-  };
+function restoreSession(auth: PlatformAuthService, platformId: Object): Promise<void> {
+  if (!isPlatformBrowser(platformId)) return Promise.resolve();
+  return firstValueFrom(auth.loadSession()).then(() => {}).catch(() => {});
 }
 
 // DatePipe'ın TR biçimi (27.07.2026 12:14) kullanabilmesi için locale verisi kaydedilir;
@@ -50,17 +46,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     // Interceptor sırası: correlation + language header'ları ekler, sonra error
     // (401'de refresh+retry) platformAuth'u sarar — retry'da taze token eklenir.
-    provideHttpClient(withFetch(), withInterceptors([
+    provideHttpClient(withInterceptors([
       correlationInterceptor,
       languageInterceptor,
       errorInterceptor,
       platformAuthInterceptor
     ])),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: sessionInitializerFactory,
-      deps: [PlatformAuthService, PLATFORM_ID],
-      multi: true
-    }
+    provideAppInitializer(() => restoreSession(inject(PlatformAuthService), inject(PLATFORM_ID)))
   ]
 };

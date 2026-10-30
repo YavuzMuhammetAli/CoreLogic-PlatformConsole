@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BillingService, CostByTenant } from './billing.service';
@@ -13,6 +13,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-cost',
     imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './cost.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './billing.component.scss'
 })
 export class CostComponent implements OnInit {

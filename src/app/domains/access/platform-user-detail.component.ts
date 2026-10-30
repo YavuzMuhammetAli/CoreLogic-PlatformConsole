@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -30,6 +30,7 @@ type PendingAction = 'deactivate' | 'reset-mfa' | 'reset-password' | null;
     selector: 'app-platform-user-detail',
     imports: [FormsModule, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './platform-user-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './platform-users.component.scss'
 })
 export class PlatformUserDetailComponent implements OnInit {

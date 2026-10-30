@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PlatformUsersService } from './platform-users.service';
@@ -15,6 +15,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-platform-users',
     imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './platform-users.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './platform-users.component.scss'
 })
 export class PlatformUsersComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -19,6 +19,7 @@ interface UsageSummary { tenantId: string; metricKey: string; total: number; }
     selector: 'app-usage',
     imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './usage.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './billing.component.scss'
 })
 export class UsageComponent implements OnInit {

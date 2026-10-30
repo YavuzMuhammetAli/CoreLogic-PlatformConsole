@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
@@ -27,6 +27,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
         ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
     ],
     templateUrl: './jobs-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './jobs-list.component.scss'
 })
 export class JobsListComponent implements OnInit {

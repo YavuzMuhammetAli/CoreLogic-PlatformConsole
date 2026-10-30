@@ -1,5 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FlagsService, flagStateTone } from './flags.service';
@@ -13,8 +12,9 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 /** Feature Flags (M39) — liste + durum/yüzde + tenant override + ölü flag işareti. */
 @Component({
     selector: 'app-feature-flags',
-    imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
+    imports: [FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './feature-flags.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './feature-flags.component.scss'
 })
 export class FeatureFlagsComponent implements OnInit {

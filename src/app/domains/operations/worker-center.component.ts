@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -30,6 +30,7 @@ const POLL_INTERVAL_MS = 15000;
         StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent
     ],
     templateUrl: './worker-center.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './worker-center.component.scss'
 })
 export class WorkerCenterComponent implements OnInit, OnDestroy {

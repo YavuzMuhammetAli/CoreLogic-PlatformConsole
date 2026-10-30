@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -16,6 +16,7 @@ type Tab = 'metrics' | 'live';
     selector: 'app-api-monitor',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './api-monitor.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './api-monitor.component.scss'
 })
 export class ApiMonitorComponent implements OnInit, OnDestroy {

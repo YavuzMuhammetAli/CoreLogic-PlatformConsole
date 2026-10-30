@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -17,6 +17,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-performance',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './performance.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './performance.component.scss'
 })
 export class PerformanceComponent implements OnInit {

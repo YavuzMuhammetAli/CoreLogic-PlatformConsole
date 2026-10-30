@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -17,6 +17,7 @@ type Tab = 'webhooks' | 'apikeys';
     selector: 'app-integration',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './integration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './integration.component.scss'
 })
 export class IntegrationComponent implements OnInit {

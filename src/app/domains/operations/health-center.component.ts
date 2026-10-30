@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HealthService, healthTone } from './health.service';
@@ -14,6 +14,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
     selector: 'app-health-center',
     imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './health-center.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './health-center.component.scss'
 })
 export class HealthCenterComponent implements OnInit {

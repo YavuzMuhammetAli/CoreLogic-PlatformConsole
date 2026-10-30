@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -20,6 +20,7 @@ type Tab = 'attempts' | 'events' | 'iprules';
     selector: 'app-security-center',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
     templateUrl: './security-center.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './security-center.component.scss'
 })
 export class SecurityCenterComponent implements OnInit {
