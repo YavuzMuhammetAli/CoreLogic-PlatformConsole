@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { MigrationRunItem, MigrationRunDetail, MigrationSchedule } from '../../core/models/migration.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Migration Orchestrator (M10) servisi — /migrations uçları. */
+/** Migration Orchestrator (M10) service — /migrations endpoints. */
 @Injectable({ providedIn: 'root' })
 export class MigrationService {
   private readonly http = inject(HttpClient);
@@ -18,7 +18,7 @@ export class MigrationService {
   getRun(id: number): Observable<DataResponseModel<MigrationRunDetail>> {
     return this.http.get<DataResponseModel<MigrationRunDetail>>(`${this.base}/runs/${id}`);
   }
-  /** Koşuyu KUYRUĞA ALIR ve hemen döner — yürütme JobWorker üzerinde sürer. */
+  /** QUEUES the run and returns immediately — execution continues on the JobWorker. */
   startRun(dto: { takePreBackup: boolean; stopOnFailure: boolean }): Observable<DataResponseModel<number>> {
     return this.http.post<DataResponseModel<number>>(`${this.base}/runs`, dto);
   }
@@ -37,7 +37,7 @@ export function migrationStatusTone(status: string): BadgeTone {
     case 'Completed':
     case 'Succeeded': return 'success';
     case 'Running': return 'meta';
-    // Kuyrukta bekliyor — henüz bir worker sahiplenmedi.
+    // Waiting in the queue — no worker has claimed it yet.
     case 'Queued': return 'meta';
     case 'Stopped': return 'warn';
     case 'Failed': return 'danger';

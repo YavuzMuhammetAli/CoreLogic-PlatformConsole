@@ -11,7 +11,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'metrics' | 'live';
 
-/** API Monitoring (M27) — metrikler (rollup) + son istek izleri (5 sn canlı akış). */
+/** API Monitoring (M27) — metrics (rollup) + recent request traces (5 s live stream). */
 @Component({
     selector: 'app-api-monitor',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],

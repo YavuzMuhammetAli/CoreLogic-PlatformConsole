@@ -1,4 +1,4 @@
-/* Angular + TypeScript yapılandırması — CoreLogicUI ile aynı katılık ayarları. */
+/* Angular + TypeScript configuration — same strictness settings as CoreLogicUI. */
 {
   "compileOnSave": false,
   "compilerOptions": {

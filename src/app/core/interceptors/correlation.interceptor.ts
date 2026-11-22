@@ -1,8 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 /**
- * Her isteğe W3C 'traceparent' başlığı ekler ([04 §3]). Backend CorrelationMiddleware
- * trace-id'yi correlationId olarak kullanır; audit/log/telemetri bu ID ile zincirlenir.
+ * Adds a W3C 'traceparent' header to every request ([04 §3]). The backend CorrelationMiddleware
+ * uses the trace-id as correlationId; audit/log/telemetry are chained by this ID.
  * Format: 00-<32 hex trace-id>-<16 hex span-id>-01
  */
 export const correlationInterceptor: HttpInterceptorFn = (req, next) => {

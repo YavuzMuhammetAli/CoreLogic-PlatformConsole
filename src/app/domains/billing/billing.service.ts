@@ -9,8 +9,8 @@ import { LanguageService } from '../../services/language.service';
 import { MetricCatalogService } from '../../services/metric-catalog.service';
 
 /**
- * Kota limitinin okunur hâli, ör. "1.000.000 token". Limit boşsa (bool özellik /
- * sınırsız) null — çağıran kendi bağlamına uygun metni koyar.
+ * Human-readable form of the quota limit, e.g. "1.000.000 token". Null when the limit is empty
+ * (bool feature / unlimited) — the caller supplies text suited to its own context.
  */
 export function formatQuota(language: LanguageService, catalog: MetricCatalogService, f: PlanFeatureItem): string | null {
   if (f.limitValue == null) return null;
@@ -18,13 +18,13 @@ export function formatQuota(language: LanguageService, catalog: MetricCatalogSer
   return f.unit ? `${amount} ${catalog.unitLabel(f.unit)}` : amount;
 }
 
-/** Billing (M35/M36/M12) servisi — /plans + /subscriptions uçları. */
+/** Billing (M35/M36/M12) service — /plans + /subscriptions endpoints. */
 @Injectable({ providedIn: 'root' })
 export class BillingService {
   private readonly http = inject(HttpClient);
   private readonly base = environment.platformApiBaseUrl;
 
-  // ── Planlar (M35) ──
+  // ── Plans (M35) ──
   plans(): Observable<ListResponseModel<PlanItem>> {
     return this.http.get<ListResponseModel<PlanItem>>(`${this.base}/plans`);
   }
@@ -35,12 +35,12 @@ export class BillingService {
     : Observable<DataResponseModel<number>> {
     return this.http.post<DataResponseModel<number>>(`${this.base}/plans`, dto);
   }
-  /** Code ve Version değişmez — sürümleme sözleşmesi gereği kimlik sabittir. */
+  /** Code and Version never change — the identity is fixed per the versioning contract. */
   updatePlan(id: number, dto: { name: string; description?: string; isPublic: boolean; trialDays: number })
     : Observable<ResponseModel> {
     return this.http.put<ResponseModel>(`${this.base}/plans/${id}`, dto);
   }
-  /** Yalnız abonesi olmayan Draft planlarda başarılı olur. */
+  /** Succeeds only for Draft plans that have no subscribers. */
   deletePlan(id: number): Observable<ResponseModel> {
     return this.http.delete<ResponseModel>(`${this.base}/plans/${id}`);
   }
@@ -60,7 +60,7 @@ export class BillingService {
       `${this.base}/plans/${planId}/features/${encodeURIComponent(featureKey)}`);
   }
 
-  // ── Abonelikler (M36) ──
+  // ── Subscriptions (M36) ──
   subscriptions(status: string, page: number, pageSize: number)
     : Observable<DataResponseModel<PagedResult<SubscriptionItem>>> {
     let params = new HttpParams().set('page', String(page)).set('pageSize', String(pageSize));
@@ -97,7 +97,7 @@ export class BillingService {
 export interface CostLine { metricKey: string; quantity: number; unitCost: number; cost: number; }
 export interface CostByTenant { tenantId: string; totalCost: number; lines: CostLine[]; }
 
-/** Abonelik durumu → rozet tonu ([12 §1]). */
+/** Subscription status → badge tone ([12 §1]). */
 export function subStatusTone(status: string): BadgeTone {
   switch (status) {
     case 'Active': return 'success';
@@ -110,7 +110,7 @@ export function subStatusTone(status: string): BadgeTone {
   }
 }
 
-/** Plan durumu → rozet tonu. */
+/** Plan status → badge tone. */
 export function planStatusTone(status: string): BadgeTone {
   switch (status) {
     case 'Active': return 'success';

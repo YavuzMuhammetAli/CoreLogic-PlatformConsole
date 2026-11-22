@@ -17,7 +17,7 @@
 }
 .actions { justify-content: flex-end; }
 
-/* 7 sekme dar ekranda tek satıra sığmıyor — sarmalasın. */
+/* 7 tabs don't fit on one line on narrow screens — let them wrap. */
 .tabs { display: flex; flex-wrap: wrap; gap: var(--space-1); border-bottom: 1px solid var(--border); }
 .tab {
   padding: var(--space-3) var(--space-4);
@@ -43,12 +43,12 @@
 .table-scroll { overflow-x: auto; }
 .nowrap { white-space: nowrap; }
 
-/* ── Modeller sekmesi: ağaç tablo ── */
+/* ── Models tab: tree table ── */
 .model-name { display: inline-flex; align-items: center; gap: var(--space-2); }
 .model-branch { font-size: var(--text-xs); }
 .model-desc { font-size: var(--text-xs); margin-top: 2px; }
 
-/* Ata zinciri sağa hizalı — derinlik tek bakışta okunur. */
+/* Ancestor chain right-aligned — depth is readable at a glance. */
 .model-path-col { text-align: right; }
 .model-path {
   display: inline-block; max-width: 34ch;
@@ -56,8 +56,8 @@
   vertical-align: bottom; font-size: var(--text-xs);
 }
 
-/* ── Tablolar sekmesi ── */
-/* Öksüz tablolar (modeli silinmiş ama tablo diskte) dikkat çeksin. */
+/* ── Tables tab ── */
+/* Orphan tables (model deleted but table still on disk) should stand out. */
 .table-orphan { color: var(--warn); font-weight: 600; }
 
 @media (max-width: 600px) {
@@ -67,5 +67,5 @@
   .model-path { max-width: 18ch; }
 }
 
-/* Hak tablosunda çevrilmiş adın yanında operatörün tanıdığı ham anahtar. */
+/* In the entitlement table, the raw key the operator knows next to the translated name. */
 .feature-key { margin-left: var(--space-1); font-size: var(--text-xs); }

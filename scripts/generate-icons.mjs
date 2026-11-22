@@ -1,13 +1,13 @@
-// Material Symbols Outlined ikon kaydını üretir (wght 500 — 14–16 px düğmelerde 400 fazla ince kalıyor).
+// Generates the Material Symbols Outlined icon registry (wght 500 — 400 is too thin on 14–16 px buttons).
 //
 //   npm run icons
 //
-// Okur : src/app/shared/ui/icon/icons.manifest.json  ({ outlined: [...], filled: [...] })
-// Yazar: src/app/shared/ui/icon/icons.generated.ts
+// Reads : src/app/shared/ui/icon/icons.manifest.json  ({ outlined: [...], filled: [...] })
+// Writes: src/app/shared/ui/icon/icons.generated.ts
 //
-// SVG'ler sabit sürümden CDN'den çekilir; paket devDependency DEĞİL (23 bin dosya, Docker `npm ci`'ı
-// yavaşlatırdı). Üretilen dosya commit'lenir — build bu script'e ve ağa bağımlı değildir.
-// Yeni ikon: adı manifest'e ekle (https://fonts.google.com/icons adıyla aynı), script'i koş.
+// SVGs are fetched from the CDN at a pinned version; the package is NOT a devDependency (23k files, it would
+// slow down Docker `npm ci`). The generated file is committed — the build does not depend on this script or the network.
+// New icon: add its name to the manifest (same as the name on https://fonts.google.com/icons), run the script.
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,14 +22,14 @@ const manifest = JSON.parse(await readFile(resolve(dir, 'icons.manifest.json'), 
 const outlined = [...new Set(manifest.outlined)].sort();
 const filled = [...new Set(manifest.filled)].sort();
 const unknownFilled = filled.filter(n => !outlined.includes(n));
-if (unknownFilled.length) fail(`"filled" listesindeki ad "outlined"da yok: ${unknownFilled.join(', ')}`);
+if (unknownFilled.length) fail(`name in the "filled" list is missing from "outlined": ${unknownFilled.join(', ')}`);
 
 async function path(file) {
   const res = await fetch(`${BASE}/${file}.svg`);
-  if (!res.ok) fail(`${file}.svg alınamadı (${res.status}) — ad Material Symbols'ta var mı?`);
+  if (!res.ok) fail(`could not fetch ${file}.svg (${res.status}) — does the name exist in Material Symbols?`);
   const svg = await res.text();
   const ds = [...svg.matchAll(/\sd="([^"]+)"/g)].map(m => m[1]);
-  if (!ds.length) fail(`${file}.svg içinde path yok`);
+  if (!ds.length) fail(`no path in ${file}.svg`);
   return ds.join('');
 }
 
@@ -43,7 +43,7 @@ const entries = async (names, suffix) =>
     .map(([n, d]) => `  ${/^[a-z_]\w*$/.test(n) ? n : `'${n}'`}: '${d}',`)
     .join('\n');
 
-const out = `// OTOMATİK ÜRETİLDİ — elle düzenleme. Kaynak: icons.manifest.json, komut: \`npm run icons\`.
+const out = `// AUTO-GENERATED — do not edit by hand. Source: icons.manifest.json, command: \`npm run icons\`.
 // Material Symbols Outlined (wght 500, opsz 48) · @material-symbols/svg-500@${VERSION} · Apache-2.0
 // viewBox "0 -960 960 960"
 
@@ -53,11 +53,11 @@ ${await entries(outlined, '')}
 
 export type IconName = keyof typeof ICONS;
 
-/** Dolu (FILL=1) varyantı — yalnız manifest'te "filled" olarak işaretlenenler. */
+/** Filled (FILL=1) variant — only those marked as "filled" in the manifest. */
 export const ICONS_FILLED: Partial<Record<IconName, string>> = {
 ${await entries(filled, '-fill')}
 };
 `;
 
 await writeFile(resolve(dir, 'icons.generated.ts'), out);
-console.log(`generate-icons: ${outlined.length} ikon, ${filled.length} dolu varyant yazıldı.`);
+console.log(`generate-icons: wrote ${outlined.length} icons, ${filled.length} filled variants.`);

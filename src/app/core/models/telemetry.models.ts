@@ -1,4 +1,4 @@
-/** API Monitoring (M27) — backend RequestTraceDto ile eşleşir. */
+/** API Monitoring (M27) — matches backend RequestTraceDto. */
 export interface RequestTrace {
   timestamp: string;
   tenantId?: string | null;
@@ -12,7 +12,7 @@ export interface RequestTrace {
   correlationId?: string | null;
 }
 
-/** API Monitoring metrik özeti (rollup) — backend RouteMetricDto. */
+/** API Monitoring metric summary (rollup) — backend RouteMetricDto. */
 export interface RouteMetric {
   route: string;
   count: number;

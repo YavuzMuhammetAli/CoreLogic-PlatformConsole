@@ -1,4 +1,4 @@
-/** Security Center (M18/M19) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Security Center (M18/M19) models — match backend Entities.DTOs.Platform. */
 
 export interface LoginAttemptItem {
   id: number;

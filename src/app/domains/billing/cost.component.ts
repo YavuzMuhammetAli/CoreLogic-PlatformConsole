@@ -8,7 +8,7 @@ import { MetricCatalogService } from '../../services/metric-catalog.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Cost & AI Usage Analytics (M33/M34) — tenant başına maliyet dökümü (usage × birim). */
+/** Cost & AI Usage Analytics (M33/M34) — per-tenant cost breakdown (usage × unit). */
 @Component({
     selector: 'app-cost',
     imports: [DecimalPipe, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -28,7 +28,7 @@ export class CostComponent implements OnInit {
 
   ngOnInit(): void { this.load(); }
 
-  /** Metrik adı katalogdan (plan özelliği ya da yalnız maliyet metriği); tanınmayan ham kalır. */
+  /** Metric name from the catalog (plan feature or cost-only metric); unknown ones stay raw. */
   metricLabel(key: string): string {
     return this.catalog.label(key);
   }

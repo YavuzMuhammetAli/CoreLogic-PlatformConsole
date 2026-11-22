@@ -13,7 +13,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Compliance & Data (M42) — DSAR/erasure/offboarding talep FSM (KVKK/GDPR). */
+/** Compliance & Data (M42) — DSAR/erasure/offboarding request FSM (KVKK/GDPR). */
 @Component({
     selector: 'app-compliance',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -33,16 +33,16 @@ export class ComplianceComponent implements OnInit {
 
   readonly tone = complianceStatusTone;
   readonly canManage = this.store.has(Cap.SecurityManage);
-  /** Talep türleri — değer sunucu sabiti, etiket çeviriden. */
+  /** Request types — the value is a server constant, the label comes from translations. */
   readonly typeOptions = computed(() =>
     COMPLIANCE_TYPES.map(v => ({ value: v, label: this.language.enumLabel(v) })));
-  /** FSM durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
+  /** FSM states — computed so the "Tümü" (All) label also changes when the language changes. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.comp.allStatuses'),
       ['Open', 'InProgress', 'Completed', 'Rejected'],
       v => this.language.enumLabel(v)));
 
-  /** Tablo hücresi için — tür sunucudan ham gelir. */
+  /** For the table cell — the type arrives raw from the server. */
   enumLabel(value: string): string {
     return this.language.enumLabel(value);
   }

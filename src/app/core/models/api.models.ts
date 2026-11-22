@@ -1,20 +1,20 @@
-/** Backend IResult → { Success, Message } (camelCase serileşir). */
+/** Backend IResult → { Success, Message } (serialized as camelCase). */
 export interface ResponseModel {
   success: boolean;
   message: string;
 }
 
-/** Backend IDataResult<T> (tekil) → { Success, Message, Data }. */
+/** Backend IDataResult<T> (single) → { Success, Message, Data }. */
 export interface DataResponseModel<T> extends ResponseModel {
   data: T;
 }
 
-/** Backend IDataResult<T> (dizi) → { Success, Message, Data }. */
+/** Backend IDataResult<T> (array) → { Success, Message, Data }. */
 export interface ListResponseModel<T> extends ResponseModel {
   data: T[];
 }
 
-/** Backend PagedResult<T> — sayfalı liste zarfı ([13 §5]). */
+/** Backend PagedResult<T> — paged list envelope ([13 §5]). */
 export interface PagedResult<T> {
   items: T[];
   total: number;
@@ -24,9 +24,9 @@ export interface PagedResult<T> {
 }
 
 /**
- * RFC 7807 problem+json ([13 §8]). Platform API'si hata gövdesini bu şekilde
- * dönebilir; şu an backend çoğu uçta {success,message} zarfını kullanıyor,
- * bu tip ileri fazlar için hazır tutulur.
+ * RFC 7807 problem+json ([13 §8]). The Platform API may return its error body in this
+ * shape; currently the backend uses the {success,message} envelope on most endpoints,
+ * so this type is kept ready for later phases.
  */
 export interface ProblemDetails {
   type?: string;

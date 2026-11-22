@@ -29,7 +29,7 @@
   @if (loading()) {
     <div class="empty-state"><span class="spinner"></span></div>
   } @else {
-    <!-- ── En yavaş uçlar ── -->
+    <!-- ── Slowest endpoints ── -->
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.perf.slowRoutes' | t }}</h2></div>
       @if (slowRoutes().length === 0) {
@@ -60,7 +60,7 @@
       }
     </section>
 
-    <!-- ── En yavaş son istekler ── -->
+    <!-- ── Slowest recent requests ── -->
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.perf.slowRequests' | t }}</h2></div>
       @if (slowRequests().length === 0) {

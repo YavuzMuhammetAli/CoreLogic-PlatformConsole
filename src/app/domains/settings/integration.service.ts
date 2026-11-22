@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { WebhookItem, WebhookDeliveryItem, ApiKeyItem } from '../../core/models/integration.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Integration Center (M40) servisi — /integration uçları. */
+/** Integration Center (M40) service — /integration endpoints. */
 @Injectable({ providedIn: 'root' })
 export class IntegrationService {
   private readonly http = inject(HttpClient);

@@ -1,12 +1,12 @@
-/* Worker kontrol düzlemi sayfası.
+/* Worker control plane page.
 
-   NOT: alert-center.component.scss paylaşılmadı — o dosyada `.checkbox-label`
-   tanımlı değil (migration sayfası bu yüzden stilsiz kalıyor) ve `var(--radius)`
-   diye var olmayan bir token'a başvuruyor. Bu sayfa aynı kusurları miras
-   almasın diye kendi dosyasını taşır.
+   NOTE: alert-center.component.scss was not shared — that file doesn't define
+   `.checkbox-label` (which is why the migration page stays unstyled) and refers to a
+   non-existent token `var(--radius)`. This page carries its own file so it doesn't
+   inherit the same defects.
 
-   styles.scss kuralı: sayfa kabında max-width YOK — shell'in içerik kolonunu
-   tamamen doldurur. */
+   styles.scss rule: NO max-width on the page container — it fills the shell's content
+   column completely. */
 
 .page-head { margin-bottom: var(--space-2); }
 .page-head h1 { font-size: var(--text-2xl); }
@@ -29,7 +29,7 @@
   font-size: var(--text-sm); color: var(--fg-2); cursor: pointer;
 }
 
-/* Aralık düzenleme hücresi — dar sayısal girdi + "varsayılan" ipucu. */
+/* Interval editing cell — narrow numeric input + "default" hint. */
 .interval-cell { display: flex; align-items: center; gap: var(--space-2); }
 .interval-input {
   width: 7ch; padding: var(--space-1) var(--space-2);
@@ -37,7 +37,7 @@
 }
 .interval-hint { font-size: var(--text-xs); color: var(--muted); white-space: nowrap; }
 
-/* Kritik worker duraklatıldığında kalıcı uyarı — satırın sessizce unutulmaması için. */
+/* Persistent warning when a critical worker is paused — so the row isn't silently forgotten. */
 .critical-flag { color: var(--danger); font-size: var(--text-xs); font-weight: 600; }
 
 .worker-name { display: flex; flex-direction: column; gap: 2px; }
@@ -48,7 +48,7 @@
   font-size: var(--text-xs); color: var(--danger);
 }
 
-/* Zamanlama paneli — cron girişi + sunucudan gelen önizleme. */
+/* Schedule panel — cron input + preview from the server. */
 .schedule-grid {
   display: grid; gap: var(--space-4);
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

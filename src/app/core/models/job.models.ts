@@ -1,4 +1,4 @@
-/** Jobs & Queue (M21) modelleri — backend Entities.DTOs.Platform.JobSummaryDto ile eşleşir. */
+/** Jobs & Queue (M21) models — match backend Entities.DTOs.Platform.JobSummaryDto. */
 
 export interface JobSummary {
   id: string;

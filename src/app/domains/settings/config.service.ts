@@ -15,11 +15,11 @@ export class ConfigService {
   }
 
   /**
-   * Tek bir ayarı yazar.
+   * Writes a single setting.
    *
-   * `isSecret` GÖNDERİLMEZ: bir anahtarın gizli olup olmadığına sunucu karar
-   * verir (PlatformConfigKeys.Secret). Gizli bir anahtar için boş değer
-   * göndermek "değiştirme" anlamına gelir — mevcut sır korunur.
+   * `isSecret` is NOT sent: the server decides whether a key is secret
+   * (PlatformConfigKeys.Secret). Sending an empty value for a secret key
+   * means "don't change" — the existing secret is kept.
    */
   set(key: string, value: string): Observable<ResponseModel> {
     return this.http.put<ResponseModel>(`${this.baseUrl}/${encodeURIComponent(key)}`, { value });

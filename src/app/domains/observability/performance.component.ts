@@ -10,8 +10,8 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
- * Performance (M28, [07 §6]) — en yavaş uçlar (rollup p95) + en yavaş son istekler.
- * Mevcut telemetri uçlarından beslenir (yeni backend gerektirmez); depo evrimi ekranı kırmaz.
+ * Performance (M28, [07 §6]) — slowest endpoints (rollup p95) + slowest recent requests.
+ * Fed by the existing telemetry endpoints (needs no new backend); storage evolution won't break the screen.
  */
 @Component({
     selector: 'app-performance',
@@ -34,11 +34,11 @@ export class PerformanceComponent implements OnInit {
   hours = 24;
   take = 200;
 
-  /** En yavaş 20 uç — p95'e göre azalan. */
+  /** The 20 slowest endpoints — descending by p95. */
   readonly slowRoutes = computed(() =>
     [...this.metrics()].sort((a, b) => b.p95DurationMs - a.p95DurationMs).slice(0, 20));
 
-  /** En yavaş 20 son istek — süreye göre azalan. */
+  /** The 20 slowest recent requests — descending by duration. */
   readonly slowRequests = computed(() =>
     [...this.requests()].sort((a, b) => b.durationMs - a.durationMs).slice(0, 20));
 

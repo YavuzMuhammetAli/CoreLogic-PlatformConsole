@@ -1,8 +1,8 @@
 import { Translations } from './translations.model';
 
-/** Platform Console çeviri sözlüğü (TR/EN). Anahtarlar 'pc.*' ön ekiyle namespace'lenir. */
+/** Platform Console translation dictionary (TR/EN). Keys are namespaced with the 'pc.*' prefix. */
 export const PLATFORM_I18N: Translations = {
-  // Ortak
+  // Common
   'pc.appName': { tr: 'CoreLogic Platform Console', en: 'CoreLogic Platform Console' },
   'pc.loading': { tr: 'Yükleniyor…', en: 'Loading…' },
   'pc.search': { tr: 'Ara', en: 'Search' },
@@ -44,7 +44,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.mfa.invalidCode': { tr: 'Doğrulama kodu hatalı.', en: 'Invalid verification code.' },
   'pc.mfa.codeLength': { tr: 'Kod 6 haneli olmalı.', en: 'The code must be 6 digits.' },
 
-  // Navigasyon (8 alan)
+  // Navigation (8 areas)
   'pc.nav.overview': { tr: 'Genel Bakış', en: 'Overview' },
   'pc.nav.tenants': { tr: 'Tenant\'lar', en: 'Tenants' },
   'pc.nav.access': { tr: 'Kullanıcı & Erişim', en: 'Users & Access' },
@@ -179,7 +179,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.tenants.noProvision': { tr: 'Kurulum kaydı yok.', en: 'No provisioning record.' },
   'pc.tenants.tabHistory': { tr: 'Zaman Çizelgesi', en: 'Timeline' },
 
-  // Modeller sekmesi — ana + alt model ağacı
+  // Models tab — root + child model tree
   'pc.tenants.tabModels': { tr: 'Modeller', en: 'Models' },
   'pc.tenants.model': { tr: 'Model', en: 'Model' },
   'pc.tenants.columnCount': { tr: 'Kolon', en: 'Columns' },
@@ -189,7 +189,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.tenants.rootCount': { tr: '{count} kök', en: '{count} roots' },
   'pc.tenants.modelsEmpty': { tr: 'Bu tenant henüz model yayınlamamış.', en: 'This tenant has no published models yet.' },
 
-  // Tablolar sekmesi — fiziksel envanter
+  // Tables tab — physical inventory
   'pc.tenants.tabTables': { tr: 'Tablolar', en: 'Tables' },
   'pc.tenants.table': { tr: 'Tablo', en: 'Table' },
   'pc.tenants.tableKind': { tr: 'Tür', en: 'Kind' },
@@ -202,7 +202,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.tenants.tableKindUnknown': { tr: 'Bilinmeyen', en: 'Unknown' },
   'pc.tenants.tablesEmpty': { tr: 'Tablo bulunamadı.', en: 'No tables found.' },
 
-  // Yaşam döngüsü (M04)
+  // Lifecycle (M04)
   'pc.lc.suspend': { tr: 'Askıya al', en: 'Suspend' },
   'pc.lc.resume': { tr: 'Devam ettir', en: 'Resume' },
   'pc.lc.archive': { tr: 'Arşivle', en: 'Archive' },
@@ -251,7 +251,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.health.checked': { tr: 'Kontrol', en: 'Checked' },
   'pc.health.empty': { tr: 'Henüz prob sonucu yok.', en: 'No probe results yet.' },
 
-  // Sağlık bileşenleri (prob adları sunucudan sabit gelir)
+  // Health components (probe names come from the server as constants)
   'pc.health.comp.MasterDb': { tr: 'Ana veritabanı', en: 'Master database' },
   'pc.health.comp.MasterDb.desc': {
     tr: 'Şirketlerin, planların ve platform ayarlarının tutulduğu merkez veritabanı.',
@@ -424,7 +424,7 @@ export const PLATFORM_I18N: Translations = {
     en: 'The run executes in the background; this page refreshes itself while it lasts.'
   },
 
-  // Koşu ve öğe durumları (sunucudan gelen sabitler)
+  // Run and item statuses (constants from the server)
   'pc.mig.state.Queued': { tr: 'Kuyrukta', en: 'Queued' },
   'pc.mig.state.Running': { tr: 'Çalışıyor', en: 'Running' },
   'pc.mig.state.Completed': { tr: 'Tamamlandı', en: 'Completed' },
@@ -437,7 +437,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.mig.trigger.Manual': { tr: 'Elle', en: 'Manual' },
   'pc.mig.trigger.Scheduled': { tr: 'Zamanlanmış', en: 'Scheduled' },
 
-  // Otomatik yükseltme zamanlaması — kullanıcı cron yazmaz, sıklık seçer
+  // Automatic upgrade schedule — the user does not write cron, they pick a frequency
   'pc.mig.schedule': { tr: 'Otomatik yükseltme', en: 'Automatic upgrade' },
   'pc.mig.scheduleEnabled': { tr: 'Otomatik yükseltmeyi etkinleştir', en: 'Enable automatic upgrade' },
   'pc.mig.frequency': { tr: 'Ne sıklıkla', en: 'How often' },
@@ -492,7 +492,7 @@ export const PLATFORM_I18N: Translations = {
     en: 'Schedule is off — upgrades only start manually.'
   },
 
-  // Worker kontrol düzlemi (migrasyon 025)
+  // Worker control plane (migration 025)
   'pc.workers.title': { tr: 'Worker\'lar', en: 'Workers' },
   'pc.workers.list': { tr: 'Arka plan worker\'ları', en: 'Background workers' },
   'pc.workers.empty': { tr: 'Worker yok.', en: 'No workers.' },
@@ -555,7 +555,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.sec.add': { tr: 'Ekle', en: 'Add' },
   'pc.sec.remove': { tr: 'Kaldır', en: 'Remove' },
 
-  // Model/Şema Registry (M11)
+  // Model/Schema Registry (M11)
   'pc.registry.title': { tr: 'Model Registry', en: 'Model Registry' },
   'pc.registry.drift': { tr: 'Drift panosu', en: 'Drift board' },
   'pc.registry.matrix': { tr: 'Sürüm matrisi', en: 'Version matrix' },
@@ -735,7 +735,7 @@ export const PLATFORM_I18N: Translations = {
   'pc.alerts.filter.Firing': { tr: 'Tetiklendi', en: 'Firing' },
   'pc.alerts.filter.Acknowledged': { tr: 'Üstlenilmiş', en: 'Acknowledged' },
   'pc.alerts.filter.Resolved': { tr: 'Çözümlenmiş', en: 'Resolved' },
-  // Uyarı bağlam paneli — "ne oldu"
+  // Alert context panel — "what happened"
   'pc.alerts.detailsToggle': { tr: 'Ayrıntıyı aç/kapat', en: 'Toggle details' },
   'pc.alerts.minutes': { tr: 'dk', en: 'min' },
   'pc.alerts.totalRequests': { tr: 'istek', en: 'requests' },
@@ -756,7 +756,7 @@ export const PLATFORM_I18N: Translations = {
   },
   'pc.alerts.viewParkedJobs': { tr: 'Askıya alınmış işleri gör →', en: 'View parked jobs →' },
 
-  // Kuralın ölçtüğü metrik — düz dille (anahtar: metrik adı)
+  // The metric the rule measures — in plain language (key: metric name)
   'pc.alerts.metricDesc.api.error.rate': {
     tr: 'Son dakikalarda API isteklerinin yüzde kaçı hatayla döndü.',
     en: 'What percentage of API requests failed in the last few minutes.'

@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/models/api.models';
 import { NotificationItem, NotificationRuleItem } from '../../core/models/notification.models';
 
-/** Notification Center (M25) servisi — /notifications uçları. */
+/** Notification Center (M25) service — /notifications endpoints. */
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
   private readonly http = inject(HttpClient);

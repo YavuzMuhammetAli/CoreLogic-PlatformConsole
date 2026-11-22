@@ -10,7 +10,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'drift' | 'matrix';
 
-/** Model/Şema Registry (M11) — drift panosu + sürüm matrisi (read-model'den). */
+/** Model/Schema Registry (M11) — drift board + version matrix (from the read-model). */
 @Component({
     selector: 'app-model-registry',
     imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],

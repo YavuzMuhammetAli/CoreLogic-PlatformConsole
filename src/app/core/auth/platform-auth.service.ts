@@ -7,8 +7,8 @@ import { PlatformAuthResult, PlatformLoginResult, PlatformUserInfo } from '../mo
 import { PlatformSessionStore } from './platform-session.store';
 
 /**
- * Platform kimlik doğrulama servisi ([05 §4]). Login → MFA challenge/enroll →
- * oturum; refresh rotasyonu; logout; /me. Tenant AuthService'ten tamamen ayrı.
+ * Platform authentication service ([05 §4]). Login → MFA challenge/enroll →
+ * session; refresh rotation; logout; /me. Completely separate from the tenant AuthService.
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformAuthService {
@@ -16,7 +16,7 @@ export class PlatformAuthService {
   private readonly store = inject(PlatformSessionStore);
   private readonly baseUrl = `${environment.platformApiBaseUrl}/auth`;
 
-  /** Aynı anda birden fazla 401 tek refresh isteğini paylaşsın (single-flight). */
+  /** Multiple simultaneous 401s share a single refresh request (single-flight). */
   private refreshInFlight: Observable<boolean> | null = null;
 
   login(email: string, password: string): Observable<DataResponseModel<PlatformLoginResult>> {
@@ -36,9 +36,9 @@ export class PlatformAuthService {
   }
 
   /**
-   * Çerezdeki refresh token ile yeni oturum al; başarı=true. Çerez JavaScript'ten görünmez, oturum
-   * olup olmadığı yalnız sunucuya sorularak öğrenilir. Tek uçuş paylaşımlıdır: refresh token her
-   * kullanımda döner, ikinci paralel istek eski token'la reddedilip oturumu düşürürdü.
+   * Obtain a new session with the refresh token in the cookie; success=true. The cookie is invisible to
+   * JavaScript, so whether a session exists can only be learned by asking the server. The flight is shared:
+   * the refresh token rotates on every use, so a second parallel request would be rejected with the old token and drop the session.
    */
   refresh(): Observable<boolean> {
     if (this.refreshInFlight) return this.refreshInFlight;
@@ -61,7 +61,7 @@ export class PlatformAuthService {
     return this.refreshInFlight;
   }
 
-  /** APP_INITIALIZER: sayfa yüklenince geçerli çerez varsa oturumu geri yükler. */
+  /** APP_INITIALIZER: on page load, restores the session if a valid cookie exists. */
   loadSession(): Observable<boolean> {
     return this.refresh();
   }

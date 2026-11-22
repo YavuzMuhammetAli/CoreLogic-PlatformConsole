@@ -1,6 +1,6 @@
 /**
- * Platform yetenek sabitleri — backend Core.Utilities.Security.Platform.PlatformCapabilities
- * ile birebir aynı string'ler ([05 §3]). Guard'lar ve menü görünürlüğü bunları kullanır.
+ * Platform capability constants — strings identical to backend
+ * Core.Utilities.Security.Platform.PlatformCapabilities ([05 §3]). Guards and menu visibility use them.
  */
 export const Cap = {
   TenantsRead: 'Platform.Tenants.Read',

@@ -16,13 +16,13 @@ export class HealthService {
   }
 }
 
-/** Sağlık durumu → rozet tonu. */
+/** Health status → badge tone. */
 export function healthTone(status: string): BadgeTone {
   switch (status) {
     case 'Healthy': return 'success';
     case 'Degraded': return 'warn';
     case 'Unhealthy': return 'danger';
-    case 'NotConfigured': return 'neutral'; // izlenecek hedef yok — sorun değil
+    case 'NotConfigured': return 'neutral'; // no target to monitor — not a problem
     default: return 'neutral';
   }
 }

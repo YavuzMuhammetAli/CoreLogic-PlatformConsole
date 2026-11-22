@@ -11,10 +11,10 @@
 .nowrap { white-space: nowrap; }
 td .badge { margin-left: var(--space-2); }
 
-// Değer sütunu: API anahtarı gibi uzun değerler tek satırda okunabilsin.
+// Value column: long values such as API keys should stay readable on one line.
 td .input { min-width: 260px; }
 
-// Gizli bir ayarın tanımlı olduğunu belirtir — değer gösterilmez.
+// Indicates that a secret setting is defined — the value is not shown.
 .hint {
   display: block;
   margin-top: var(--space-1);

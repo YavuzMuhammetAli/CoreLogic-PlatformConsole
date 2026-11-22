@@ -24,10 +24,10 @@
 .plan-card .plan-head > div { display: flex; flex-direction: column; gap: 2px; }
 .feature-list { flex-wrap: wrap; gap: var(--space-2); }
 .plan-link { color: var(--fg); &:hover { color: var(--accent); } }
-/* Çevrilmiş özellik/metrik adının altında operatörün tanıdığı ham anahtar. */
+/* The raw key the operator recognizes, shown under the translated feature/metric name. */
 .feature-key { font-size: var(--text-xs); }
 
-/* ── Plan detay ── */
+/* ── Plan detail ── */
 .back { color: var(--muted); font-size: var(--text-sm); &:hover { color: var(--accent); } }
 .detail-head {
   display: flex; justify-content: space-between; align-items: flex-start;

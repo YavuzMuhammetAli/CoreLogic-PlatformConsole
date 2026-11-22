@@ -13,13 +13,13 @@ interface NavItem {
   labelKey: string;
   route: string;
   icon: IconName;
-  /** Boş → herkese görünür; dolu → hasAny gerekir. */
+  /** Empty → visible to everyone; set → requires hasAny. */
   caps: string[];
 }
 
 /**
- * Konsol kabuğu ([11 §3], [12 §2]): topbar (arama yeri + dil + tema + kullanıcı)
- * + 8-domain sol menü (yetkiye göre filtreli — kör kapı yok). CSS Grid layout.
+ * Console shell ([11 §3], [12 §2]): topbar (search slot + language + theme + user)
+ * + 8-domain left menu (filtered by permission — no dead-end doors). CSS Grid layout.
  */
 @Component({
     selector: 'app-console-shell',

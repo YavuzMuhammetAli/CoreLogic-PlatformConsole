@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { ImpersonationGrantItem, ImpersonationToken } from '../../core/models/impersonation.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Support & Impersonation (M17) servisi — /impersonation uçları. */
+/** Support & Impersonation (M17) service — /impersonation endpoints. */
 @Injectable({ providedIn: 'root' })
 export class ImpersonationService {
   private readonly http = inject(HttpClient);

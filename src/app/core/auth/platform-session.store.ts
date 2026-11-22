@@ -2,11 +2,11 @@ import { Injectable, computed, signal } from '@angular/core';
 import { PlatformAuthResult, PlatformUserInfo } from '../models/platform.models';
 
 /**
- * Platform oturum durumu (signal store) — [11 §4].
+ * Platform session state (signal store) — [11 §4].
  *
- * Access token BELLEKTE tutulur (localStorage'a yazılmaz): XSS'te sızmasın.
- * Refresh token HttpOnly çerezdedir, JavaScript onu görmez. Sayfa yenilemesinde
- * access bellekten silinir; APP_INITIALIZER refresh ile yeni access + kullanıcı yükler.
+ * The access token is kept IN MEMORY (never written to localStorage) so it cannot leak via XSS.
+ * The refresh token lives in an HttpOnly cookie that JavaScript cannot see. On page reload
+ * the access token is wiped from memory; APP_INITIALIZER loads a new access token + user via refresh.
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformSessionStore {
@@ -17,7 +17,7 @@ export class PlatformSessionStore {
   readonly isAuthenticated = computed(() => !!this.accessToken() && !!this.user());
 
   constructor() {
-    // Çerez öncesi sürümün refresh token'ı: artık okunmuyor, tarayıcıda kalmasın.
+    // Refresh token from the pre-cookie version: no longer read, so don't leave it in the browser.
     if (typeof localStorage !== 'undefined') localStorage.removeItem('pc_refresh');
   }
 

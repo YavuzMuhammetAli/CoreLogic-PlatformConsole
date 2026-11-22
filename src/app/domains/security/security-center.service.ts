@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { LoginAttemptItem, SecurityEventItem, IpAccessRuleItem } from '../../core/models/security.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Security Center (M18/M19) servisi — /security uçları. */
+/** Security Center (M18/M19) service — /security endpoints. */
 @Injectable({ providedIn: 'root' })
 export class SecurityCenterService {
   private readonly http = inject(HttpClient);

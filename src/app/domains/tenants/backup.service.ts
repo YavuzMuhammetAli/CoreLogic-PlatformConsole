@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/models/api.models';
 import { TenantBackupItem } from '../../core/models/backup.models';
 
-/** Backup/Restore (M09) servisi — /backups uçları. */
+/** Backup/Restore (M09) service — /backups endpoints. */
 @Injectable({ providedIn: 'root' })
 export class BackupService {
   private readonly http = inject(HttpClient);

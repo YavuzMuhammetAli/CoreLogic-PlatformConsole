@@ -1,4 +1,4 @@
-// OTOMATİK ÜRETİLDİ — elle düzenleme. Kaynak: icons.manifest.json, komut: `npm run icons`.
+// AUTO-GENERATED — do not edit by hand. Source: icons.manifest.json, command: `npm run icons`.
 // Material Symbols Outlined (wght 500, opsz 48) · @material-symbols/svg-500@0.48.0 · Apache-2.0
 // viewBox "0 -960 960 960"
 
@@ -56,7 +56,7 @@ export const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 
-/** Dolu (FILL=1) varyantı — yalnız manifest'te "filled" olarak işaretlenenler. */
+/** Filled (FILL=1) variant — only those marked as "filled" in the manifest. */
 export const ICONS_FILLED: Partial<Record<IconName, string>> = {
   credit_card: 'M142.15-154.02q-27.6 0-47.86-20.27-20.27-20.26-20.27-47.86v-515.7q0-27.7 20.27-48.03 20.26-20.34 47.86-20.34h675.7q27.7 0 48.03 20.34 20.34 20.33 20.34 48.03v515.7q0 27.6-20.34 47.86-20.33 20.27-48.03 20.27h-675.7Zm0-348.46h675.7v-129h-675.7v129Z',
   dashboard: 'M508.57-572.63v-278.13h342.19v278.13H508.57ZM109.24-445.46v-405.3h342.19v405.3H109.24Zm399.33 335.74v-405.54h342.19v405.54H508.57Zm-399.33 0v-278.37h342.19v278.37H109.24Z',

@@ -1,4 +1,4 @@
-/** Feature Flags (M39) modelleri — backend Entities.DTOs.Platform.FeatureFlagDto ile eşleşir. */
+/** Feature Flags (M39) models — match backend Entities.DTOs.Platform.FeatureFlagDto. */
 
 export interface FeatureFlagOverrideItem {
   tenantId: string;
@@ -15,7 +15,7 @@ export interface FeatureFlagItem {
   percentage: number;
   removeBy?: string | null;
   updatedAt: string;
-  /** Kaldırma tarihi geçmiş "geçici" flag — ölü flag disiplini. */
+  /** A "temporary" flag past its removal date — dead-flag discipline. */
   isStale: boolean;
   overrides: FeatureFlagOverrideItem[];
 }

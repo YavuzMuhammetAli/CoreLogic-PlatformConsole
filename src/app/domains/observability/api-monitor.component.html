@@ -25,7 +25,7 @@
     <div class="alert alert-danger" role="alert">{{ error() }}</div>
   }
 
-  <!-- Metrikler (rollup) -->
+  <!-- Metrics (rollup) -->
   @if (tab() === 'metrics') {
     <div class="panel">
       @if (loading() && metrics().length === 0) {
@@ -61,7 +61,7 @@
     </div>
   }
 
-  <!-- Canlı istek akışı -->
+  <!-- Live request stream -->
   @if (tab() === 'live') {
     <div class="panel">
       <div class="panel-head filters">

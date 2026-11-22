@@ -1,6 +1,6 @@
-/** Alert Center (M23) modelleri — backend Entities.DTOs.Platform.AlertDto/AlertRuleDto ile eşleşir. */
+/** Alert Center (M23) models — match backend Entities.DTOs.Platform.AlertDto/AlertRuleDto. */
 
-/** Tetiklenmiş uyarı — kural bilgisiyle zenginleştirilmiş. */
+/** A fired alert — enriched with rule information. */
 export interface AlertItem {
   id: number;
   ruleId: number;
@@ -20,26 +20,26 @@ export interface AlertItem {
   ackedAt?: string | null;
   resolvedAt?: string | null;
   correlationId?: string | null;
-  /** Tetiklenme anındaki bağlam — api.* dışı kurallarda null. */
+  /** Context at the moment of firing — null for non-api.* rules. */
   details?: AlertDetails | null;
 }
 
-/** Uyarı bağlamı: "ne oldu" — hangi endpoint'ler hata verdi, hangi status kodları döndü. */
+/** Alert context: "what happened" — which endpoints failed, which status codes were returned. */
 export interface AlertDetails {
   windowStart: string;
   windowEnd: string;
-  /** Fiilen kullanılan pencere (dk) — kuralın nominal değeri değil, rollup saat başına yuvarlar. */
+  /** Window actually used (min) — not the rule's nominal value; the rollup rounds to the hour. */
   windowMinutes: number;
   totalRequests: number;
   errorRequests: number;
   routes: AlertRouteStat[];
   statusCodes: AlertStatusStat[];
   sampleCorrelationIds: string[];
-  /** Ham izler budanmışsa false — status/method kırılımı boş gelir, route tablosu yine dolu. */
+  /** false if raw traces were pruned — status/method breakdown comes empty, the route table is still filled. */
   traceDataAvailable: boolean;
 }
 
-/** Endpoint bazlı istek/hata özeti. */
+/** Per-endpoint request/error summary. */
 export interface AlertRouteStat {
   route: string;
   method?: string | null;
@@ -49,13 +49,13 @@ export interface AlertRouteStat {
   p95DurationMs: number;
 }
 
-/** HTTP durum kodu sayacı. */
+/** HTTP status code counter. */
 export interface AlertStatusStat {
   statusCode: number;
   count: number;
 }
 
-/** Uyarı kuralı tanımı. */
+/** Alert rule definition. */
 export interface AlertRuleItem {
   id: number;
   name: string;
@@ -71,5 +71,5 @@ export interface AlertRuleItem {
   createdAt: string;
 }
 
-/** Uyarı listesi durum filtresi — 'open' = Firing + Acknowledged. */
+/** Alert list status filter — 'open' = Firing + Acknowledged. */
 export const ALERT_STATUS_FILTERS = ['open', 'Firing', 'Acknowledged', 'Resolved'] as const;

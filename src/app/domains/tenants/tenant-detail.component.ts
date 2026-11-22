@@ -37,7 +37,7 @@ interface PendingAction {
   danger: boolean;
 }
 
-/** Tenant detay (M02/M04) — özet/provisioning/tarihçe + yaşam döngüsü eylemleri. */
+/** Tenant detail (M02/M04) — summary/provisioning/history + lifecycle actions. */
 @Component({
     selector: 'app-tenant-detail',
     imports: [DatePipe, DecimalPipe, RouterLink, StatusBadgeComponent, ConfirmDangerDialogComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -131,9 +131,9 @@ export class TenantDetailComponent implements OnInit {
   }
 
   /**
-   * Model ağacı — tenant DB'sine canlı gider. Diğer sekmelerin aksine hatası
-   * yutulmaz: kurulumu tamamlanmamış/erişilemeyen tenant'ta boş liste değil,
-   * sebebi yazan bir mesaj gösterilir.
+   * Model tree — goes live to the tenant DB. Unlike the other tabs its error is
+   * not swallowed: for a tenant that isn't fully provisioned/reachable, a message
+   * stating the reason is shown instead of an empty list.
    */
   private loadModels(): void {
     const code = this.detail()?.code;
@@ -152,7 +152,7 @@ export class TenantDetailComponent implements OnInit {
     });
   }
 
-  /** Tablo envanteri — model ağacıyla aynı hata yaklaşımı. */
+  /** Table inventory — same error approach as the model tree. */
   private loadTables(): void {
     const code = this.detail()?.code;
     if (!code) return;
@@ -170,7 +170,7 @@ export class TenantDetailComponent implements OnInit {
     });
   }
 
-  /** Tablo türü → rozet tonu. Öksüz tablolar (silinmiş model) uyarı tonuyla öne çıkar. */
+  /** Table kind → badge tone. Orphan tables (deleted model) stand out with a warning tone. */
   tableKindTone(kind: string): 'success' | 'warn' | 'danger' | 'meta' | 'neutral' {
     switch (kind) {
       case 'Published': return 'success';
@@ -193,12 +193,12 @@ export class TenantDetailComponent implements OnInit {
     });
   }
 
-  /** Kuyrukta/süren yedek var mı — yedek artık arka planda alınır, liste yoklanır. */
+  /** Is there a queued/running backup — backups now run in the background and the list is polled. */
   hasActiveBackup(): boolean {
     return this.backups().some(b => b.status === 'Queued' || b.status === 'Running');
   }
 
-  /** Kuyrukta/süren yedek kaldıkça listeyi birkaç saniyede bir yeniden okur. */
+  /** Re-reads the list every few seconds while a backup is queued/running. */
   private scheduleBackupPoll(): void {
     if (this.backupPoll !== null) clearTimeout(this.backupPoll);
     this.backupPoll = null;
@@ -210,7 +210,7 @@ export class TenantDetailComponent implements OnInit {
     const code = this.detail()?.code;
     if (!code) return;
     this.backupBusy.set(-1);
-    // Sunucu yedeği kuyruğa alıp hemen döner; ilerleme listede yoklanarak izlenir.
+    // The server queues the backup and returns immediately; progress is tracked by polling the list.
     this.backupSvc.create(code).subscribe({
       next: res => {
         this.backupBusy.set(null);
@@ -238,13 +238,13 @@ export class TenantDetailComponent implements OnInit {
     });
   }
 
-  /** Entitlement snapshot'ının feature dict'ini şablona uygun diziye çevirir. */
+  /** Converts the entitlement snapshot's feature dict into an array suitable for the template. */
   entitlementFeatures(): { key: string; limit: number | null }[] {
     const f = this.entitlement()?.features ?? {};
     return Object.keys(f).sort().map(key => ({ key, limit: f[key] }));
   }
 
-  /** Özellik/kota anahtarı ve yedek türü sunucudan ham gelir. */
+  /** The feature/quota key and backup type come raw from the server. */
   featureLabel(key: string): string {
     return this.catalog.label(key);
   }

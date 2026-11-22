@@ -16,15 +16,15 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 type PendingAction = 'deactivate' | 'reset-mfa' | 'reset-password' | null;
 
 /**
- * Platform kullanıcısı oluşturma/düzenleme (M13).
+ * Platform user create/edit (M13).
  *
- * Yetki ROL üzerinden verilir; rol→yetenek matrisi backend'de derlenmiş tek
- * doğruluk kaynağıdır (`PlatformCapabilities.RoleMatrix`) ve buraya
- * GET /platform-users/roles ile gelir — istemcide kopyalanmaz. Form seçime göre
- * "bu kullanıcı şunları yapabilir" önizlemesini bu veriden hesaplar.
+ * Permissions are granted via ROLES; the role→capability matrix is the single source of
+ * truth compiled in the backend (`PlatformCapabilities.RoleMatrix`) and arrives here via
+ * GET /platform-users/roles — it is not duplicated on the client. Based on the selection the form
+ * computes the "this user can do the following" preview from this data.
  *
- * Yeni kullanıcı için TOTP/QR adımı YOKTUR: kullanıcı ilk girişinde
- * PlatformAuthManager'ın lazy enrollment yoluna düşer (`mfa_enroll`).
+ * There is NO TOTP/QR step for a new user: on first sign-in the user falls into
+ * PlatformAuthManager's lazy enrollment path (`mfa_enroll`).
  */
 @Component({
     selector: 'app-platform-user-detail',
@@ -52,16 +52,16 @@ export class PlatformUserDetailComponent implements OnInit {
   private userId = 0;
 
   form = { email: '', name: '', surname: '', password: '' };
-  /** Oluşturma ekranında seçilen roller (rol adı → seçili). */
+  /** Roles selected on the create screen (role name → selected). */
   selectedRoles = signal<Set<string>>(new Set<string>());
   newPassword = '';
 
-  /** Kendi hesabını düzenliyor mu? Pasifleme/rol alma korumaları buna bakar. */
+  /** Is the user editing their own account? The deactivate/role-removal guards check this. */
   readonly isSelf = computed(() => !this.isNew() && this.user()?.id === this.store.user()?.id);
 
   /**
-   * Seçili rollerin verdiği yeteneklerin birleşimi — sıralı ve tekilleştirilmiş.
-   * Yeni kullanıcıda form seçiminden, mevcut kullanıcıda atanmış rollerden hesaplanır.
+   * Union of the capabilities granted by the selected roles — sorted and de-duplicated.
+   * Computed from the form selection for a new user, from the assigned roles for an existing one.
    */
   readonly effectiveCapabilities = computed(() => {
     const roles = this.isNew() ? this.selectedRoles() : new Set(this.user()?.roles ?? []);
@@ -119,7 +119,7 @@ export class PlatformUserDetailComponent implements OnInit {
       : (this.user()?.roles ?? []).includes(role);
   }
 
-  // ─── Oluşturma ──────────────────────────────────────────────────────────────
+  // ─── Create ──────────────────────────────────────────────────────────────
 
   create(): void {
     if (!this.form.email.trim() || !this.form.password) return;
@@ -144,7 +144,7 @@ export class PlatformUserDetailComponent implements OnInit {
     });
   }
 
-  // ─── Düzenleme / eylemler ───────────────────────────────────────────────────
+  // ─── Edit / actions ───────────────────────────────────────────────────
 
   save(): void {
     if (!this.form.email.trim()) return;
@@ -170,7 +170,7 @@ export class PlatformUserDetailComponent implements OnInit {
     }
   }
 
-  /** Tüm mutasyonlar aynı sonuç/yenileme kalıbını paylaşır. */
+  /** All mutations share the same result/refresh pattern. */
   private run(obs: Observable<ResponseModel>, onSuccess?: () => void): void {
     this.busy.set(true);
     this.error.set(null);

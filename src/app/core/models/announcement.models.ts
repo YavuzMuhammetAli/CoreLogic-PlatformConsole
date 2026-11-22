@@ -1,4 +1,4 @@
-/** Announcements & Status (M26) + DB sunucu (multi-region tohumu) modelleri. */
+/** Announcements & Status (M26) + DB server (multi-region seed) models. */
 
 export interface AnnouncementItem {
   id: number;

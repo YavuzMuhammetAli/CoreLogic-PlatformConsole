@@ -1,13 +1,13 @@
-/* Host, `.cluster` (flex) içinde bir alan gibi davranır. `.input`'un global
-   `width: 100%` kuralı bilerek kullanılmıyor — select'in içeriği kadar yer kaplaması
-   gerekiyor, aksi hâlde satırı taşırıp diğer alanları alt satıra itiyordu. */
+/* The host behaves like a field inside `.cluster` (flex). The global `.input`
+   `width: 100%` rule is deliberately not used — the select must take only as much space as its
+   content, otherwise it overflowed the row and pushed the other fields onto the next line. */
 :host {
   display: inline-block;
   position: relative;
   min-width: 160px;
 }
 
-/* Tetikleyici görsel olarak `.input` ile aynı — token'lar birebir styles.scss'ten. */
+/* The trigger looks exactly like `.input` — tokens come straight from styles.scss. */
 .select-trigger {
   display: flex;
   align-items: center;
@@ -49,8 +49,8 @@
 }
 .select-trigger.is-open .select-caret { transform: rotate(180deg); }
 
-/* Kırpılmayan liste. `fixed` + TS'te hesaplanan koordinatlar; yükseklik viewport'a
-   sığacak şekilde kelepçelendiği için taşarsa kendi içinde kaydırılır. */
+/* Unclipped list. `fixed` + coordinates computed in TS; the height is clamped to fit the
+   viewport, so if it overflows it scrolls internally. */
 .select-list {
   position: fixed;
   z-index: 300;

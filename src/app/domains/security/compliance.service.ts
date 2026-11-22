@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { ComplianceRequestItem } from '../../core/models/compliance.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Compliance & Data (M42) servisi — /compliance uçları. */
+/** Compliance & Data (M42) service — /compliance endpoints. */
 @Injectable({ providedIn: 'root' })
 export class ComplianceService {
   private readonly http = inject(HttpClient);

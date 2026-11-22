@@ -1,8 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 /**
- * Kullanıcının arayüz dilini (TR/EN) Accept-Language header'ı olarak ekler.
- * LanguageService ile aynı localStorage anahtarını ('pc_lang') okur.
+ * Adds the user's UI language (TR/EN) as the Accept-Language header.
+ * Reads the same localStorage key ('pc_lang') as LanguageService.
  */
 export const languageInterceptor: HttpInterceptorFn = (req, next) => {
   if (typeof localStorage === 'undefined') return next(req);

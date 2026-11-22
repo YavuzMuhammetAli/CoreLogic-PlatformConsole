@@ -6,7 +6,7 @@ import { ListResponseModel, ResponseModel } from '../../core/models/api.models';
 import { UpdateWorkerRequest, WorkerStatus } from '../../core/models/worker.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Worker kontrol düzlemi (migrasyon 025) servisi — /workers uçları. */
+/** Worker control plane (migration 025) service — /workers endpoints. */
 @Injectable({ providedIn: 'root' })
 export class WorkerService {
   private readonly http = inject(HttpClient);
@@ -21,9 +21,9 @@ export class WorkerService {
   }
 
   /**
-   * Döngüyü yeniler — proses YENİDEN BAŞLATILMAZ. Uç adı bu yüzden /restart
-   * değil /reset: worker bir sonraki turda kapanış+başlangıç adımlarını
-   * yeniden koşar, uygulama süreci ayakta kalır.
+   * Resets the loop — the process is NOT RESTARTED. That's why the endpoint is /reset,
+   * not /restart: on its next tick the worker re-runs its shutdown+startup steps
+   * while the application process stays up.
    */
   reset(name: string): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.base}/${encodeURIComponent(name)}/reset`, {});

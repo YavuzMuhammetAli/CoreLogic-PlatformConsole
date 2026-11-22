@@ -1,22 +1,22 @@
 import { Translations } from './translations.model';
 
 /**
- * Sunucudan sabit İngilizce gelen değerlerin görünen adları.
+ * Display names of values that come from the server as fixed English constants.
  *
- * Backend durum/tür sabitlerini (Entities.Concrete.* ve AuditConstants) olduğu gibi
- * döndürür; konsol onları burada çevirir. Tek sözlük, çünkü aynı değer birden çok
- * ekranda geçer ('Active' tenant, plan ve abonelikte) ve her yerde aynı okunmalı.
+ * The backend returns status/type constants (Entities.Concrete.* and AuditConstants) as
+ * is; the console translates them here. A single dictionary, because the same value appears on
+ * multiple screens ('Active' for tenant, plan and subscription) and must read the same everywhere.
  *
- *   pc.enum.<Değer>      → LanguageService.enumLabel()  (StatusBadge bunu otomatik kullanır)
- *   pc.jobType.<tip>     → İş kuyruğu tipleri
+ *   pc.enum.<Value>      → LanguageService.enumLabel()  (StatusBadge uses this automatically)
+ *   pc.jobType.<type>    → Job queue types
  *
- * Plan özellik / metrik adları ve birimleri burada TUTULMAZ — sunucu, isteğin dilinde
- * backend MetricCatalog'dan gönderir (bkz. MetricCatalogService).
+ * Plan feature / metric names and units are NOT KEPT here — the server sends them in the
+ * request's language from the backend MetricCatalog (see MetricCatalogService).
  *
- * Model sabitlerindeki her değerin burada karşılığı olduğunu scripts/check-i18n.js denetler.
+ * scripts/check-i18n.js verifies that every value in the model constants has a match here.
  */
 export const ENUM_I18N: Translations = {
-  // ── Tenant yaşam döngüsü + kurulum adımları ────────────────────────────────
+  // ── Tenant lifecycle + provisioning steps ──────────────────────────────────
   'pc.enum.Provisioning': { tr: 'Kuruluyor', en: 'Provisioning' },
   'pc.enum.Active': { tr: 'Aktif', en: 'Active' },
   'pc.enum.Failed': { tr: 'Başarısız', en: 'Failed' },
@@ -28,14 +28,14 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Completed': { tr: 'Tamamlandı', en: 'Completed' },
   'pc.enum.RolledBack': { tr: 'Geri alındı', en: 'Rolled back' },
 
-  // ── Sağlık ─────────────────────────────────────────────────────────────────
+  // ── Health ─────────────────────────────────────────────────────────────────
   'pc.enum.Healthy': { tr: 'Sağlıklı', en: 'Healthy' },
   'pc.enum.Degraded': { tr: 'Yavaş / kısmi', en: 'Degraded' },
   'pc.enum.Unhealthy': { tr: 'Erişilemiyor', en: 'Unhealthy' },
   'pc.enum.Unknown': { tr: 'Bilinmiyor', en: 'Unknown' },
   'pc.enum.NotConfigured': { tr: 'Yapılandırılmamış', en: 'Not configured' },
 
-  // ── İş kuyruğu / outbox / bildirim teslimi ─────────────────────────────────
+  // ── Job queue / outbox / notification delivery ─────────────────────────────
   'pc.enum.Pending': { tr: 'Beklemede', en: 'Pending' },
   'pc.enum.Succeeded': { tr: 'Başarılı', en: 'Succeeded' },
   'pc.enum.Parked': { tr: 'Askıya alındı', en: 'Parked' },
@@ -44,12 +44,12 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Delivered': { tr: 'Teslim edildi', en: 'Delivered' },
   'pc.enum.Sent': { tr: 'Gönderildi', en: 'Sent' },
 
-  // ── Uyarı durumu ───────────────────────────────────────────────────────────
+  // ── Alert status ───────────────────────────────────────────────────────────
   'pc.enum.Firing': { tr: 'Tetiklendi', en: 'Firing' },
   'pc.enum.Acknowledged': { tr: 'Üstlenildi', en: 'Acknowledged' },
   'pc.enum.Resolved': { tr: 'Çözümlendi', en: 'Resolved' },
 
-  // ── Önem seviyeleri (uyarı, denetim, duyuru) ───────────────────────────────
+  // ── Severity levels (alert, audit, announcement) ───────────────────────────
   'pc.enum.Info': { tr: 'Bilgi', en: 'Info' },
   'pc.enum.Notice': { tr: 'Dikkat', en: 'Notice' },
   'pc.enum.Warning': { tr: 'Uyarı', en: 'Warning' },
@@ -57,7 +57,7 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Maintenance': { tr: 'Bakım', en: 'Maintenance' },
   'pc.enum.Incident': { tr: 'Kesinti', en: 'Incident' },
 
-  // ── Denetim sonucu + kategorisi ────────────────────────────────────────────
+  // ── Audit result + category ────────────────────────────────────────────────
   'pc.enum.Success': { tr: 'Başarılı', en: 'Success' },
   'pc.enum.Denied': { tr: 'Reddedildi', en: 'Denied' },
   'pc.enum.Identity': { tr: 'Kimlik', en: 'Identity' },
@@ -70,14 +70,14 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Support': { tr: 'Destek', en: 'Support' },
   'pc.enum.Data': { tr: 'Veri', en: 'Data' },
 
-  // ── Destek erişimi (impersonation) ─────────────────────────────────────────
+  // ── Support access (impersonation) ─────────────────────────────────────────
   'pc.enum.Requested': { tr: 'Talep edildi', en: 'Requested' },
   'pc.enum.Approved': { tr: 'Onaylandı', en: 'Approved' },
   'pc.enum.ActiveUse': { tr: 'Kullanımda', en: 'In use' },
   'pc.enum.Expired': { tr: 'Süresi doldu', en: 'Expired' },
   'pc.enum.Revoked': { tr: 'Geri çekildi', en: 'Revoked' },
 
-  // ── Uyumluluk talepleri ────────────────────────────────────────────────────
+  // ── Compliance requests ────────────────────────────────────────────────────
   'pc.enum.Open': { tr: 'Açık', en: 'Open' },
   'pc.enum.InProgress': { tr: 'İşlemde', en: 'In progress' },
   'pc.enum.Rejected': { tr: 'Reddedildi', en: 'Rejected' },
@@ -86,7 +86,7 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Offboarding': { tr: 'Müşteri ayrılışı', en: 'Offboarding' },
   'pc.enum.RetentionReview': { tr: 'Saklama incelemesi', en: 'Retention review' },
 
-  // ── Güvenlik olayları + IP kuralları ───────────────────────────────────────
+  // ── Security events + IP rules ─────────────────────────────────────────────
   'pc.enum.Reviewed': { tr: 'İncelendi', en: 'Reviewed' },
   'pc.enum.Dismissed': { tr: 'Kapatıldı', en: 'Dismissed' },
   'pc.enum.Escalated': { tr: 'Üst kademeye iletildi', en: 'Escalated' },
@@ -98,36 +98,36 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Allow': { tr: 'İzin ver', en: 'Allow' },
   'pc.enum.Deny': { tr: 'Engelle', en: 'Deny' },
 
-  // ── Bildirim kuralları ─────────────────────────────────────────────────────
+  // ── Notification rules ─────────────────────────────────────────────────────
   'pc.enum.Event': { tr: 'Olay', en: 'Event' },
   'pc.enum.Alert': { tr: 'Uyarı', en: 'Alert' },
   'pc.enum.Email': { tr: 'E-posta', en: 'Email' },
   'pc.enum.InApp': { tr: 'Konsol içi', en: 'In-app' },
   'pc.enum.Webhook': { tr: 'Webhook', en: 'Webhook' },
 
-  // ── Webhook olay tipleri ───────────────────────────────────────────────────
+  // ── Webhook event types ────────────────────────────────────────────────────
   'pc.enum.TenantSuspended': { tr: 'Tenant askıya alındı', en: 'Tenant suspended' },
   'pc.enum.TenantResumed': { tr: 'Tenant yeniden açıldı', en: 'Tenant resumed' },
   'pc.enum.TenantArchived': { tr: 'Tenant arşivlendi', en: 'Tenant archived' },
   'pc.enum.TenantPurgeScheduled': { tr: 'Tenant silme planlandı', en: 'Tenant purge scheduled' },
 
-  // ── Plan + abonelik ────────────────────────────────────────────────────────
+  // ── Plan + subscription ────────────────────────────────────────────────────
   'pc.enum.Draft': { tr: 'Taslak', en: 'Draft' },
   'pc.enum.Retired': { tr: 'Kullanımdan kaldırıldı', en: 'Retired' },
   'pc.enum.Trial': { tr: 'Deneme', en: 'Trial' },
   'pc.enum.PastDue': { tr: 'Ödemesi gecikmiş', en: 'Past due' },
 
-  // ── Duyuru + veritabanı sunucusu ───────────────────────────────────────────
+  // ── Announcement + database server ─────────────────────────────────────────
   'pc.enum.Published': { tr: 'Yayında', en: 'Published' },
   'pc.enum.Draining': { tr: 'Boşaltılıyor', en: 'Draining' },
   'pc.enum.Offline': { tr: 'Çevrimdışı', en: 'Offline' },
 
-  // ── Özellik bayrakları ─────────────────────────────────────────────────────
+  // ── Feature flags ──────────────────────────────────────────────────────────
   'pc.enum.On': { tr: 'Açık', en: 'On' },
   'pc.enum.Off': { tr: 'Kapalı', en: 'Off' },
   'pc.enum.Percentage': { tr: 'Yüzdelik', en: 'Percentage' },
 
-  // ── Migrasyon + yedek türleri ──────────────────────────────────────────────
+  // ── Migration + backup types ───────────────────────────────────────────────
   'pc.enum.Queued': { tr: 'Kuyrukta', en: 'Queued' },
   'pc.enum.Stopped': { tr: 'Durduruldu', en: 'Stopped' },
   'pc.enum.Skipped': { tr: 'Atlandı', en: 'Skipped' },
@@ -142,7 +142,7 @@ export const ENUM_I18N: Translations = {
   'pc.enum.Stale': { tr: 'Yanıt yok', en: 'Not responding' },
   'pc.enum.Error': { tr: 'Hata', en: 'Error' },
 
-  // ── İş kuyruğu tipleri ─────────────────────────────────────────────────────
+  // ── Job queue types ────────────────────────────────────────────────────────
   'pc.jobType.tenant.provision': { tr: 'Şirket kurulumu', en: 'Tenant provisioning' },
   'pc.jobType.tenant.backup': { tr: 'Şirket yedeği', en: 'Tenant backup' },
   'pc.jobType.tenant.restore': { tr: 'Şirket geri yükleme', en: 'Tenant restore' },

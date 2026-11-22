@@ -1,11 +1,11 @@
-/** Platform config (M41) — backend PlatformConfigDto ile eşleşir (secret'lar maskeli). */
+/** Platform config (M41) — matches backend PlatformConfigDto (secrets are masked). */
 export interface PlatformConfigItem {
   key: string;
   value?: string | null;
   isSecret: boolean;
   updatedAt: string;
-  /** Değer boşken geçerli varsayılan (şimdilik yalnız cost.unit.* birim maliyetleri). */
+  /** Default in effect when the value is empty (for now only cost.unit.* unit costs). */
   defaultValue?: string | null;
-  /** Veritabanında satırı yok — varsayılan geçiyor; kaydedilince satır açılır. */
+  /** No row in the database — the default applies; a row is created on save. */
   isDefault?: boolean;
 }

@@ -10,7 +10,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Platform Kullanıcıları (M13) — liste; yazma işlemleri detay ekranında. */
+/** Platform Users (M13) — list; write operations are on the detail screen. */
 @Component({
     selector: 'app-platform-users',
     imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -22,7 +22,7 @@ export class PlatformUsersComponent implements OnInit {
   private readonly service = inject(PlatformUsersService);
   private readonly store = inject(PlatformSessionStore);
 
-  /** Route Cap.UsersRead ile de girilebiliyor — yazma bağlantıları yalnız IamManage'e görünür. */
+  /** The route can also be entered with Cap.UsersRead — write links are visible only to IamManage. */
   readonly canManage = this.store.has(Cap.IamManage);
 
   readonly loading = signal(true);

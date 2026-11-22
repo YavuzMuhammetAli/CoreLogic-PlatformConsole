@@ -7,9 +7,9 @@ export type Lang = 'tr' | 'en';
 const LANG_KEY = 'pc_lang';
 
 /**
- * Arayüz dili tercihi (TR/EN) — CoreLogicUI LanguageService deseni. Statik UI
- * metinleri `t()` / `| t` pipe ile TRANSLATIONS'tan çözülür; language.interceptor
- * aynı localStorage anahtarını okuyup Accept-Language header'ı ekler.
+ * UI language preference (TR/EN) — CoreLogicUI LanguageService pattern. Static UI
+ * texts are resolved from TRANSLATIONS via `t()` / the `| t` pipe; language.interceptor
+ * reads the same localStorage key and adds the Accept-Language header.
  */
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
@@ -53,18 +53,18 @@ export class LanguageService {
     return text;
   }
 
-  /** Anahtar sözlükte yoksa `fallback` döner — ekranda ham anahtar metni görünmesin. */
+  /** Returns `fallback` if the key is not in the dictionary — so the raw key text never shows on screen. */
   tOr(key: string, fallback: string): string {
     return TRANSLATIONS[key] ? this.t(key) : fallback;
   }
 
-  // Sunucudan sabit İngilizce gelen değerlerin görünen adları. Tanınmayan (sonradan
-  // eklenmiş) değer ham hâliyle görünür; kapsamı scripts/check-i18n.js denetler.
+  // Display names of values that come from the server as fixed English constants. An unrecognized
+  // (later added) value shows in its raw form; coverage is checked by scripts/check-i18n.js.
 
-  /** Durum / önem / sonuç / tür sabiti, ör. 'Active' → 'Aktif' (`pc.enum.*`). */
+  /** Status / severity / result / type constant, e.g. 'Active' → 'Aktif' (`pc.enum.*`). */
   enumLabel(value: string): string {
     return this.tOr(`pc.enum.${value}`, value);
   }
 
-  // Plan özellik / metrik adları ve birimleri burada DEĞİL: MetricCatalogService (sunucudan).
+  // Plan feature / metric names and units are NOT here: see MetricCatalogService (from the server).
 }

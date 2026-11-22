@@ -11,7 +11,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Denetim kayıtları görüntüleyici (M20) — temel filtre + liste ([06 §6]). */
+/** Audit log viewer (M20) — basic filter + list ([06 §6]). */
 @Component({
     selector: 'app-audit-explorer',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -26,7 +26,7 @@ export class AuditExplorerComponent implements OnInit {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly items = signal<PlatformAuditLogItem[]>([]);
-  /** Aktif correlation zinciri filtresi (null = normal liste). */
+  /** Active correlation chain filter (null = normal list). */
   readonly chain = signal<string | null>(null);
 
   category: string = '';
@@ -37,11 +37,11 @@ export class AuditExplorerComponent implements OnInit {
     'Commercial', 'Security', 'Operations', 'Support', 'Data'
   ];
 
-  /** Dil değişince etiket de değişsin diye computed. */
+  /** Computed so the label also changes when the language changes. */
   readonly categoryOptions = computed(() =>
     withAllOption(this.language.t('pc.audit.filterCategory'), this.categories, v => this.language.enumLabel(v)));
 
-  /** Tablo hücresi için — kategori sunucudan ham gelir. */
+  /** For the table cell — the category arrives raw from the server. */
   enumLabel(value: string): string {
     return this.language.enumLabel(value);
   }
@@ -66,20 +66,20 @@ export class AuditExplorerComponent implements OnInit {
     });
   }
 
-  /** Bir kaydın correlationId'sine tıklayınca o iş akışının tüm izini (zincir) yükler. */
+  /** Clicking a record's correlationId loads the full trace (chain) of that workflow. */
   openChain(correlationId: string | null | undefined): void {
     if (!correlationId) return;
     this.chain.set(correlationId);
     this.load();
   }
 
-  /** Zincir görünümünden normal listeye döner. */
+  /** Returns from the chain view to the normal list. */
   clearChain(): void {
     this.chain.set(null);
     this.load();
   }
 
-  /** Görüntülenen kayıtları CSV olarak indirir (istemci tarafı export, [06 §6]). */
+  /** Downloads the displayed records as CSV (client-side export, [06 §6]). */
   exportCsv(): void {
     const rows = this.items();
     if (rows.length === 0) return;

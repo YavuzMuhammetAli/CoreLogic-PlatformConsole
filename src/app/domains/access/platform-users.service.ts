@@ -6,8 +6,8 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { PlatformRoleInfo, PlatformUserListItem } from '../../core/models/platform.models';
 
 /**
- * Platform personeli (M13). Tüm uçlar Platform.Iam.Manage ister ve her yazma
- * işlemi Critical seviyede audit'e düşer.
+ * Platform staff (M13). All endpoints require Platform.Iam.Manage and every write
+ * operation is audited at Critical level.
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformUsersService {
@@ -22,7 +22,7 @@ export class PlatformUsersService {
     return this.http.get<DataResponseModel<PlatformUserListItem>>(`${this.baseUrl}/${id}`);
   }
 
-  /** Rol kataloğu + yetenekleri — form önizlemesi bunu kullanır. */
+  /** Role catalogue + capabilities — the form preview uses this. */
   roles(): Observable<ListResponseModel<PlatformRoleInfo>> {
     return this.http.get<ListResponseModel<PlatformRoleInfo>>(`${this.baseUrl}/roles`);
   }
@@ -52,7 +52,7 @@ export class PlatformUsersService {
     return this.http.post<ResponseModel>(`${this.baseUrl}/${id}/activate`, {});
   }
 
-  /** Authenticator'ını kaybeden kullanıcı ilk girişinde yeniden kaydolur. */
+  /** A user who lost their authenticator re-enrolls on their first sign-in. */
   resetMfa(id: number): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.baseUrl}/${id}/reset-mfa`, {});
   }

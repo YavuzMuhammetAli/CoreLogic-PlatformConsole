@@ -1,4 +1,4 @@
-/** Model/Şema Registry (M11) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Model/Schema Registry (M11) models — match backend Entities.DTOs.Platform. */
 
 export interface TenantModelSummaryItem {
   tenantId: string;

@@ -5,8 +5,8 @@ import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { IconComponent } from '../icon/icon.component';
 
 /**
- * "Nasıl çalışır?" tetikleyicisi — butonu ve diyaloğu birlikte taşır, böylece
- * her sayfaya tek satır düşer ve 25 ekranda `open` sinyali tekrarlanmaz:
+ * "Nasıl çalışır?" (How does it work?) trigger — carries both the button and the dialog, so
+ * each page needs a single line and the `open` signal isn't repeated across 25 screens:
  *
  *   <app-help-button topic="plans" />
  */

@@ -3,9 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /**
- * Yıkıcı/dikkatli eylem onay diyaloğu ([12 §1, §10]). Opsiyonel sebep girişi ve
- * "kodu yazarak doğrula" (purge gibi geri-dönüşsüz işlemler için). "Bu işlem
- * audit'lenir" notunu gösterir — kullanıcı izlendiğini eylemden önce bilir.
+ * Confirmation dialog for destructive/sensitive actions ([12 §1, §10]). Optional reason input and
+ * "confirm by typing the code" (for irreversible operations such as purge). Shows the "this action
+ * is audited" note — the user knows they are being tracked before acting.
  */
 @Component({
     selector: 'app-confirm-danger-dialog',
@@ -66,7 +66,7 @@ export class ConfirmDangerDialogComponent {
   @Input() message = '';
   @Input() confirmLabel = '';
   @Input() requireReason = false;
-  /** Dolu ise: kullanıcı bu değeri yazmadan onay etkinleşmez (geri-dönüşsüz işlemler). */
+  /** If set: confirm stays disabled until the user types this value (irreversible operations). */
   @Input() confirmCode: string | null = null;
   @Input() danger = false;
   @Input() busy = false;

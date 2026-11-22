@@ -20,23 +20,23 @@ import { platformAuthInterceptor } from './core/interceptors/platform-auth.inter
 import { PlatformAuthService } from './core/auth/platform-auth.service';
 
 /**
- * Router etkinleşmeden önce oturumu geri yükler ([11 §4]): access token bellekte
- * olduğundan sayfa yenilemesinde silinir; refresh çerezi geçerliyse yeni
- * access + kullanıcı yüklenir, böylece guard'lar (platformAuthGuard/capabilityGuard)
- * senkron store'u dolu okur — yarış durumu yok.
+ * Restores the session before the router activates ([11 §4]): since the access token lives in
+ * memory it is wiped on page reload; if the refresh cookie is valid a new
+ * access token + user are loaded, so the guards (platformAuthGuard/capabilityGuard)
+ * read the synchronous store already filled — no race condition.
  *
- * Bu garanti router'ın varsayılan (non-blocking) ilk navigasyonuna dayanır: o modda
- * navigasyon tüm APP_INITIALIZER'lar bittikten sonra bootstrap listener'da başlar.
- * withEnabledBlockingInitialNavigation() EKLEME — navigasyonu kendi APP_INITIALIZER'ında
- * bununla paralel başlatır, guard refresh dönmeden koşar ve her F5 /login'e düşer.
+ * This guarantee relies on the router's default (non-blocking) initial navigation: in that mode
+ * navigation starts in the bootstrap listener after all APP_INITIALIZERs have finished.
+ * Do NOT ADD withEnabledBlockingInitialNavigation() — it starts navigation in its own APP_INITIALIZER
+ * in parallel with this one, the guard runs before refresh returns and every F5 lands on /login.
  */
 function restoreSession(auth: PlatformAuthService, platformId: Object): Promise<void> {
   if (!isPlatformBrowser(platformId)) return Promise.resolve();
   return firstValueFrom(auth.loadSession()).then(() => {}).catch(() => {});
 }
 
-// DatePipe'ın TR biçimi (27.07.2026 12:14) kullanabilmesi için locale verisi kaydedilir;
-// Angular varsayılanı en-US'tir (7/27/26, 12:14 PM). Konsol arayüzü Türkçe.
+// Locale data is registered so DatePipe can use the TR format (27.07.2026 12:14);
+// Angular's default is en-US (7/27/26, 12:14 PM). The console UI is Turkish.
 registerLocaleData(localeTr);
 
 export const appConfig: ApplicationConfig = {
@@ -44,8 +44,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     { provide: LOCALE_ID, useValue: 'tr' },
     provideRouter(routes),
-    // Interceptor sırası: correlation + language header'ları ekler, sonra error
-    // (401'de refresh+retry) platformAuth'u sarar — retry'da taze token eklenir.
+    // Interceptor order: correlation + language add headers, then error
+    // (refresh+retry on 401) wraps platformAuth — the fresh token is attached on retry.
     provideHttpClient(withInterceptors([
       correlationInterceptor,
       languageInterceptor,

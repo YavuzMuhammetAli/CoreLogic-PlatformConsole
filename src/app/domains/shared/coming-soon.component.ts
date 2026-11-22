@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
-/** Henüz uygulanmamış domain'ler için yer tutucu. Başlık route data.titleKey'den. */
+/** Placeholder for domains not yet implemented. Title comes from route data.titleKey. */
 @Component({
   selector: 'app-coming-soon',
   standalone: true,

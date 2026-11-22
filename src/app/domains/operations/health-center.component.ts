@@ -9,7 +9,7 @@ import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Health Center (M24) — bileşen sağlık ağacı (platform prob'ları). */
+/** Health Center (M24) — component health tree (platform probes). */
 @Component({
     selector: 'app-health-center',
     imports: [DatePipe, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -28,8 +28,8 @@ export class HealthCenterComponent implements OnInit {
 
   ngOnInit(): void { this.load(); }
 
-  // Prob adları sunucudan sabit İngilizce gelir (durumları StatusBadge çevirir).
-  // Çevirisi olmayan (sonradan eklenmiş) bir prob ham adıyla görünür.
+  // Probe names come from the server as fixed English (StatusBadge translates their statuses).
+  // A probe without a translation (added later) shows its raw name.
 
   componentLabel(name: string): string {
     return this.language.tOr(`pc.health.comp.${name}`, name);
@@ -39,7 +39,7 @@ export class HealthCenterComponent implements OnInit {
     return this.language.tOr(`pc.health.comp.${name}.desc`, '');
   }
 
-  /** Yapılandırılmamış kontrolde sunucunun teknik notu yerine ne yapılacağını anlatan metin. */
+  /** For an unconfigured check, text explaining what to do instead of the server's technical note. */
   detail(c: HealthComponent): string {
     if (c.status === 'NotConfigured') {
       return this.language.tOr(`pc.health.comp.${c.name}.notConfigured`, c.error || '—');

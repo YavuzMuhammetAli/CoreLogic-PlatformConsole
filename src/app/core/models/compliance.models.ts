@@ -1,4 +1,4 @@
-/** Compliance & Data (M42) modeli — backend Entities.DTOs.Platform.ComplianceRequestDto ile eşleşir. */
+/** Compliance & Data (M42) model — matches backend Entities.DTOs.Platform.ComplianceRequestDto. */
 export interface ComplianceRequestItem {
   id: number;
   type: string;      // DSAR | Erasure | Offboarding | RetentionReview

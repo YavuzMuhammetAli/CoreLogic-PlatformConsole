@@ -23,9 +23,9 @@
       </div>
     </header>
 
-    <!-- ── Kimlik ────────────────────────────────────────────────────────────
-         Kod ve sürüm salt-okur: UQ_Plan_Code_Version gereği plan kimliği sabittir,
-         limit/fiyat değişimi yeni bir sürüm satırı olarak açılır. -->
+    <!-- ── Identity ──────────────────────────────────────────────────────────
+         Code and version are read-only: per UQ_Plan_Code_Version the plan identity is fixed,
+         a limit/price change is opened as a new version row. -->
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.billing.planInfo' | t }}</h2></div>
       <div class="panel-body stack">
@@ -67,7 +67,7 @@
       </div>
     </section>
 
-    <!-- ── Özellik / kota editörü ───────────────────────────────────────────── -->
+    <!-- ── Feature / quota editor ───────────────────────────────────────────── -->
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.billing.features' | t }}</h2></div>
       <div class="table-scroll">
@@ -114,7 +114,7 @@
       @if (canWrite) {
         <div class="panel-body">
           <div class="cluster wrap">
-            <!-- Katalog kapalı: backend katalog dışı anahtarı reddediyor. -->
+            <!-- Closed catalog: the backend rejects keys outside the catalog. -->
             <app-select
               [options]="featureKeys()"
               [(value)]="featureForm.featureKey"
@@ -133,7 +133,7 @@
       }
     </section>
 
-    <!-- ── Yaşam döngüsü ────────────────────────────────────────────────────── -->
+    <!-- ── Lifecycle ────────────────────────────────────────────────────────── -->
     @if (canWrite) {
       <section class="panel">
         <div class="panel-head"><h2>{{ 'pc.billing.lifecycle' | t }}</h2></div>

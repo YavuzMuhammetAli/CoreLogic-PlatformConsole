@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, PagedResult, ResponseModel } from
 import { AlertItem, AlertRuleItem } from '../../core/models/alert.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Alert Center (M23) servisi — /alerts uçları. */
+/** Alert Center (M23) service — /alerts endpoints. */
 @Injectable({ providedIn: 'root' })
 export class AlertsService {
   private readonly http = inject(HttpClient);
@@ -36,7 +36,7 @@ export class AlertsService {
   }
 }
 
-/** Önem derecesi → rozet tonu ([12 §1]). */
+/** Severity → badge tone ([12 §1]). */
 export function severityTone(severity: string): BadgeTone {
   switch (severity) {
     case 'Critical': return 'danger';
@@ -46,7 +46,7 @@ export function severityTone(severity: string): BadgeTone {
   }
 }
 
-/** Uyarı durumu → rozet tonu. */
+/** Alert status → badge tone. */
 export function alertStatusTone(status: string): BadgeTone {
   switch (status) {
     case 'Firing': return 'danger';

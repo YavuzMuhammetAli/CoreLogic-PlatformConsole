@@ -4,14 +4,14 @@ import { capabilityGuard } from './core/guards/capability.guard';
 import { Cap } from './core/models/capabilities';
 
 export const routes: Routes = [
-  // Giriş (public)
+  // Login (public)
   {
     path: 'login',
     loadComponent: () =>
       import('./domains/auth/login.component').then(m => m.LoginComponent)
   },
 
-  // Korumalı konsol kabuğu
+  // Protected console shell
   {
     path: '',
     canActivate: [platformAuthGuard],
@@ -34,7 +34,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./domains/access/platform-users.component').then(m => m.PlatformUsersComponent)
       },
-      // Sabit 'new' segmenti ':id'den ÖNCE — aksi hâlde Angular 'new'i parametre yakalar.
+      // The fixed 'new' segment comes BEFORE ':id' — otherwise Angular captures 'new' as a parameter.
       {
         path: 'access/platform-users/new',
         canActivate: [capabilityGuard(Cap.IamManage)],
@@ -75,7 +75,7 @@ export const routes: Routes = [
           import('./domains/security/compliance.component').then(m => m.ComplianceComponent)
       },
 
-      // Tenants (M02) — salt-okur dizin (P1.2)
+      // Tenants (M02) — read-only directory (P1.2)
       {
         path: 'tenants',
         canActivate: [capabilityGuard(Cap.TenantsRead)],
@@ -89,7 +89,7 @@ export const routes: Routes = [
           import('./domains/tenants/tenant-detail.component').then(m => m.TenantDetailComponent)
       },
 
-      // Henüz uygulanmamış domain'ler (sonraki fazlar) — yer tutucu
+      // Domains not yet implemented (later phases) — placeholder
       // Operations (P1.3) — Jobs & Queue
       { path: 'operations', redirectTo: 'operations/jobs', pathMatch: 'full' },
       {
@@ -99,7 +99,7 @@ export const routes: Routes = [
           import('./domains/operations/jobs-list.component').then(m => m.JobsListComponent)
       },
       {
-        // Worker kontrol düzlemi (migrasyon 025) — aç/kapa, aralık, döngü yenileme.
+        // Worker control plane (migration 025) — on/off, interval, loop refresh.
         path: 'operations/workers',
         canActivate: [capabilityGuard(Cap.OpsRead)],
         loadComponent: () =>
@@ -149,7 +149,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./domains/observability/performance.component').then(m => m.PerformanceComponent)
       },
-      // Billing (P3.1) — Plan kataloğu + abonelikler
+      // Billing (P3.1) — Plan catalog + subscriptions
       { path: 'billing', redirectTo: 'billing/plans', pathMatch: 'full' },
       {
         path: 'billing/plans',

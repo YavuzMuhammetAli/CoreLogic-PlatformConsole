@@ -23,7 +23,7 @@
       </div>
     </header>
 
-    <!-- ── Kimlik ────────────────────────────────────────────────────────────── -->
+    <!-- ── Identity ────────────────────────────────────────────────────────────── -->
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.users.identity' | t }}</h2></div>
       <div class="panel-body stack">
@@ -54,7 +54,7 @@
       </div>
     </section>
 
-    <!-- ── Roller + canlı yetenek önizlemesi ─────────────────────────────────── -->
+    <!-- ── Roles + live capability preview ─────────────────────────────────── -->
     <section class="panel">
       <div class="panel-head"><h2>{{ 'pc.users.roles' | t }}</h2></div>
       <div class="panel-body stack">
@@ -73,7 +73,7 @@
           } @empty { <span class="muted">{{ 'pc.users.noRoles' | t }}</span> }
         </div>
 
-        <!-- Matris backend'de derlenmiş; burada yalnızca gösterilir. -->
+        <!-- The matrix is compiled in the backend; it is only displayed here. -->
         <div class="cap-preview stack">
           <strong>{{ 'pc.users.effectiveCaps' | t:{ n: effectiveCapabilities().length } }}</strong>
           <div class="cluster wrap">
@@ -89,7 +89,7 @@
       </div>
     </section>
 
-    <!-- ── Eylemler ──────────────────────────────────────────────────────────── -->
+    <!-- ── Actions ──────────────────────────────────────────────────────────── -->
     @if (isNew()) {
       <div class="cluster">
         <button class="btn btn-primary" [disabled]="busy() || !form.email || !form.password" (click)="create()">

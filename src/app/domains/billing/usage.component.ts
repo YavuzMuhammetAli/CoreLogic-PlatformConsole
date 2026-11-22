@@ -14,7 +14,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 interface UsageSummary { tenantId: string; metricKey: string; total: number; }
 
-/** Usage Analytics (M32/M34) — dönem özeti (tenant × metrik) + manuel/AI kayıt girişi. */
+/** Usage Analytics (M32/M34) — period summary (tenant × metric) + manual/AI record entry. */
 @Component({
     selector: 'app-usage',
     imports: [FormsModule, RouterLink, RouterLinkActive, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -39,7 +39,7 @@ export class UsageComponent implements OnInit {
 
   ngOnInit(): void { this.load(); }
 
-  /** Metrik adı katalogdan (plan özelliği ya da yalnız maliyet metriği); tanınmayan ham kalır. */
+  /** Metric name from the catalog (plan feature or cost-only metric); unknown ones stay raw. */
   metricLabel(key: string): string {
     return this.catalog.label(key);
   }

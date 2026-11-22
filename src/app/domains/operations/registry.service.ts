@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ListResponseModel } from '../../core/models/api.models';
 import { TenantModelSummaryItem, TenantDriftItem } from '../../core/models/registry.models';
 
-/** Model Registry (M11) servisi — /registry uçları. */
+/** Model Registry (M11) service — /registry endpoints. */
 @Injectable({ providedIn: 'root' })
 export class RegistryService {
   private readonly http = inject(HttpClient);

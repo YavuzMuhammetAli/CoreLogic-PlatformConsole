@@ -26,9 +26,9 @@
 tr.unread td { font-weight: 600; }
 tr.unread td:first-child { border-left: 3px solid var(--accent); }
 
-/* ── Uyarı bağlam paneli ────────────────────────────────────────────────────
-   NOT: Bu dosya model-registry.component.ts tarafından da kullanılıyor —
-   yeni sınıflar `alert-` önekiyle ayrılır, oraya sızmaz. */
+/* ── Alert context panel ────────────────────────────────────────────────────
+   NOTE: This file is also used by model-registry.component.ts —
+   new classes are kept apart with the `alert-` prefix so they don't leak there. */
 .alert-toggle {
   display: flex; align-items: center; gap: var(--space-2);
   padding: 0; border: 0; background: none; cursor: pointer;

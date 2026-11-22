@@ -22,7 +22,7 @@
       <div class="alert alert-danger" role="alert">{{ error() }}</div>
     }
 
-    <!-- Adım 1: parola -->
+    <!-- Step 1: password -->
     @if (step() === 'login') {
       <form class="stack" [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="field">
@@ -41,7 +41,7 @@
       </form>
     }
 
-    <!-- Adım 2: MFA doğrulama -->
+    <!-- Step 2: MFA verification -->
     @if (step() === 'mfa') {
       <div class="stack">
         <p class="muted">{{ 'pc.mfa.subtitle' | t }}</p>
@@ -64,7 +64,7 @@
       </div>
     }
 
-    <!-- Adım 3: MFA kurulumu -->
+    <!-- Step 3: MFA enrollment -->
     @if (step() === 'enroll') {
       <div class="stack">
         <h2 class="enroll-title">{{ 'pc.mfa.enrollTitle' | t }}</h2>

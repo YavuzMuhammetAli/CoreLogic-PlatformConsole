@@ -13,15 +13,15 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Otomatik yenileme aralığı — heartbeat 30 sn'de bir yazıldığı için daha sık sormanın anlamı yok. */
+/** Auto-refresh interval — the heartbeat is written every 30 s, so polling more often is pointless. */
 const POLL_INTERVAL_MS = 15000;
 
 /**
- * Worker kontrol düzlemi (migrasyon 025) — 11 periyodik worker'ın durumu,
- * aç/kapa, aralık ve döngü yenileme.
+ * Worker control plane (migration 025) — status of the 11 periodic workers,
+ * on/off, interval and loop reset.
  *
- * Durum ("Çalışıyor / Duraklatıldı / Yanıt yok / Hata") SUNUCUDA türetilir;
- * burada yalnız renklendirilir.
+ * The status ("Çalışıyor / Duraklatıldı / Yanıt yok / Hata" — Running / Paused / No response / Error)
+ * is derived ON THE SERVER; here it is only coloured.
  */
 @Component({
     selector: 'app-worker-center',
@@ -44,13 +44,13 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
   readonly workers = signal<WorkerStatus[]>([]);
   readonly busyName = signal<string | null>(null);
 
-  /** Kritik worker kapatma onayı bekleyen satır. */
+  /** Row awaiting confirmation to stop a critical worker. */
   readonly confirmTarget = signal<WorkerStatus | null>(null);
 
   readonly tone = workerStatusTone;
   readonly canManage = this.store.has(Cap.OpsManage);
 
-  /** Aralık düzenleme taslakları — boş string "varsayılana dön" demek. */
+  /** Interval edit drafts — an empty string means "revert to default". */
   edits: Record<string, string> = {};
 
   private timer: ReturnType<typeof setInterval> | null = null;
@@ -58,7 +58,7 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.load();
     this.timer = setInterval(() => {
-      // Arka plandaki sekme boşuna istek atmasın.
+      // A background tab shouldn't send needless requests.
       if (document.visibilityState === 'visible') this.load(true);
     }, POLL_INTERVAL_MS);
   }
@@ -67,7 +67,7 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }
   }
 
-  /** @param silent Otomatik yenilemede spinner gösterme — tablo zıplamasın. */
+  /** @param silent Don't show a spinner on auto-refresh — so the table doesn't jump. */
   load(silent = false): void {
     if (!silent) this.loading.set(true);
     this.service.list().subscribe({
@@ -87,9 +87,9 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Sunucudan gelen aralıkları taslaklara yansıtır — ama kullanıcının O AN
-   * düzenlediği hücreye DOKUNMAZ: 15 sn'lik otomatik yenileme yazdığı sayıyı
-   * altından çekerse kullanıcı ne olduğunu anlamaz.
+   * Copies the intervals from the server into the drafts — but does NOT TOUCH the cell the
+   * user is editing AT THAT MOMENT: if the 15 s auto-refresh pulled the typed number out from
+   * under them, the user wouldn't understand what happened.
    */
   private syncEdits(items: WorkerStatus[]): void {
     for (const w of items) {
@@ -108,7 +108,7 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
     this.edits[name] = value;
   }
 
-  /** Duraklat/sürdür. Kritik bir worker kapatılıyorsa önce onay diyaloğu açılır. */
+  /** Pause/resume. If a critical worker is being stopped, a confirmation dialog opens first. */
   toggleEnabled(w: WorkerStatus): void {
     const turningOff = w.enabled;
     if (turningOff && w.isCritical) { this.confirmTarget.set(w); return; }
@@ -128,7 +128,7 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
     this.apply(w, { enabled: w.enabled, intervalSeconds: this.parseInterval(w), confirm: false });
   }
 
-  /** Döngüyü yeniler — proses yeniden başlatılmaz (bkz. WorkerService.reset). */
+  /** Resets the loop — the process is not restarted (see WorkerService.reset). */
   reset(w: WorkerStatus): void {
     this.busyName.set(w.name);
     this.clearBanners();
@@ -138,7 +138,7 @@ export class WorkerCenterComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Boş taslak = override kaldır (kod varsayılanına dön). */
+  /** Empty draft = remove the override (revert to the code default). */
   private parseInterval(w: WorkerStatus): number | null {
     const raw = (this.edits[w.name] ?? '').trim();
     if (raw === '') return null;

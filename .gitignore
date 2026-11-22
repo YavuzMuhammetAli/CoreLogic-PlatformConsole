@@ -1,7 +1,7 @@
-# Bağımlılıklar
+# Dependencies
 /node_modules
 
-# Build çıktıları
+# Build outputs
 /dist
 /tmp
 /out-tsc
@@ -17,9 +17,9 @@
 .DS_Store
 Thumbs.db
 
-# Loglar
+# Logs
 *.log
 npm-debug.log*
 
-# CodeGraph local index (yerel araç indeksi)
+# CodeGraph local index (local tool index)
 .codegraph/

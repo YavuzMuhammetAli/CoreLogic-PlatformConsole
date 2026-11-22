@@ -15,7 +15,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'attempts' | 'events' | 'iprules';
 
-/** Security Center (M18/M19) — giriş denemeleri + tehdit olayları + IP kuralları. */
+/** Security Center (M18/M19) — login attempts + threat events + IP rules. */
 @Component({
     selector: 'app-security-center',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -38,7 +38,7 @@ export class SecurityCenterComponent implements OnInit {
 
   readonly evtTone = eventStatusTone;
   readonly canManage = this.store.has(Cap.SecurityManage);
-  /** Tehdit olayı durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
+  /** Threat event statuses — computed so the "Tümü" (All) label also changes when the language changes. */
   readonly eventStatusOptions = computed(() =>
     withAllOption(this.language.t('pc.sec.allStatuses'),
       ['Open', 'Reviewed', 'Dismissed', 'Escalated'],
@@ -46,7 +46,7 @@ export class SecurityCenterComponent implements OnInit {
   readonly ipActionOptions = computed(() =>
     ['Deny', 'Allow'].map(v => ({ value: v, label: this.language.enumLabel(v) })));
 
-  /** Tablo hücreleri için — olay tipi ve IP eylemi sunucudan ham gelir. */
+  /** For the table cells — the event type and IP action arrive raw from the server. */
   enumLabel(value: string): string {
     return this.language.enumLabel(value);
   }

@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { FeatureFlagItem } from '../../core/models/flag.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Feature Flags (M39) servisi — /feature-flags uçları. */
+/** Feature Flags (M39) service — /feature-flags endpoints. */
 @Injectable({ providedIn: 'root' })
 export class FlagsService {
   private readonly http = inject(HttpClient);
@@ -34,7 +34,7 @@ export class FlagsService {
   }
 }
 
-/** Flag durumu → rozet tonu. */
+/** Flag state → badge tone. */
 export function flagStateTone(state: string): BadgeTone {
   switch (state) {
     case 'On': return 'success';

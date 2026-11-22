@@ -26,7 +26,7 @@
     <button class="tab" [class.active]="tab() === 'rules'" (click)="selectTab('rules')">{{ 'pc.alerts.tabRules' | t }}</button>
   </div>
 
-  <!-- ── Uyarılar sekmesi ── -->
+  <!-- ── Alerts tab ── -->
   @if (tab() === 'alerts') {
     <div class="panel">
       <div class="panel-head filters">
@@ -106,7 +106,7 @@
                   </td>
                 </tr>
 
-                <!-- ── Bağlam paneli: "ne oldu" ── -->
+                <!-- ── Context panel: "what happened" ── -->
                 @if (expandedId() === a.id) {
                   <tr class="alert-details-row">
                     <td [attr.colspan]="columnCount">
@@ -202,7 +202,7 @@
     </div>
   }
 
-  <!-- ── Kurallar sekmesi ── -->
+  <!-- ── Rules tab ── -->
   @if (tab() === 'rules') {
     <div class="panel">
       @if (loading()) {

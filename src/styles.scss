@@ -1,11 +1,11 @@
 /* =====================================================
-   CoreLogic Platform Console — Global Tasarım Token'ları
-   CoreLogicUI src/styles.scss'ten senkron kopya (token bloğu birebir)
-   + konsola özgü daraltılmış global sınıf seti.
+   CoreLogic Platform Console — Global Design Tokens
+   Synchronized copy of CoreLogicUI src/styles.scss (token block verbatim)
+   + a reduced, console-specific set of global classes.
    ===================================================== */
 
 :root {
-  /* Renkler */
+  /* Colors */
   --bg: #f8fafc;
   --surface: #ffffff;
   --surface-warm: #eef2f7;
@@ -34,7 +34,7 @@
   --alert-warn-border: #fde68a;
   --alert-info-border: #bfdbfe;
 
-  /* Tipografi */
+  /* Typography */
   --font-display: 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
@@ -49,7 +49,7 @@
   --leading-tight: 1.08;
   --tracking-display: -0.018em;
 
-  /* Boşluk */
+  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -59,30 +59,30 @@
   --space-8: 32px;
   --space-12: 48px;
 
-  /* Köşe yuvarlaklığı */
+  /* Border radius */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-pill: 9999px;
 
-  /* Gölge / Yükseklik */
+  /* Shadow / Elevation */
   --elev-flat: none;
   --elev-ring: 0 0 0 1px var(--border);
   --elev-raised: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 16px rgba(15, 23, 42, 0.08);
   --elev-high: 0 8px 32px rgba(15, 23, 42, 0.12);
   --focus-ring: 0 0 0 3px rgba(29, 78, 216, 0.22);
 
-  /* Hareket */
+  /* Motion */
   --motion-fast: 150ms;
   --motion-base: 230ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 
-  /* Düzen */
+  /* Layout */
   --sidebar-w: 248px;
   --topbar-h: 60px;
 
-  /* Sidebar — açık tema */
+  /* Sidebar — light theme */
   --sidebar-bg: #0f172a;
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-fg: #f1f5f9;
@@ -91,7 +91,7 @@
   --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
 }
 
-/* ---- Karanlık tema override'ları ---- */
+/* ---- Dark theme overrides ---- */
 :root[data-theme="dark"] {
   --bg: #0b1220;
   --surface: #131c2e;
@@ -131,7 +131,7 @@
   --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
 }
 
-/* ---- Sıfırlama ---- */
+/* ---- Reset ---- */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; height: 100%; }
 body {
@@ -152,7 +152,7 @@ h1, h2, h3, h4, h5, h6 {
 p { margin: 0; }
 a { color: var(--accent); text-decoration: none; }
 
-/* ---- Butonlar ---- */
+/* ---- Buttons ---- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -202,7 +202,7 @@ a { color: var(--accent); text-decoration: none; }
 .btn-sm { min-height: 32px; padding: 0 var(--space-4); font-size: var(--text-xs); }
 .btn-block { width: 100%; }
 
-/* ---- Panel / Kart ---- */
+/* ---- Panel / Card ---- */
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -240,7 +240,7 @@ a { color: var(--accent); text-decoration: none; }
 .field-error { font-size: var(--text-xs); color: var(--danger); }
 .field-help { font-size: var(--text-xs); color: var(--muted); }
 
-/* ---- Tablo ---- */
+/* ---- Table ---- */
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -262,7 +262,7 @@ a { color: var(--accent); text-decoration: none; }
 .data-table tbody tr:hover { background: var(--surface-warm); }
 .data-table .num { font-family: var(--font-mono); }
 
-/* ---- Rozet ---- */
+/* ---- Badge ---- */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -279,7 +279,7 @@ a { color: var(--accent); text-decoration: none; }
 .badge-danger { background: var(--danger-bg); color: var(--danger); }
 .badge-meta { background: var(--meta-bg); color: var(--meta); }
 
-/* ---- Uyarı ---- */
+/* ---- Alert ---- */
 .alert {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
@@ -291,13 +291,13 @@ a { color: var(--accent); text-decoration: none; }
 .alert-warn { background: var(--warn-bg); color: var(--warn); border-color: var(--alert-warn-border); }
 .alert-info { background: var(--meta-bg); color: var(--meta); border-color: var(--alert-info-border); }
 
-/* ---- Yardımcılar ---- */
-/* Her route şablonu `.stack.page` ile başlar. Sayfa, shell'in içerik kolonunu
-   (grid `1fr`) tamamen doldurur — component SCSS'lerinde max-width KOYMA:
-   yatay ortalama olmadığı için sağda ölü alan bırakır. */
+/* ---- Utilities ---- */
+/* Every route template starts with `.stack.page`. The page fully fills the shell's content
+   column (grid `1fr`) — do NOT SET max-width in component SCSS:
+   since there is no horizontal centering, it leaves dead space on the right. */
 .page { width: 100%; }
-/* Başlık + sağda "Nasıl çalışır?" düğmesi. `.page-head`'in kendisi her component'te
-   ayrı stillendiği için yerleşim ayrı bir sınıfa alındı. */
+/* Header + the "Nasıl çalışır?" (How does it work?) button on the right. Since `.page-head` itself is
+   styled separately in each component, the layout was moved into its own class. */
 .page-head-row {
   display: flex;
   align-items: flex-end;
@@ -337,7 +337,7 @@ a { color: var(--accent); text-decoration: none; }
   opacity: 0.6;
 }
 
-/* <app-icon> (Material Symbols): metin içinde satır ortasında dursun; flex kaplarda etkisiz. */
+/* <app-icon> (Material Symbols): sits vertically centered within text; no effect in flex containers. */
 app-icon { vertical-align: middle; }
 .sr-only {
   position: absolute; width: 1px; height: 1px;

@@ -9,12 +9,12 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
- * Platform Config (M41) — listeleme + satır içi düzenleme.
+ * Platform Config (M41) — listing + inline editing.
  *
- * Gizli değerler sunucudan maskeli (`••••••`) gelir ve maske ASLA geri
- * gönderilmez: gizli satırların girdisi boş başlar, boş bırakmak "değiştirme"
- * demektir. Aksi halde kullanıcı alana dokunmadan kaydettiğinde gerçek anahtar
- * maske metniyle ezilirdi.
+ * Secret values arrive masked (`••••••`) from the server and the mask is NEVER sent
+ * back: the input of secret rows starts empty, and leaving it empty means "don't
+ * change". Otherwise, saving without touching the field would overwrite the real
+ * key with the mask text.
  */
 @Component({
     selector: 'app-config-list',
@@ -31,10 +31,10 @@ export class ConfigListComponent implements OnInit {
   readonly success = signal<string | null>(null);
   readonly items = signal<PlatformConfigItem[]>([]);
 
-  /** Anahtar → düzenlenmekte olan değer. */
+  /** Key → value being edited. */
   readonly drafts = signal<Record<string, string>>({});
 
-  /** O an kaydedilen anahtar; satırın butonunu kilitler. */
+  /** The key currently being saved; locks that row's button. */
   readonly savingKey = signal<string | null>(null);
 
   ngOnInit(): void { this.load(); }
@@ -50,8 +50,8 @@ export class ConfigListComponent implements OnInit {
         const items = res.data ?? [];
         this.items.set(items);
 
-        // Gizli satırlar BOŞ başlar — maskeyi taslağa koymak, kullanıcı hiç
-        // dokunmasa bile onu geri göndermek anlamına gelirdi.
+        // Secret rows start EMPTY — putting the mask into the draft would mean
+        // sending it back even if the user never touched it.
         const drafts: Record<string, string> = {};
         for (const item of items) {
           drafts[item.key] = item.isSecret ? '' : (item.value ?? '');
@@ -82,7 +82,7 @@ export class ConfigListComponent implements OnInit {
         this.savingKey.set(null);
         if (res.success) {
           this.success.set(res.message);
-          // Maskeyi ve UpdatedAt'i sunucudan tazele — tek doğruluk kaynağı orası.
+          // Refresh the mask and UpdatedAt from the server — it is the single source of truth.
           this.load();
         } else {
           this.error.set(res.message);

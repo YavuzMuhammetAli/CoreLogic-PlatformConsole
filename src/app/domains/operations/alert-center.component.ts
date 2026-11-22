@@ -16,7 +16,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'alerts' | 'rules';
 
-/** Alert Center (M23, [07 §5]) — uyarı listesi (ack/resolve) + kural yönetimi (toggle). */
+/** Alert Center (M23, [07 §5]) — alert list (ack/resolve) + rule management (toggle). */
 @Component({
     selector: 'app-alert-center',
     imports: [DatePipe, DecimalPipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -35,14 +35,14 @@ export class AlertCenterComponent implements OnInit {
   readonly result = signal<PagedResult<AlertItem> | null>(null);
   readonly rules = signal<AlertRuleItem[]>([]);
   readonly busyId = signal<number | null>(null);
-  /** Detay satırı açık olan uyarının id'si — aynı anda tek satır açılır. */
+  /** Id of the alert whose detail row is open — only one row is open at a time. */
   readonly expandedId = signal<number | null>(null);
 
   readonly sevTone = severityTone;
   readonly stTone = alertStatusTone;
   readonly statusFilters = ALERT_STATUS_FILTERS;
   readonly canManage = this.store.has(Cap.OpsManage);
-  /** Etiketler çeviriden gelir ("open" sentetik filtresi dahil); dil değişince güncellenir. */
+  /** Labels come from translations (including the synthetic "open" filter); updated when the language changes. */
   readonly statusOptions = computed(() =>
     this.statusFilters.map(s => ({ value: s, label: this.language.t(`pc.alerts.filter.${s}`) })));
 
@@ -61,7 +61,7 @@ export class AlertCenterComponent implements OnInit {
   load(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.expandedId.set(null); // liste tazelenince açık detay bayatlamasın
+    this.expandedId.set(null); // keep the open detail from going stale when the list refreshes
     this.service.list(this.status, this.page, this.pageSize).subscribe({
       next: res => {
         this.loading.set(false);
@@ -88,20 +88,20 @@ export class AlertCenterComponent implements OnInit {
   applyFilter(): void { this.page = 1; this.load(); }
 
   /**
-   * Kuralın neyi ölçtüğünü düz dille anlatır. Kural adları seed'den Türkçe gelir ve
-   * "Askıya alınmış iş var" gibi iç terimler taşır; açıklaması olmayan (operatörün
-   * sonradan eklediği) metrikte boş döner, satır gösterilmez.
+   * Explains in plain language what the rule measures. Rule names come from the seed in Turkish and
+   * carry internal terms like "Askıya alınmış iş var" (There are parked jobs); for a metric without a
+   * description (added later by the operator) it returns empty and the row is not shown.
    */
   metricDescription(metricKey: string): string {
     return this.language.tOr(`pc.alerts.metricDesc.${metricKey}`, '');
   }
 
-  /** Uyarının bağlam panelini açar/kapatır. */
+  /** Opens/closes the alert's context panel. */
   toggleDetails(a: AlertItem): void {
     this.expandedId.set(this.expandedId() === a.id ? null : a.id);
   }
 
-  /** Detay tablosunun kolon sayısı — genişletilmiş satırın colspan'i. */
+  /** Column count of the detail table — the colspan of the expanded row. */
   readonly columnCount = 6;
 
   prev(): void { if (this.page > 1) { this.page--; this.load(); } }

@@ -18,8 +18,8 @@
   <app-icon class="select-caret" name="keyboard_arrow_down" size="16" />
 </button>
 
-<!-- position: fixed — panel/tablo/shell kaydırma kaplarının kırpmasından kaçar.
-     Koordinatlar TS'te hesaplanır ve viewport'a kelepçelenir. -->
+<!-- position: fixed — escapes clipping by panel/table/shell scroll containers.
+     Coordinates are computed in TS and clamped to the viewport. -->
 @if (open()) {
   <ul
     #list

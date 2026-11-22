@@ -11,7 +11,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Tenant Directory listesi (M02) — arama/durum filtresi + sayfalama. */
+/** Tenant Directory list (M02) — search/status filter + pagination. */
 @Component({
     selector: 'app-tenant-list',
     imports: [DatePipe, FormsModule, RouterLink, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -30,7 +30,7 @@ export class TenantListComponent implements OnInit {
   readonly statuses = TENANT_STATUSES;
   readonly tone = tenantStatusTone;
   readonly hTone = healthTone;
-  /** Dil değişince etiket de değişsin diye computed. */
+  /** Computed so the label also changes when the language changes. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.tenants.allStatuses'), this.statuses, v => this.language.enumLabel(v)));
 

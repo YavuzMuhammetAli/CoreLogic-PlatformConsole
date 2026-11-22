@@ -6,15 +6,15 @@ import { MetricCatalog, MetricCatalogItem } from '../core/models/commerce.models
 import { LanguageService } from './language.service';
 
 /**
- * Plan özelliği / kullanım metriği kataloğu — `GET metric-catalog`.
+ * Plan feature / usage metric catalog — `GET metric-catalog`.
  *
- * Anahtar listesi, sırası ve görünen adları backend `MetricCatalog`'da TEK yerde durur;
- * etiket isteğin dilinde (Accept-Language) sunucuda seçilir. Önceden konsol kendi
- * `FEATURE_KEYS` listesini ve `pc.feature.*` çevirilerini tutuyordu, tenant arayüzü de ayrı
- * bir liste — üçü kaymıştı. Dil değişince katalog yeniden istenir.
+ * The key list, its order and display names live in ONE place, the backend `MetricCatalog`;
+ * the label is chosen on the server in the request's language (Accept-Language). Previously the
+ * console kept its own `FEATURE_KEYS` list and `pc.feature.*` translations, and the tenant UI a separate
+ * list — the three had drifted apart. The catalog is re-requested when the language changes.
  *
- * Etiket fonksiyonları sinyal okuduğundan katalog geldiğinde şablonlar kendiliğinden
- * yenilenir; o ana dek (ya da tanınmayan anahtarda) ham anahtar görünür.
+ * Since the label functions read signals, templates refresh by themselves when the catalog
+ * arrives; until then (or for an unrecognized key) the raw key is shown.
  */
 @Injectable({ providedIn: 'root' })
 export class MetricCatalogService {
@@ -25,7 +25,7 @@ export class MetricCatalogService {
   private readonly units = signal<ReadonlyMap<string, string>>(new Map());
   private readonly byKey = computed(() => new Map(this.metrics().map(m => [m.key, m])));
 
-  /** Plana yazılabilen anahtarlar, katalog sırasıyla (plan detayındaki seçici). */
+  /** Keys that can be written to a plan, in catalog order (the selector on the plan detail). */
   readonly planFeatures = computed(() => this.metrics().filter(m => m.isPlanFeature));
 
   constructor() {
@@ -35,12 +35,12 @@ export class MetricCatalogService {
     });
   }
 
-  /** Görünen ad; katalog henüz gelmediyse ya da anahtar tanınmıyorsa anahtarın kendisi. */
+  /** Display name; the key itself if the catalog has not arrived yet or the key is unrecognized. */
   label(key: string): string {
     return this.byKey().get(key)?.label ?? key;
   }
 
-  /** Birimin görünen adı (ör. tokens → token); tanınmayan birim aynen döner. */
+  /** Display name of the unit (e.g. tokens → token); an unrecognized unit is returned as is. */
   unitLabel(unit: string): string {
     return this.units().get(unit) ?? unit;
   }
@@ -53,7 +53,7 @@ export class MetricCatalogService {
           this.metrics.set([...res.data.metrics].sort((a, b) => a.order - b.order));
           this.units.set(new Map(res.data.units.map(u => [u.unit, u.label])));
         },
-        // Etiketler yardımcı veridir: alınamazsa ekran ham anahtarla çalışmaya devam eder.
+        // Labels are auxiliary data: if they cannot be fetched, the screen keeps working with raw keys.
         error: () => {}
       });
   }

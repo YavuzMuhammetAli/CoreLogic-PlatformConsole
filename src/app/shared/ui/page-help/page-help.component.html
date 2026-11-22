@@ -9,19 +9,19 @@
       </div>
 
       <div class="help-body stack">
-        <!-- Ne işe yarar -->
+        <!-- What it is for -->
         <section class="stack">
           <span class="eyebrow">{{ 'pc.help.sectionSummary' | t }}</span>
           <p>{{ content().summaryKey | t }}</p>
         </section>
 
-        <!-- Yaşam döngüsü şeridi -->
+        <!-- Lifecycle strip -->
         @if (content().lifecycle; as steps) {
           <section class="stack">
             <span class="eyebrow">{{ 'pc.help.sectionLifecycle' | t }}</span>
             <div class="lifecycle">
               @for (s of steps; track s; let last = $last) {
-                <!-- Adımlar sunucu durum sabitleridir; pc.enum.* kapsamını check-i18n denetler. -->
+                <!-- Steps are server status constants; check-i18n verifies pc.enum.* coverage. -->
                 <span class="lifecycle-step">{{ ('pc.enum.' + s) | t }}</span>
                 @if (!last) { <span class="lifecycle-arrow" aria-hidden="true">→</span> }
               }
@@ -29,7 +29,7 @@
           </section>
         }
 
-        <!-- Alan / kolon sözlüğü -->
+        <!-- Field / column glossary -->
         @if (content().fields.length) {
           <section class="stack">
             <span class="eyebrow">{{ 'pc.help.sectionFields' | t }}</span>
@@ -42,7 +42,7 @@
           </section>
         }
 
-        <!-- İş kuralları -->
+        <!-- Business rules -->
         @if (content().rules; as rules) {
           @if (rules.length) {
             <section class="stack">
@@ -57,7 +57,7 @@
           }
         }
 
-        <!-- Dikkat -->
+        <!-- Caution -->
         @if (content().notesKey; as notes) {
           <div class="alert alert-warn">{{ notes | t }}</div>
         }

@@ -1,14 +1,14 @@
 /**
- * Çeviri sözlüğü bütünlük denetimi — `npm run check:i18n`.
+ * Translation dictionary integrity check — `npm run check:i18n`.
  *
- * NEDEN SCRIPT, SPEC DEĞİL: Bu projede Karma/Jasmine kurulu değildir
- * (angular.json'da `test` target'ı, package.json'da jasmine bağımlılığı yok).
- * Tek bir doğrulama için tüm test altyapısını kurmak yerine, zaten var olan
- * `typescript` paketiyle kaynakları derleyip denetimi burada koşuyoruz.
+ * WHY A SCRIPT, NOT A SPEC: Karma/Jasmine is not installed in this project
+ * (no `test` target in angular.json, no jasmine dependency in package.json).
+ * Instead of setting up a whole test infrastructure for a single check, we compile
+ * the sources with the already present `typescript` package and run the check here.
  *
- * NE YAKALAR: Eksik bir anahtar sessizce patlamaz — `LanguageService.t()`
- * bulamadığı anahtarı OLDUĞU GİBİ döndürür, yani kullanıcı ekranda
- * `pc.help.plans.title` gibi ham metin görür. Bu script o hatayı CI'a çeker.
+ * WHAT IT CATCHES: A missing key does not fail loudly — `LanguageService.t()`
+ * returns a key it cannot find AS IS, so the user sees raw text like
+ * `pc.help.plans.title` on screen. This script pulls that error into CI.
  */
 const fs = require('fs');
 const path = require('path');
@@ -17,7 +17,7 @@ const ts = require('typescript');
 
 const SRC = path.join(__dirname, '..', 'src');
 
-/** Bir .ts dosyasını CommonJS'e çevirip değerlendirir (tip-only import'lar silinir). */
+/** Transpiles a .ts file to CommonJS and evaluates it (type-only imports are dropped). */
 function loadTs(file) {
   const code = fs.readFileSync(file, 'utf8');
   const js = ts.transpileModule(code, {
@@ -28,7 +28,7 @@ function loadTs(file) {
   const mod = new Module(file, null);
   mod.filename = file;
   mod.paths = Module._nodeModulePaths(path.dirname(file));
-  // Kardeş .ts dosyalarını da aynı yolla çözebilmek için require'ı sarmala.
+  // Wrap require so sibling .ts files can be resolved the same way.
   const originalRequire = mod.require.bind(mod);
   mod.require = req => {
     if (req.startsWith('.')) {
@@ -51,27 +51,27 @@ const { PAGE_HELP, FALLBACK_TOPIC } =
 const problems = [];
 const entries = Object.entries(TRANSLATIONS);
 
-// ── 1) TR/EN dolu mu? ────────────────────────────────────────────────────────
+// ── 1) Are TR/EN filled in? ──────────────────────────────────────────────────
 for (const [key, value] of entries) {
   if (!value || !String(value.tr || '').trim() || !String(value.en || '').trim()) {
-    problems.push(`TR/EN eksik: ${key}`);
+    problems.push(`Missing TR/EN: ${key}`);
   }
 }
 
-// ── 2) Yer tutucular iki dilde de aynı mı? ───────────────────────────────────
+// ── 2) Are the placeholders the same in both languages? ──────────────────────
 const placeholders = s => (String(s).match(/\{[a-zA-Z0-9_]+\}/g) || []).sort().join(',');
 for (const [key, value] of entries) {
   if (placeholders(value.tr) !== placeholders(value.en)) {
-    problems.push(`Yer tutucu uyuşmuyor: ${key} (tr: ${placeholders(value.tr) || '—'}, en: ${placeholders(value.en) || '—'})`);
+    problems.push(`Placeholder mismatch: ${key} (tr: ${placeholders(value.tr) || '—'}, en: ${placeholders(value.en) || '—'})`);
   }
 }
 
-// ── 3) Anahtar ön eki ────────────────────────────────────────────────────────
+// ── 3) Key prefix ────────────────────────────────────────────────────────────
 for (const [key] of entries) {
-  if (!key.startsWith('pc.')) problems.push(`'pc.' ön eki yok: ${key}`);
+  if (!key.startsWith('pc.')) problems.push(`Missing 'pc.' prefix: ${key}`);
 }
 
-// ── 4) Yardım konularının her anahtarı sözlükte var mı? ──────────────────────
+// ── 4) Is every key of the help topics in the dictionary? ────────────────────
 const keysOf = t => [
   t.titleKey,
   t.summaryKey,
@@ -81,18 +81,18 @@ const keysOf = t => [
 ];
 
 for (const [id, topic] of Object.entries(PAGE_HELP)) {
-  if (topic.fields.length === 0) problems.push(`Alan sözlüğü boş konu: ${id}`);
+  if (topic.fields.length === 0) problems.push(`Topic with empty field glossary: ${id}`);
   for (const key of keysOf(topic)) {
-    if (!TRANSLATIONS[key]) problems.push(`Sözlükte yok: ${id} → ${key}`);
+    if (!TRANSLATIONS[key]) problems.push(`Not in dictionary: ${id} → ${key}`);
   }
 }
 for (const key of keysOf(FALLBACK_TOPIC)) {
-  if (!TRANSLATIONS[key]) problems.push(`Sözlükte yok (fallback): ${key}`);
+  if (!TRANSLATIONS[key]) problems.push(`Not in dictionary (fallback): ${key}`);
 }
 
-// ── 5) Sunucu sabitlerinin görünen adı var mı? ───────────────────────────────
-// Rozetler/seçim kutuları bu değerleri `pc.enum.*` ve `pc.feature.*` üzerinden
-// çevirir; karşılığı yoksa ekranda ham İngilizce sabit görünür.
+// ── 5) Do the server constants have display names? ───────────────────────────
+// Badges/select boxes translate these values via `pc.enum.*` and `pc.feature.*`;
+// without a match the raw English constant shows on screen.
 const model = file => loadTs(path.join(SRC, 'app/core/models', file));
 const enumSources = {
   JOB_STATUSES: model('job.models.ts').JOB_STATUSES,
@@ -107,22 +107,22 @@ for (const topic of Object.values(PAGE_HELP)) {
   if (topic.lifecycle) enumSources[`lifecycle(${topic.titleKey})`] = topic.lifecycle;
 }
 for (const [source, values] of Object.entries(enumSources)) {
-  if (!Array.isArray(values)) { problems.push(`Sabit okunamadı: ${source}`); continue; }
+  if (!Array.isArray(values)) { problems.push(`Could not read constant: ${source}`); continue; }
   for (const v of values) {
-    if (!TRANSLATIONS[`pc.enum.${v}`]) problems.push(`Görünen ad yok: ${source} → pc.enum.${v}`);
+    if (!TRANSLATIONS[`pc.enum.${v}`]) problems.push(`Missing display name: ${source} → pc.enum.${v}`);
   }
 }
-// Plan özellik / metrik adları çeviri sözlüğünde değil, sunucudaki MetricCatalog'da.
+// Plan feature / metric names are not in the translation dictionary but in the server's MetricCatalog.
 
-// ── Sonuç ────────────────────────────────────────────────────────────────────
+// ── Result ───────────────────────────────────────────────────────────────────
 if (problems.length) {
-  console.error(`\n✖ ${problems.length} sorun bulundu:\n`);
+  console.error(`\n✖ ${problems.length} problem(s) found:\n`);
   problems.forEach(p => console.error('  ' + p));
   console.error('');
   process.exit(1);
 }
 
 console.log(
-  `✔ i18n bütünlük denetimi geçti — ${entries.length} anahtar, ` +
-  `${Object.keys(PAGE_HELP).length} yardım konusu.`
+  `✔ i18n integrity check passed — ${entries.length} keys, ` +
+  `${Object.keys(PAGE_HELP).length} help topics.`
 );

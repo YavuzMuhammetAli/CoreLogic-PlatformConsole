@@ -13,7 +13,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Support & Impersonation (M17) — talep/onay/basım/iptal iş akışı (görev ayrılığı). */
+/** Support & Impersonation (M17) — request/approve/issue/revoke workflow (separation of duties). */
 @Component({
     selector: 'app-impersonation',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -35,7 +35,7 @@ export class ImpersonationComponent implements OnInit {
   readonly tone = grantStatusTone;
   readonly canRequest = this.store.has(Cap.ImpersonationRequest);
   readonly canApprove = this.store.has(Cap.ImpersonationApprove);
-  /** Talep FSM durumları — dil değişince "Tümü" etiketi de değişsin diye computed. */
+  /** Request FSM states — computed so the "Tümü" (All) label also changes when the language changes. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.imp.allStatuses'),
       ['Requested', 'Approved', 'ActiveUse', 'Expired', 'Revoked', 'Denied'],

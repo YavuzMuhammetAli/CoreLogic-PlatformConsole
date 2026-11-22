@@ -12,7 +12,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'webhooks' | 'apikeys';
 
-/** Integration Center (M40) — webhook + teslimatlar + API key yönetimi. */
+/** Integration Center (M40) — webhooks + deliveries + API key management. */
 @Component({
     selector: 'app-integration',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -41,7 +41,7 @@ export class IntegrationComponent implements OnInit {
 
   ngOnInit(): void { this.loadWebhooks(); }
 
-  /** Teslimat tablosu için — olay tipi sunucudan ham gelir (ör. TenantSuspended). */
+  /** For the deliveries table — the event type arrives raw from the server (e.g. TenantSuspended). */
   enumLabel(value: string): string {
     return this.language.enumLabel(value);
   }

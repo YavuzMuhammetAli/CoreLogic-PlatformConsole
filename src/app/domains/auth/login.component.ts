@@ -11,8 +11,8 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 type Step = 'login' | 'mfa' | 'enroll';
 
 /**
- * Platform giriş ekranı — çok adımlı: parola → MFA doğrulama (mfa_required) veya
- * MFA kurulumu (mfa_enroll). Başarıda oturum store'a yazılır ve /overview'a geçilir.
+ * Platform sign-in screen — multi-step: password → MFA verification (mfa_required) or
+ * MFA enrollment (mfa_enroll). On success the session is written to the store and it navigates to /overview.
  */
 @Component({
     selector: 'app-login',
@@ -43,8 +43,8 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]]
   });
-  // Kod alanı da FormGroup içinde tutulur: (ngSubmit) yalnızca [formGroup] bağlı
-  // bir <form>'da tetiklenir. Aksi halde tarayıcı native submit yapıp sayfayı yeniler.
+  // The code field is also kept inside the FormGroup: (ngSubmit) only fires on a <form>
+  // bound to [formGroup]. Otherwise the browser does a native submit and reloads the page.
   readonly codeForm = this.fb.group({
     code: ['', [Validators.required, Validators.minLength(6)]]
   });

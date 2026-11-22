@@ -19,18 +19,18 @@ export class JobsService {
     return this.http.get<DataResponseModel<PagedResult<JobSummary>>>(this.baseUrl, { params });
   }
 
-  /** Askıya alınmış işi deneme hakkı sıfırlanmış olarak yeniden kuyruğa alır (Ops.Manage). */
+  /** Re-queues a parked job with its attempt count reset (Ops.Manage). */
   retry(id: string): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.baseUrl}/${id}/retry`, {});
   }
 
-  /** Tüm askıya alınmış işleri yeniden kuyruğa alır (Ops.Manage). */
+  /** Re-queues all parked jobs (Ops.Manage). */
   retryAllParked(): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.baseUrl}/retry-parked`, {});
   }
 }
 
-/** İş durumu → rozet tonu ([12 §1]). */
+/** Job status → badge tone ([12 §1]). */
 export function jobStatusTone(status: string): BadgeTone {
   switch (status) {
     case 'Succeeded': return 'success';

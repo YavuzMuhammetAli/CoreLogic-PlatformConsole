@@ -1,7 +1,7 @@
-/* Migrasyon sayfasına özgü stiller — ortak sayfa iskeleti alert-center.component.scss'ten gelir. */
+/* Styles specific to the migration page — the shared page skeleton comes from alert-center.component.scss. */
 
-/* Zamanlama alanları: grid, çünkü yardım metni olan/olmayan alanlar `.cluster`'da
-   (align-items: center) kaymış görünüyordu. */
+/* Schedule fields: grid, because fields with/without help text looked misaligned
+   in `.cluster` (align-items: center). */
 .schedule-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

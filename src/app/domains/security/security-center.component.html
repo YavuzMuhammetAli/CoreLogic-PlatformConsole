@@ -21,7 +21,7 @@
     <button class="tab" [class.active]="tab() === 'iprules'" (click)="selectTab('iprules')">{{ 'pc.sec.ipRules' | t }}</button>
   </div>
 
-  <!-- ── Tehdit olayları ── -->
+  <!-- ── Threat events ── -->
   @if (tab() === 'events') {
     <div class="panel">
       <div class="panel-head filters">
@@ -68,7 +68,7 @@
     </div>
   }
 
-  <!-- ── Giriş denemeleri ── -->
+  <!-- ── Login attempts ── -->
   @if (tab() === 'attempts') {
     <div class="panel">
       <div class="panel-head filters">
@@ -107,7 +107,7 @@
     </div>
   }
 
-  <!-- ── IP kuralları ── -->
+  <!-- ── IP rules ── -->
   @if (tab() === 'iprules') {
     @if (canManage) {
       <section class="panel">

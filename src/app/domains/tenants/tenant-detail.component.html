@@ -251,7 +251,7 @@
       </div>
     }
 
-    <!-- ── Modeller: ana + alt modeller, ata zinciriyle ── -->
+    <!-- ── Models: root + child models, with ancestor chain ── -->
     @if (tab() === 'models') {
       <div class="panel">
         <div class="panel-head">
@@ -286,7 +286,7 @@
                 @for (m of models()!.items; track m.id) {
                   <tr>
                     <td>
-                      <!-- Girinti derinlikten gelir; liste backend'den derinlik-öncelikli sıralı. -->
+                      <!-- Indentation comes from depth; the list arrives from the backend in depth-first order. -->
                       <span class="model-name" [style.padding-left.px]="(m.depth - 1) * 20">
                         @if (m.depth > 1) { <span class="muted model-branch" aria-hidden="true">└</span> }
                         <span class="mono">{{ m.name }}</span>
@@ -316,7 +316,7 @@
       </div>
     }
 
-    <!-- ── Tablolar: fiziksel envanter + boyut + sınıflandırma ── -->
+    <!-- ── Tables: physical inventory + size + classification ── -->
     @if (tab() === 'tables') {
       <div class="panel">
         <div class="panel-head">

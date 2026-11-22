@@ -11,7 +11,7 @@ import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Announcements & Status (M26) + DB sunucu envanteri (multi-region tohumu). */
+/** Announcements & Status (M26) + DB server inventory (multi-region seed). */
 @Component({
     selector: 'app-announcements',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -31,7 +31,7 @@ export class AnnouncementsComponent implements OnInit {
 
   readonly sevTone = severityTone;
   readonly stTone = announcementStatusTone;
-  /** Değer sunucu sabiti (Info/Maintenance/Incident), etiket çeviriden. */
+  /** The value is a server constant (Info/Maintenance/Incident), the label comes from translations. */
   readonly severities = computed(() =>
     ANNOUNCEMENT_SEVERITIES.map(v => ({ value: v, label: this.language.enumLabel(v) })));
 

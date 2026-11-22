@@ -12,7 +12,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Plan kataloğu (M35) — liste + özellik/kota + durum geçişi + yeni plan taslağı. */
+/** Plan catalog (M35) — list + feature/quota + status transition + new plan draft. */
 @Component({
     selector: 'app-plans',
     imports: [FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -48,7 +48,7 @@ export class PlansComponent implements OnInit {
     });
   }
 
-  /** Rozet metni, ör. "Aylık AI token: 1.000.000 token"; limitsiz özellikte yalnız adı. */
+  /** Badge text, e.g. "Aylık AI token: 1.000.000 token"; only the name for an unlimited feature. */
   featureLabel(f: PlanFeatureItem): string {
     const name = this.catalog.label(f.featureKey);
     const quota = formatQuota(this.language, this.catalog, f);

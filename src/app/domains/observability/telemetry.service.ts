@@ -22,14 +22,14 @@ export class TelemetryService {
   }
 }
 
-/** Hata oranı → rozet tonu. */
+/** Error rate → badge tone. */
 export function errorRateTone(pct: number): BadgeTone {
   if (pct >= 5) return 'danger';
   if (pct >= 1) return 'warn';
   return 'success';
 }
 
-/** HTTP durum kodu → rozet tonu. */
+/** HTTP status code → badge tone. */
 export function statusTone(code: number): BadgeTone {
   if (code >= 500) return 'danger';
   if (code >= 400) return 'warn';

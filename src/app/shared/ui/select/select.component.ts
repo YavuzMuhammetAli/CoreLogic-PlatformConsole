@@ -4,21 +4,21 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 
-/** Seçenek — düz string verilirse value=label kabul edilir. */
+/** Option — if a plain string is given, value=label is assumed. */
 export interface SelectOption {
   value: string;
   label: string;
 }
 export type SelectOptionInput = SelectOption | string;
 
-/** Aynı sayfada birden çok select olabilir; ARIA id'leri çakışmasın. */
+/** A page may contain several selects; ARIA ids must not collide. */
 let nextSelectId = 0;
 
 /**
- * Filtre select'lerinin başına boş değerli "Tümü" seçeneğini ekler — konsolda
- * yedi ayrı listede tekrarlanan kalıp. `label` çağıran tarafta çevrilir, bu yüzden
- * dil değişiminde yeniden hesaplanması için `computed()` içinde kullanılmalıdır.
- * `labelOf` verilirse değerlerin görünen adı ondan gelir (ör. `language.enumLabel`).
+ * Prepends an empty-valued "Tümü" (All) option to filter selects — a pattern repeated
+ * in seven separate lists in the console. `label` is translated by the caller, so
+ * it must be used inside `computed()` to be recomputed when the language changes.
+ * If `labelOf` is given, the values' display names come from it (e.g. `language.enumLabel`).
  */
 export function withAllOption(
   label: string,
@@ -29,29 +29,29 @@ export function withAllOption(
 }
 
 /**
- * SelectComponent — konsolun tek açılır liste bileşeni.
+ * SelectComponent — the console's only dropdown component.
  *
- * Neden native `<select>` değil:
- *   1. Global `.input { width: 100% }` native select'i de yakalıyordu; `.cluster` içinde
- *      satırın tamamını kaplayıp diğer alanları alt satıra itiyordu.
- *   2. `appearance: none` koyan sayfalarda ok işareti hiç çizilmiyordu
- *      (`--select-chevron-icon` tanımlıydı ama kullanılmıyordu).
- *   3. Native select'in stili tema token'larıyla (özellikle karanlık temada açılan liste)
- *      tutarlı hale getirilemiyordu.
+ * Why not a native `<select>`:
+ *   1. The global `.input { width: 100% }` also caught the native select; inside `.cluster`
+ *      it took up the whole row and pushed the other fields onto the next line.
+ *   2. On pages that set `appearance: none` the arrow was never drawn
+ *      (`--select-chevron-icon` was defined but unused).
+ *   3. The native select's styling could not be made consistent with the theme tokens
+ *      (especially the opened list in dark theme).
  *
- * KONUMLANDIRMA: Liste `position: fixed` ve koordinatları burada hesaplanır. Sebebi,
- * select'in içinde durduğu kapsayıcıların onu kırpması:
+ * POSITIONING: The list is `position: fixed` and its coordinates are computed here. The reason
+ * is that the containers the select sits in clip it:
  *   - `.panel { overflow: hidden }` (global)
- *   - `.table-scroll { overflow-x: auto }` — CSS gereği bir eksen `visible` dışına çıkınca
- *     diğeri de `auto`'ya döner, yani DİKEYDE de kırpar.
- *   - `.content { overflow-y: auto }` (shell'in kaydırma kabı)
- * `z-index` bunu çözmez — kırpma boyama sırasından bağımsızdır. `position: fixed` ise
- * kırpan atalar containing block oluşturmadığı için onlardan kaçar. Konsolda containing
- * block'u yalnızca `.overlay`'ler oluşturabilir; hepsi `position: fixed; inset: 0` ve
- * kenarlıksız olduğundan padding box'ları viewport'a eşittir ve `getBoundingClientRect()`
- * koordinatları doğrudan kullanılabilir.
+ *   - `.table-scroll { overflow-x: auto }` — per CSS, once one axis is not `visible`
+ *     the other becomes `auto` too, i.e. it clips VERTICALLY as well.
+ *   - `.content { overflow-y: auto }` (the shell's scroll container)
+ * `z-index` doesn't fix this — clipping is independent of paint order. `position: fixed`, however,
+ * escapes clipping ancestors because they don't form a containing block. In the console only
+ * `.overlay`s can form the containing block; all of them are `position: fixed; inset: 0` and
+ * borderless, so their padding box equals the viewport and `getBoundingClientRect()`
+ * coordinates can be used directly.
  *
- * Kullanım:
+ * Usage:
  *   <app-select [options]="severities" [(value)]="form.severity" [ariaLabel]="'...' | t" />
  */
 @Component({
@@ -64,14 +64,14 @@ export function withAllOption(
 export class SelectComponent implements OnDestroy {
   private readonly host = inject(ElementRef<HTMLElement>);
 
-  /** Seçenekler — `SelectOption[]` ya da `string[]`. */
+  /** Options — `SelectOption[]` or `string[]`. */
   options = input.required<readonly SelectOptionInput[]>();
-  /** İki yönlü bağlanan seçili değer. */
+  /** The selected value, two-way bound. */
   value = model<string>('');
-  /** Değer boşken gösterilen metin. */
+  /** Text shown while the value is empty. */
   placeholder = input<string>('');
   disabled = input(false);
-  /** Görsel etiketi olmayan yerlerde ekran okuyucu için. */
+  /** For screen readers where there is no visual label. */
   ariaLabel = input<string>('');
 
   private readonly listEl = viewChild<ElementRef<HTMLElement>>('list');
@@ -87,7 +87,7 @@ export class SelectComponent implements OnDestroy {
   private readonly uid = `pc-select-${nextSelectId++}`;
   readonly listId = `${this.uid}-list`;
 
-  /** Düz string listesi de kabul edilsin diye tek biçime indirger. */
+  /** Normalizes to a single shape so plain string lists are accepted too. */
   readonly normalized = computed<SelectOption[]>(() =>
     this.options().map(o => (typeof o === 'string' ? { value: o, label: o } : o))
   );
@@ -100,7 +100,7 @@ export class SelectComponent implements OnDestroy {
     return `${this.uid}-opt-${index}`;
   }
 
-  // ─── Açma / kapama ──────────────────────────────────────────────────────────
+  // ─── Open / close ───────────────────────────────────────────────────────────
 
   toggle(): void {
     this.open() ? this.close() : this.openList();
@@ -110,11 +110,11 @@ export class SelectComponent implements OnDestroy {
     if (this.disabled() || this.normalized().length === 0) return;
 
     this.position();
-    // Klavye seçili seçenekten devam etsin; hiç seçim yoksa baştan başla.
+    // Keyboard continues from the selected option; with no selection, start from the top.
     this.activeIndex.set(Math.max(0, this.normalized().findIndex(o => o.value === this.value())));
     this.open.set(true);
     this.bindDismissListeners();
-    // Liste bu anda henüz DOM'da değil — kaydırma bir sonraki tik'e bırakılır.
+    // The list is not in the DOM yet at this point — scrolling is deferred to the next tick.
     setTimeout(() => this.scrollActiveIntoView(), 0);
   }
 
@@ -137,7 +137,7 @@ export class SelectComponent implements OnDestroy {
     this.closeAndFocus();
   }
 
-  // ─── Konumlandırma ──────────────────────────────────────────────────────────
+  // ─── Positioning ────────────────────────────────────────────────────────────
 
   private readonly GAP = 4;
   private readonly MARGIN = 8;
@@ -146,10 +146,10 @@ export class SelectComponent implements OnDestroy {
   private readonly MAX_H = 280;
 
   /**
-   * Listeyi viewport'a sığdırır. Yükseklik açılıştan ÖNCE tahmin edilir (seçenek sayısı ×
-   * satır yüksekliği) — böylece "render et, ölç, yeniden konumlandır" turu ve onun
-   * getirdiği görsel zıplama olmaz. Kalan boşluk tahminden azsa liste kendi içinde kaydırılır,
-   * yani her hâlükârda TAMAMI görünür.
+   * Fits the list into the viewport. The height is estimated BEFORE opening (option count ×
+   * row height) — so there is no "render, measure, reposition" round and the visual
+   * jump it causes. If the remaining space is less than the estimate, the list scrolls internally,
+   * so it is ALWAYS fully visible.
    */
   private position(): void {
     const anchor = this.triggerEl().nativeElement.getBoundingClientRect();
@@ -157,7 +157,7 @@ export class SelectComponent implements OnDestroy {
 
     const spaceBelow = window.innerHeight - anchor.bottom - this.GAP - this.MARGIN;
     const spaceAbove = anchor.top - this.GAP - this.MARGIN;
-    // Alta sığıyorsa alt; sığmıyorsa hangi taraf genişse o.
+    // Below if it fits; otherwise whichever side has more room.
     const below = spaceBelow >= estimated || spaceBelow >= spaceAbove;
 
     const height = Math.max(this.OPTION_H, Math.min(estimated, below ? spaceBelow : spaceAbove));
@@ -166,19 +166,19 @@ export class SelectComponent implements OnDestroy {
 
     const width = Math.max(anchor.width, 160);
     this.width.set(width);
-    // Yatayda kelepçele — sağ kenardaki select'lerin listesi ekran dışına taşmasın.
+    // Clamp horizontally — lists of selects near the right edge must not overflow off-screen.
     const maxLeft = Math.max(this.MARGIN, window.innerWidth - width - this.MARGIN);
     this.left.set(Math.min(Math.max(anchor.left, this.MARGIN), maxLeft));
   }
 
-  // ─── Klavye ─────────────────────────────────────────────────────────────────
+  // ─── Keyboard ───────────────────────────────────────────────────────────────
 
   onTriggerKeydown(event: KeyboardEvent): void {
     const count = this.normalized().length;
     if (!count || this.disabled()) return;
 
     if (!this.open()) {
-      // Kapalıyken: yalnızca açma tuşları ilgilendirir.
+      // While closed: only the opening keys matter.
       if (['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Spacebar'].includes(event.key)) {
         event.preventDefault();
         this.openList();
@@ -212,13 +212,13 @@ export class SelectComponent implements OnDestroy {
         this.choose(this.activeIndex());
         break;
       case 'Escape':
-        // Diyalog içindeyken ESC önce listeyi kapatsın, diyaloğu değil.
+        // Inside a dialog, ESC should close the list first, not the dialog.
         event.preventDefault();
         event.stopPropagation();
         this.closeAndFocus();
         break;
       case 'Tab':
-        // Odak zaten gidiyor — listeyi bırakma.
+        // Focus is leaving anyway — don't leave the list open.
         this.close();
         break;
       default:
@@ -242,7 +242,7 @@ export class SelectComponent implements OnDestroy {
   private buffer = '';
   private bufferTimer?: ReturnType<typeof setTimeout>;
 
-  /** Yazılan harflerle eşleşen ilk seçeneğe atlar; 700 ms sessizlikten sonra tampon sıfırlanır. */
+  /** Jumps to the first option matching the typed letters; the buffer resets after 700 ms of silence. */
   private typeahead(char: string): void {
     clearTimeout(this.bufferTimer);
     this.buffer += char.toLowerCase();
@@ -255,19 +255,19 @@ export class SelectComponent implements OnDestroy {
     else this.value.set(this.normalized()[index].value);
   }
 
-  // ─── Dışarı tıklama / kaydırma ──────────────────────────────────────────────
+  // ─── Outside click / scroll ─────────────────────────────────────────────────
 
   private readonly onDocumentClick = (event: Event) => {
     if (!this.host.nativeElement.contains(event.target as Node)) this.close();
   };
 
   /**
-   * Konum açılış anında hesaplanır; kaydırma/yeniden boyutlandırma onu bayatlatır.
-   * Yeniden hesaplamak yerine kapatmak yeterli ve beklenen davranış.
+   * The position is computed at open time; scrolling/resizing makes it stale.
+   * Closing instead of recomputing is enough and is the expected behaviour.
    *
-   * `scroll` olayı BUBBLE ETMEZ: panelin ya da shell içerik kabının kendi kaydırması
-   * `document`'a ulaşmaz. Bu yüzden dinleyici CAPTURE fazında bağlanır ve yalnızca
-   * liste açıkken takılı kalır.
+   * The `scroll` event DOES NOT BUBBLE: scrolling of a panel or the shell content container
+   * never reaches `document`. So the listener is attached in the CAPTURE phase and stays
+   * attached only while the list is open.
    */
   private readonly onViewportChange = () => this.close();
 

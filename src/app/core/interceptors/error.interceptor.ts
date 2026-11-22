@@ -6,12 +6,12 @@ import { PlatformAuthService } from '../auth/platform-auth.service';
 import { PlatformSessionStore } from '../auth/platform-session.store';
 
 /**
- * Hata yönetimi:
- * - 401 (auth uçları hariç): refresh dene → başarılıysa isteği tekrar et,
- *   değilse oturumu temizle ve /login'e yönlendir ([11 §4]).
- * - 403: yetki yetersiz — kullanıcıyı Overview'a al (oturum geçerli).
- * Not: bu interceptor platformAuth'tan ÖNCE kayıtlıdır; retry'da next(req)
- * platformAuth'u yeniden çalıştırıp taze token ekler.
+ * Error handling:
+ * - 401 (except auth endpoints): try refresh → if it succeeds, retry the request,
+ *   otherwise clear the session and redirect to /login ([11 §4]).
+ * - 403: insufficient permission — send the user to Overview (session is still valid).
+ * Note: this interceptor is registered BEFORE platformAuth; on retry next(req)
+ * runs platformAuth again, which attaches the fresh token.
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(PlatformAuthService);
@@ -26,7 +26,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         return auth.refresh().pipe(
           switchMap(ok => {
             if (ok) {
-              return next(req); // platformAuth taze token ekler
+              return next(req); // platformAuth attaches the fresh token
             }
             store.clear();
             router.navigate(['/login'], { queryParams: { reason: 'session_expired' } });

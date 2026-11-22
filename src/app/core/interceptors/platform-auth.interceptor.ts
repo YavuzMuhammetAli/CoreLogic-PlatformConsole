@@ -3,8 +3,8 @@ import { inject } from '@angular/core';
 import { PlatformSessionStore } from '../auth/platform-session.store';
 
 /**
- * PlatformBearer access token'ını (bellekten) Authorization header'ı olarak ekler.
- * Token yoksa (anonim: login/mfa/refresh) header eklenmez.
+ * Adds the PlatformBearer access token (from memory) as the Authorization header.
+ * If there is no token (anonymous: login/mfa/refresh), no header is added.
  */
 export const platformAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(PlatformSessionStore).accessToken();

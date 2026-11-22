@@ -1,6 +1,6 @@
-/** Platform (control plane) API modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Platform (control plane) API models — match backend Entities.DTOs.Platform. */
 
-/** /auth/me ve auth sonuçlarındaki kullanıcı özeti. */
+/** User summary in /auth/me and auth results. */
 export interface PlatformUserInfo {
   id: number;
   email: string;
@@ -9,24 +9,24 @@ export interface PlatformUserInfo {
   capabilities: string[];
 }
 
-/** POST /auth/login yanıtı — MFA adımına yönlendirir. */
+/** POST /auth/login response — directs to the MFA step. */
 export interface PlatformLoginResult {
   /** 'mfa_required' | 'mfa_enroll'. */
   status: string;
   challengeToken: string;
-  /** Yalnızca mfa_enroll. */
+  /** Only for mfa_enroll. */
   mfaSecret?: string | null;
   otpAuthUri?: string | null;
 }
 
-/** Başarılı kimlik doğrulama — access + kullanıcı. Refresh token HttpOnly çerezde. */
+/** Successful authentication — access token + user. The refresh token is in an HttpOnly cookie. */
 export interface PlatformAuthResult {
   accessToken: string;
   accessTokenExpiration: string;
   user: PlatformUserInfo;
 }
 
-/** GET /platform-users öğesi. */
+/** GET /platform-users item. */
 export interface PlatformUserListItem {
   id: number;
   email: string;
@@ -39,16 +39,16 @@ export interface PlatformUserListItem {
 }
 
 /**
- * GET /platform-users/roles öğesi — rol → yetenek eşlemesi.
- * Matris backend'de derlenmiş sabittir (`PlatformCapabilities.RoleMatrix`);
- * konsol onu KOPYALAMAZ, bu uçtan okur — kopya sessizce bayatlardı.
+ * GET /platform-users/roles item — role → capability mapping.
+ * The matrix is a compiled constant in the backend (`PlatformCapabilities.RoleMatrix`);
+ * the console does NOT COPY it but reads it from this endpoint — a copy would silently go stale.
  */
 export interface PlatformRoleInfo {
   role: string;
   capabilities: string[];
 }
 
-/** GET /audit-logs öğesi (PlatformAuditLog, camelCase). */
+/** GET /audit-logs item (PlatformAuditLog, camelCase). */
 export interface PlatformAuditLogItem {
   id: number;
   occurredAt: string;

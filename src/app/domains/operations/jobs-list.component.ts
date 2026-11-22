@@ -17,8 +17,8 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
- * Jobs & Queue (M21) — durable iş kuyruğu listesi + askıya alınmış (Parked) işleri
- * yeniden deneme. Yeniden deneme Platform.Ops.Manage ister ve denetim kaydına düşer.
+ * Jobs & Queue (M21) — durable job queue list + retrying parked (Parked)
+ * jobs. Retrying requires Platform.Ops.Manage and is written to the audit log.
  */
 @Component({
     selector: 'app-jobs-list',
@@ -40,14 +40,14 @@ export class JobsListComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly notice = signal<string | null>(null);
   readonly result = signal<PagedResult<JobSummary> | null>(null);
-  /** Yeniden denenen işin id'si; toplu işlemde 'all'. */
+  /** Id of the job being retried; 'all' for the bulk operation. */
   readonly busyId = signal<string | null>(null);
   readonly confirmRetryAll = signal(false);
 
   readonly statuses = JOB_STATUSES;
   readonly tone = jobStatusTone;
   readonly canManage = this.store.has(Cap.OpsManage);
-  /** Dil değişince etiket de değişsin diye computed. */
+  /** Computed so the label also changes when the language changes. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.jobs.allStatuses'), this.statuses, v => this.language.enumLabel(v)));
 
@@ -56,18 +56,18 @@ export class JobsListComponent implements OnInit {
   pageSize = 25;
 
   ngOnInit(): void {
-    // Uyarı Merkezi "Askıya alınmış işleri gör" bağlantısı ?status=Parked ile gelir.
+    // The Alert Center's "Askıya alınmış işleri gör" (View parked jobs) link arrives with ?status=Parked.
     const requested = this.route.snapshot.queryParamMap.get('status') ?? '';
     if ((this.statuses as readonly string[]).includes(requested)) this.status = requested;
     this.load();
   }
 
-  /** İş tipinin okunur adı; tanınmayan tip ham hâliyle görünür. */
+  /** Readable name of the job type; an unknown type is shown as-is. */
   typeLabel(type: string): string {
     return this.language.tOr(`pc.jobType.${type}`, type);
   }
 
-  /** Toplu yeniden deneme yalnız "Askıya alındı" filtresinde ve kayıt varken sunulur. */
+  /** Bulk retry is offered only under the "Askıya alındı" (Parked) filter and when there are records. */
   canRetryAll(): boolean {
     return this.canManage && this.status === 'Parked' && (this.result()?.total ?? 0) > 0;
   }
@@ -125,7 +125,7 @@ export class JobsListComponent implements OnInit {
         this.busyId.set(null);
         done?.();
         this.error.set(err?.error?.message ?? this.language.t('pc.actionFailed'));
-        this.load(); // durum başka biri tarafından değişmiş olabilir
+        this.load(); // the status may have been changed by someone else
       }
     });
   }

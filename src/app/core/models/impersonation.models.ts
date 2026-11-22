@@ -1,4 +1,4 @@
-/** Support & Impersonation (M17) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Support & Impersonation (M17) models — match backend Entities.DTOs.Platform. */
 
 export interface ImpersonationGrantItem {
   id: string;

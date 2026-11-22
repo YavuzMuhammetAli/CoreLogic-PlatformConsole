@@ -46,7 +46,7 @@
           </label>
         </div>
 
-        <!-- Kullanıcı cron yazmaz: sıklık + saat/gün seçer; ham ifade yalnız "Özel"de. -->
+        <!-- The user doesn't write cron: picks frequency + time/day; the raw expression only under "Özel" (Custom). -->
         <div class="schedule-grid">
           <div class="field">
             <label>{{ 'pc.mig.frequency' | t }}</label>
@@ -107,7 +107,7 @@
             </div>
           }
 
-          <!-- Saatte bir / N saatte bir: saat serbest, yalnız dakika seçilir. -->
+          <!-- Hourly / every N hours: hour is free, only the minute is picked. -->
           @if (fields().minute) {
             <div class="field">
               <label for="mig-minute">{{ 'pc.mig.minute' | t }}</label>

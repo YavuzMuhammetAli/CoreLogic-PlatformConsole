@@ -1,4 +1,4 @@
-/** Backup/Restore (M09) modeli — backend Entities.DTOs.Platform.TenantBackupDto ile eşleşir. */
+/** Backup/Restore (M09) model — matches backend Entities.DTOs.Platform.TenantBackupDto. */
 export interface TenantBackupItem {
   id: number;
   tenantId: string;
@@ -10,8 +10,8 @@ export interface TenantBackupItem {
   status: string; // Queued | Running | Completed | Failed
   error?: string | null;
   verifiedAt?: string | null;
-  /** Saklama sonu; null = süresiz. */
+  /** End of retention; null = indefinite. */
   expiresAt?: string | null;
-  /** Yedeğin alındığı şema sürümü; null = bilinmiyor (geri yüklenemez). */
+  /** Schema version the backup was taken at; null = unknown (cannot be restored). */
   databaseVersion?: number | null;
 }

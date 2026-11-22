@@ -2,8 +2,8 @@ import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LanguageService } from '../services/language.service';
 
 /**
- * Çeviri anahtarını aktif dile çevirir. Impure — dil toggle'ı signal'i
- * değişince yeniden değerlendirilir. Kullanım: {{ 'pc.login.title' | t }}
+ * Translates a translation key into the active language. Impure — re-evaluated when the
+ * language toggle signal changes. Usage: {{ 'pc.login.title' | t }}
  */
 @Pipe({ name: 't', standalone: true, pure: false })
 export class TranslatePipe implements PipeTransform {

@@ -6,8 +6,8 @@ export type Theme = 'light' | 'dark';
 const THEME_KEY = 'pc_theme';
 
 /**
- * Açık/koyu tema tercihi (localStorage). data-theme kök öğeye basılır; ilk değer
- * index.html'deki erken script tarafından zaten uygulanır (flash önleme).
+ * Light/dark theme preference (localStorage). data-theme is set on the root element; the initial value
+ * is already applied by the early script in index.html (prevents a flash).
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {

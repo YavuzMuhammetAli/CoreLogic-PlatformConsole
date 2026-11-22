@@ -1,4 +1,4 @@
-/** Notification Center (M25) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Notification Center (M25) models — match backend Entities.DTOs.Platform. */
 
 export interface NotificationItem {
   id: number;

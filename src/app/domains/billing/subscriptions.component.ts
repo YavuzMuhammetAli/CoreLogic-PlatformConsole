@@ -14,7 +14,7 @@ import { HelpButtonComponent } from '../../shared/ui/page-help/help-button.compo
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Abonelikler (M36) — liste/filtre + tenant'a plan atama + yaşam döngüsü eylemleri. */
+/** Subscriptions (M36) — list/filter + assigning a plan to a tenant + lifecycle actions. */
 @Component({
     selector: 'app-subscriptions',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -37,17 +37,17 @@ export class SubscriptionsComponent implements OnInit {
   readonly statuses = SUBSCRIPTION_STATUSES;
   readonly canWrite = this.store.has(Cap.BillingWrite);
 
-  /** Dil değişince "Tümü" etiketi de değişsin diye computed. */
+  /** Computed so the "Tümü" (All) label also changes when the language changes. */
   readonly statusOptions = computed(() =>
     withAllOption(this.language.t('pc.billing.allStatuses'), this.statuses, v => this.language.enumLabel(v)));
 
-  /** app-select değerleri string; planId sayı olduğu için iki uçta da çevrilir. */
+  /** app-select values are strings; planId is a number, so it is converted at both ends. */
   readonly planOptions = computed(() => [
     { value: '0', label: this.language.t('pc.billing.selectPlan') },
     ...this.plans().map(p => ({ value: String(p.id), label: `${p.name} (${p.code})` }))
   ]);
 
-  /** Şablonda `String(...)` çağrılabilsin diye. */
+  /** So that `String(...)` can be called in the template. */
   readonly String = String;
 
   status = '';

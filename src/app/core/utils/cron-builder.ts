@@ -1,55 +1,55 @@
 /**
- * Zamanlama formu ↔ cron ifadesi dönüşümü.
+ * Schedule form ↔ cron expression conversion.
  *
- * Kullanıcı cron yazmaz: sıklık tipi + saat/gün seçer, buradaki saf fonksiyonlar
- * 5 alanlı cron ifadesine çevirir (ve kayıtlı ifadeyi forma geri açar). Backend
- * (`Core.Utilities.Scheduling.CronSchedule`) aynı altkümeyi yorumlar.
+ * The user does not write cron: they pick a frequency type + hour/day, and the pure functions
+ * here turn that into a 5-field cron expression (and open a saved expression back into the form).
+ * The backend (`Core.Utilities.Scheduling.CronSchedule`) interprets the same subset.
  *
- * Kaynak: CoreLogicUI `src/app/utils/cron-builder.ts` (tenant yedekleme sekmesi) —
- * iki uygulama ayrı derlendiği için kopyadır; davranış değişikliği iki dosyaya
- * birlikte yapılmalı. Oradaki `nextOccurrences` bilinçli olarak ALINMADI: konsolda
- * sonraki koşu önizlemesini, zamanlamayı gerçekten yürütecek olan sunucu hesaplar.
+ * Source: CoreLogicUI `src/app/utils/cron-builder.ts` (tenant backup tab) —
+ * it is a copy because the two apps are compiled separately; behaviour changes must be made
+ * to both files together. Its `nextOccurrences` was deliberately NOT taken: in the console
+ * the next-run preview is computed by the server that will actually execute the schedule.
  */
 
-/** Desteklenen sıklık tipleri — ekrandaki seçim kutusunun değerleri. */
+/** Supported frequency types — the values of the on-screen select box. */
 export type CronFrequency =
-  | 'hourly'      // saatte bir
-  | 'everyNHours' // N saatte bir
-  | 'daily'       // her gün
-  | 'everyNDays'  // N günde bir
-  | 'weekly'      // haftada bir
-  | 'monthly'     // ayda bir
-  | 'custom';     // ham cron
+  | 'hourly'      // once an hour
+  | 'everyNHours' // every N hours
+  | 'daily'       // every day
+  | 'everyNDays'  // every N days
+  | 'weekly'      // once a week
+  | 'monthly'     // once a month
+  | 'custom';     // raw cron
 
-/** Sıklık seçicisinin gösterim sırası. */
+/** Display order of the frequency selector. */
 export const CRON_FREQUENCIES: readonly CronFrequency[] = [
   'hourly', 'everyNHours', 'daily', 'everyNDays', 'weekly', 'monthly', 'custom'
 ];
 
-/** "N saatte bir" için sunulan aralıklar — 24'ü tam bölenler seçildi ki
- *  gün içindeki koşu saatleri her gün aynı kalsın. */
+/** Intervals offered for "every N hours" — divisors of 24 were chosen so that
+ *  the run times within a day stay the same every day. */
 export const HOUR_INTERVALS: readonly number[] = [2, 3, 4, 6, 8, 12];
 
-/** Zamanlamanın yapılandırılmış hali — form bu nesneyi tutar. */
+/** Structured form of the schedule — the form holds this object. */
 export interface CronSpec {
   frequency: CronFrequency;
-  /** 0-59 — tüm sıklıklarda kullanılır. */
+  /** 0-59 — used by all frequencies. */
   minute: number;
-  /** 0-23 — hourly/everyNHours dışında kullanılır. */
+  /** 0-23 — used except for hourly/everyNHours. */
   hour: number;
-  /** everyNHours için saat aralığı. */
+  /** Hour interval for everyNHours. */
   hourInterval: number;
-  /** everyNDays için gün aralığı. */
+  /** Day interval for everyNDays. */
   dayInterval: number;
-  /** weekly için haftanın günü (0 = Pazar … 6 = Cumartesi). */
+  /** Day of the week for weekly (0 = Sunday … 6 = Saturday). */
   dayOfWeek: number;
-  /** monthly için ayın günü (1-31). */
+  /** Day of the month for monthly (1-31). */
   dayOfMonth: number;
-  /** custom için ham cron ifadesi. */
+  /** Raw cron expression for custom. */
   raw: string;
 }
 
-/** Makul bir başlangıç: her gün gece 03:00 (yoğunluk dışı saat). */
+/** A sensible default: every day at 03:00 at night (off-peak hour). */
 export function defaultCronSpec(): CronSpec {
   return {
     frequency: 'daily',
@@ -66,7 +66,7 @@ export function defaultCronSpec(): CronSpec {
 const clamp = (value: number, min: number, max: number): number =>
   Number.isFinite(value) ? Math.min(max, Math.max(min, Math.trunc(value))) : min;
 
-/** Yapılandırılmış seçimden 5 alanlı cron ifadesi üretir. */
+/** Builds a 5-field cron expression from the structured selection. */
 export function buildCron(spec: CronSpec): string {
   const minute = clamp(spec.minute, 0, 59);
   const hour = clamp(spec.hour, 0, 23);
@@ -96,10 +96,10 @@ export function buildCron(spec: CronSpec): string {
 }
 
 /**
- * Kaydedilmiş cron'u yapılandırılmış forma geri çevirir.
+ * Converts a saved cron back into the structured form.
  *
- * Tanınmayan (ama geçerli) bir ifade bilgi kaybına uğramasın diye 'custom'
- * moduna düşer ve ham hâliyle korunur.
+ * An unrecognized (but valid) expression falls back to 'custom' mode and is
+ * kept in its raw form so no information is lost.
  */
 export function parseCron(expression: string | null | undefined): CronSpec {
   const base = defaultCronSpec();
@@ -113,17 +113,17 @@ export function parseCron(expression: string | null | undefined): CronSpec {
 
   const [min, hr, dom, month, dow] = fields;
 
-  // Ay alanı her zaman '*' olmalı; değilse bizim üretmediğimiz bir ifadedir.
+  // The month field must always be '*'; otherwise it is an expression we did not produce.
   const minute = parseSingle(min);
   if (minute === null || month !== '*') return { ...base, frequency: 'custom' };
   base.minute = minute;
 
-  // Saatte bir: dakika sabit, saat serbest.
+  // Once an hour: minute fixed, hour free.
   if (hr === '*' && dom === '*' && dow === '*') {
     return { ...base, frequency: 'hourly' };
   }
 
-  // N saatte bir.
+  // Every N hours.
   const hourStep = parseStep(hr);
   if (hourStep !== null && dom === '*' && dow === '*') {
     return { ...base, frequency: 'everyNHours', hourInterval: hourStep };
@@ -133,28 +133,28 @@ export function parseCron(expression: string | null | undefined): CronSpec {
   if (hour === null) return { ...base, frequency: 'custom' };
   base.hour = hour;
 
-  // Her gün.
+  // Every day.
   if (dom === '*' && dow === '*') {
     return { ...base, frequency: 'daily' };
   }
 
-  // N günde bir.
+  // Every N days.
   const dayStep = parseStep(dom);
   if (dayStep !== null && dow === '*') {
     return { ...base, frequency: 'everyNDays', dayInterval: dayStep };
   }
 
-  // Haftada bir.
+  // Once a week.
   if (dom === '*') {
     const weekday = parseSingle(dow);
-    // Cron'da 7 de Pazar'dır; tek gösterime indirgenir.
+    // In cron 7 is also Sunday; normalized to a single representation.
     if (weekday !== null && weekday >= 0 && weekday <= 7) {
       return { ...base, frequency: 'weekly', dayOfWeek: weekday === 7 ? 0 : weekday };
     }
     return { ...base, frequency: 'custom' };
   }
 
-  // Ayda bir.
+  // Once a month.
   if (dow === '*') {
     const monthDay = parseSingle(dom);
     if (monthDay !== null && monthDay >= 1 && monthDay <= 31) {
@@ -165,12 +165,12 @@ export function parseCron(expression: string | null | undefined): CronSpec {
   return { ...base, frequency: 'custom' };
 }
 
-/** Yalnızca düz bir tamsayı alanını çözer; joker/adım/liste alanlarında null döner. */
+/** Parses only a plain integer field; returns null for wildcard/step/list fields. */
 function parseSingle(field: string): number | null {
   return /^\d+$/.test(field) ? Number(field) : null;
 }
 
-/** "*&#47;n" biçimindeki adım alanını çözer; değilse null. */
+/** Parses a step field of the form "*&#47;n"; otherwise null. */
 function parseStep(field: string): number | null {
   const match = /^\*\/(\d+)$/.exec(field);
   if (!match) return null;
@@ -179,9 +179,9 @@ function parseStep(field: string): number | null {
 }
 
 /**
- * Cron ifadesinin bu altkümeye göre geçerli olup olmadığı.
- * Backend'deki CronSchedule.TryParse ile aynı alan kurallarını uygular —
- * kullanıcı "Kaydet"e basmadan hatayı görebilsin diye.
+ * Whether the cron expression is valid according to this subset.
+ * Applies the same field rules as CronSchedule.TryParse in the backend —
+ * so the user can see the error before pressing "Kaydet" (Save).
  */
 export function isValidCron(expression: string | null | undefined): boolean {
   const fields = (expression ?? '').trim().split(/\s+/);
@@ -223,8 +223,8 @@ function isValidField(field: string, min: number, max: number): boolean {
 }
 
 /**
- * Ayın 29-31'i seçildiğinde bazı ayların atlanacağını bildirmek gerekir —
- * "her ay çalışıyor" beklentisi sessizce yanlış olurdu.
+ * When the 29th-31st of the month is chosen, the user must be told that some months will be skipped —
+ * the expectation "it runs every month" would silently be wrong.
  */
 export function isShortMonthRisk(spec: CronSpec): boolean {
   return spec.frequency === 'monthly' && spec.dayOfMonth >= 29;

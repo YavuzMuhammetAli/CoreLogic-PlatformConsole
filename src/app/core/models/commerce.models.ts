@@ -1,8 +1,8 @@
-/** Ticari katman (M35/M36/M12) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Commercial layer (M35/M36/M12) models — match backend Entities.DTOs.Platform. */
 
 export interface PlanFeatureItem {
   featureKey: string;
-  /** null = bool özellik (açık); dolu = sayısal kota. */
+  /** null = bool feature (enabled); set = numeric quota. */
   limitValue?: number | null;
   unit?: string | null;
 }
@@ -15,17 +15,17 @@ export interface PlanItem {
   status: string; // Draft | Active | Retired
   version: number;
   isPublic: boolean;
-  /** Yeni tenant provision edilirken otomatik atanan plan (aynı anda tek olabilir). */
+  /** Plan assigned automatically when a new tenant is provisioned (only one at a time). */
   isDefaultForNewTenants: boolean;
-  /** Otomatik/elle atamada Trial penceresinin gün sayısı. */
+  /** Length of the Trial window in days for automatic/manual assignment. */
   trialDays: number;
   features: PlanFeatureItem[];
 }
 
 /**
- * Metrik kataloğu satırı — `GET metric-catalog` (backend `MetricCatalog`). Plan özelliklerinin
- * ve kullanım/maliyet metriklerinin anahtar, sıra ve görünen adı yalnız orada tutulur; konsol
- * liste ya da çeviri tutmaz (bkz. `MetricCatalogService`).
+ * Metric catalog row — `GET metric-catalog` (backend `MetricCatalog`). The key, order and display
+ * name of plan features and usage/cost metrics are kept only there; the console keeps
+ * no list or translations (see `MetricCatalogService`).
  */
 export interface MetricCatalogItem {
   key: string;
@@ -33,7 +33,7 @@ export interface MetricCatalogItem {
   kind: 'flag' | 'quota' | 'metric';
   isPlanFeature: boolean;
   defaultUnit?: string | null;
-  /** İsteğin dilinde görünen ad. */
+  /** Display name in the request's language. */
   label: string;
 }
 
@@ -66,7 +66,7 @@ export interface EntitlementSnapshot {
   subscriptionStatus: string;
   seats: number;
   entitled: boolean;
-  /** featureKey → limit (null = bool özellik açık). */
+  /** featureKey → limit (null = bool feature enabled). */
   features: Record<string, number | null>;
 }
 

@@ -28,17 +28,17 @@ export class TenantsService {
     return this.http.get<ListResponseModel<TenantStateHistory>>(`${this.action(code, 'state-history')}`);
   }
 
-  /** Ana + alt modeller (tenant DB'sinden canlı; registry read-model'i parent/depth taşımıyor). */
+  /** Root + child models (live from the tenant DB; the registry read-model doesn't carry parent/depth). */
   models(code: string): Observable<DataResponseModel<TenantModelTree>> {
     return this.http.get<DataResponseModel<TenantModelTree>>(this.action(code, 'models'));
   }
 
-  /** Fiziksel tablolar: boyut + yayınlanmış/sistem sınıflandırması. */
+  /** Physical tables: size + published/system classification. */
   tables(code: string): Observable<DataResponseModel<TenantTables>> {
     return this.http.get<DataResponseModel<TenantTables>>(this.action(code, 'tables'));
   }
 
-  // ── Yaşam döngüsü geçişleri (M04) ──
+  // ── Lifecycle transitions (M04) ──
   suspend(code: string, reason: string): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(this.action(code, 'suspend'), { reason });
   }
@@ -63,7 +63,7 @@ export class TenantsService {
   }
 }
 
-/** Tenant/kurulum durumu → rozet tonu ([12 §1]). */
+/** Tenant/provisioning status → badge tone ([12 §1]). */
 export function tenantStatusTone(status: string): 'success' | 'warn' | 'danger' | 'meta' | 'neutral' {
   switch (status) {
     case 'Active':
@@ -77,7 +77,7 @@ export function tenantStatusTone(status: string): 'success' | 'warn' | 'danger' 
   }
 }
 
-/** Sağlık durumu → rozet tonu ([07 §1]). */
+/** Health status → badge tone ([07 §1]). */
 export function healthTone(status: string): 'success' | 'warn' | 'danger' | 'meta' | 'neutral' {
   switch (status) {
     case 'Healthy': return 'success';

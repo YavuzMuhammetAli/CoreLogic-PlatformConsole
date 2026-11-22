@@ -1,19 +1,19 @@
 import { Translations } from './translations.model';
 
 /**
- * Sayfa yardım içerikleri (`pc.help.*`).
+ * Page help contents (`pc.help.*`).
  *
- * Şema `shared/ui/page-help/page-help.data.ts` içindedir; burada yalnızca metin
- * durur. Anahtar konvansiyonu:
- *   pc.help.<konu>.title / .summary / .notes
- *   pc.help.<konu>.field.<ad>.label / .desc
- *   pc.help.<konu>.rule.<ad>.label / .desc
+ * The schema lives in `shared/ui/page-help/page-help.data.ts`; only the text lives
+ * here. Key convention:
+ *   pc.help.<topic>.title / .summary / .notes
+ *   pc.help.<topic>.field.<name>.label / .desc
+ *   pc.help.<topic>.rule.<name>.label / .desc
  *
- * Ayrı dosya olmasının sebebi hacim: platform.i18n.ts operatör arayüzünün kısa
- * etiketlerini taşır, buradaki metinler ise açıklayıcı paragraflardır.
+ * The reason for a separate file is volume: platform.i18n.ts carries the short labels
+ * of the operator UI, whereas the texts here are explanatory paragraphs.
  */
 export const HELP_I18N: Translations = {
-  // ── Diyalog çerçevesi ──────────────────────────────────────────────────────
+  // ── Dialog frame ───────────────────────────────────────────────────────────
   'pc.help.howItWorks': { tr: 'Nasıl çalışır?', en: 'How does this work?' },
   'pc.help.sectionSummary': { tr: 'Bu sayfa ne gösterir?', en: 'What does this page show?' },
   'pc.help.sectionLifecycle': { tr: 'Yaşam döngüsü', en: 'Lifecycle' },
@@ -25,7 +25,7 @@ export const HELP_I18N: Translations = {
     en: 'Detailed documentation for this screen has not been written yet.'
   },
 
-  // ══ GENEL BAKIŞ ═══════════════════════════════════════════════════════════
+  // ══ OVERVIEW ══════════════════════════════════════════════════════════════
   'pc.help.overview.title': { tr: 'Genel Bakış', en: 'Overview' },
   'pc.help.overview.summary': {
     tr: 'Platformun "altın sinyalleri": sağlık, trafik, hata oranı ve gecikme tek ekranda. Sayılar son 24 saatlik API metrik rollup\'larından, sağlık ise bileşen kontrollerinden gelir.',
@@ -71,7 +71,7 @@ export const HELP_I18N: Translations = {
     en: 'Metrics are computed from per-minute rollups; the most recent minute may not appear here yet. Use Observability → Live stream for real-time traffic.'
   },
 
-  // ══ TENANT LİSTESİ ════════════════════════════════════════════════════════
+  // ══ TENANT LIST ═══════════════════════════════════════════════════════════
   'pc.help.tenants.title': { tr: 'Tenant Dizini', en: 'Tenant Directory' },
   'pc.help.tenants.summary': {
     tr: 'Platformdaki tüm müşteri kurulumları. Her tenant\'ın kendi veritabanı vardır; buradaki satırlar master veritabanındaki Tenant + Company kayıtlarından gelir.',
@@ -104,7 +104,7 @@ export const HELP_I18N: Translations = {
   'pc.help.tenants.field.created.label': { tr: 'Oluşturma', en: 'Created' },
   'pc.help.tenants.field.created.desc': { tr: 'Şirket kaydının açıldığı an (UTC saklanır, yerel saatinizde gösterilir).', en: 'When the company record was created (stored in UTC, displayed in your local time).' },
 
-  // ══ TENANT DETAYI ═════════════════════════════════════════════════════════
+  // ══ TENANT DETAIL ═════════════════════════════════════════════════════════
   'pc.help.tenantDetail.title': { tr: 'Tenant Detayı', en: 'Tenant Detail' },
   'pc.help.tenantDetail.summary': {
     tr: 'Tek bir tenant\'ın kurulumu, geçmişi, lisansı, yedekleri, modelleri ve fiziksel tabloları. Buradaki yaşam döngüsü eylemleri müşterinin erişimini doğrudan etkiler ve tamamı audit\'lenir.',
@@ -175,7 +175,7 @@ export const HELP_I18N: Translations = {
     en: 'Suspend, archive and purge directly affect the customer and all are written to the audit log at Critical severity — who did it, when, and with what reason is retained permanently.'
   },
 
-  // ══ PLATFORM KULLANICILARI ════════════════════════════════════════════════
+  // ══ PLATFORM USERS ════════════════════════════════════════════════════════
   'pc.help.platformUsers.title': { tr: 'Platform Kullanıcıları', en: 'Platform Users' },
   'pc.help.platformUsers.summary': {
     tr: 'Konsolu kullanan platform personeli. Bunlar tenant (müşteri) kullanıcıları DEĞİLDİR — tamamen ayrı bir kimlik ve yetki sistemidir.',
@@ -256,7 +256,7 @@ export const HELP_I18N: Translations = {
     en: 'Every action taken through impersonation appears in the tenant-side audit records together with the real staff identity — the customer can see afterwards who signed in as them.'
   },
 
-  // ══ DENETİM KAYITLARI ═════════════════════════════════════════════════════
+  // ══ AUDIT LOGS ════════════════════════════════════════════════════════════
   'pc.help.auditLogs.title': { tr: 'Denetim Kayıtları', en: 'Audit Logs' },
   'pc.help.auditLogs.summary': {
     tr: 'Platformda yapılan her yazma işleminin kalıcı izi: kim, ne zaman, neyi, hangi sonuçla. Kayıtlar değiştirilemez; yalnız okunur ve CSV olarak dışa aktarılabilir.',
@@ -290,7 +290,7 @@ export const HELP_I18N: Translations = {
     en: 'CSV export downloads only the records CURRENTLY SHOWN — not the entire history. Raise the row limit first if you need a wider range.'
   },
 
-  // ══ GÜVENLİK MERKEZİ ══════════════════════════════════════════════════════
+  // ══ SECURITY CENTER ═══════════════════════════════════════════════════════
   'pc.help.securityCenter.title': { tr: 'Güvenlik Merkezi', en: 'Security Center' },
   'pc.help.securityCenter.summary': {
     tr: 'Tehdit olayları, giriş denemeleri ve IP erişim kuralları. Olaylar otomatik tespit edilir; buradaki iş, onları değerlendirip kapatmaktır.',
@@ -310,7 +310,7 @@ export const HELP_I18N: Translations = {
   'pc.help.securityCenter.rule.ipRuleOrder.label': { tr: 'Kural önceliği', en: 'Rule precedence' },
   'pc.help.securityCenter.rule.ipRuleOrder.desc': { tr: 'Engel (Deny) kuralları izin (Allow) kurallarına göre önceliklidir; bir IP her ikisine de uyuyorsa engellenir.', en: 'Deny rules take precedence over Allow rules; if an IP matches both, it is blocked.' },
 
-  // ══ UYUMLULUK ═════════════════════════════════════════════════════════════
+  // ══ COMPLIANCE ════════════════════════════════════════════════════════════
   'pc.help.compliance.title': { tr: 'Uyumluluk ve Veri Talepleri', en: 'Compliance and Data Requests' },
   'pc.help.compliance.summary': {
     tr: 'KVKK/GDPR kapsamındaki veri sahibi taleplerinin takibi. Her talep bir durum makinesinde ilerler ve tamamlanana kadar açık kalır.',
@@ -339,7 +339,7 @@ export const HELP_I18N: Translations = {
     en: 'Rejected requests remain on record too, along with their reason. That record is the only evidence available if you are later asked why it was rejected.'
   },
 
-  // ══ İŞLER ═════════════════════════════════════════════════════════════════
+  // ══ JOBS ══════════════════════════════════════════════════════════════════
   'pc.help.jobs.title': { tr: 'İş Kuyruğu', en: 'Job Queue' },
   'pc.help.jobs.summary': {
     tr: 'Arka planda çalışan dayanıklı işler: yedekleme, migrasyon, e-posta gönderimi, webhook teslimi. Kuyruk kalıcıdır — sunucu yeniden başlasa da işler kaybolmaz.',
@@ -362,7 +362,7 @@ export const HELP_I18N: Translations = {
   'pc.help.jobs.rule.poison.label': { tr: 'Askıya alınmış iş', en: 'Parked job' },
   'pc.help.jobs.rule.poison.desc': { tr: 'Deneme hakkı tükenen iş "Askıya alındı" durumuna geçer: kuyrukta kalır ama bir daha kendiliğinden denenmez. Nedeni Hata kolonunda yazar. Satırdaki "Yeniden dene" işi deneme hakkı sıfırlanmış olarak kuyruğa geri koyar; "Askıya alındı" filtresindeyken "Tümünü yeniden dene" hepsini birden alır. Hatanın nedeni giderilmediyse iş denemeler bitince yine askıya alınır. Askıya alınmış iş kaldıkça Uyarılar\'daki "Askıya alınmış iş var" uyarısı çözümlense bile soğuma süresi (30 dk) dolunca yeniden açılır.', en: 'A job that runs out of attempts becomes "Parked": it stays in the queue but is never retried automatically. The Error column says why. "Retry" on the row puts the job back in the queue with its attempts reset; with the "Parked" filter on, "Retry all" takes them all at once. If the cause of the error has not been fixed the job is parked again once attempts run out. While parked jobs remain, the "Parked job exists" alert reopens after its 30-minute cooldown even if resolved.' },
 
-  // ══ SAĞLIK ════════════════════════════════════════════════════════════════
+  // ══ HEALTH ════════════════════════════════════════════════════════════════
   'pc.help.health.title': { tr: 'Sağlık Merkezi', en: 'Health Center' },
   'pc.help.health.summary': {
     tr: 'Platformun bağımlı olduğu bileşenlerin canlılık kontrolleri: veritabanları, disk, şirket veritabanları ve canary test şirketi. Kontroller arka planda düzenli aralıklarla koşar; "Yenile" son sonucu okur.',
@@ -383,7 +383,7 @@ export const HELP_I18N: Translations = {
   'pc.help.health.rule.canary.label': { tr: 'Canary nedir?', en: 'What is canary?' },
   'pc.help.health.rule.canary.desc': { tr: 'Bir modül değil, bir kontroldür. Platform kendini denetlemek için gerçek müşteri olmayan bir test şirketi (kod: canary) tutar; sorunlar müşteriden önce onda görülür. Migrasyonlar da önce bu şirkete uygulanır. Böyle bir şirket kurulmamışsa satır "Yapılandırılmamış" görünür.', en: 'Not a module but a check. The platform keeps a test company that is not a real customer (code: canary) to monitor itself, so problems show up there before customers see them. Migrations are applied to it first, too. If no such company exists the row shows "Not configured".' },
 
-  // ══ UYARILAR ══════════════════════════════════════════════════════════════
+  // ══ ALERTS ════════════════════════════════════════════════════════════════
   'pc.help.alerts.title': { tr: 'Uyarı Merkezi', en: 'Alert Center' },
   'pc.help.alerts.summary': {
     tr: 'Kurallar metrikleri belirli aralıklarla değerlendirir; eşik aşılınca uyarı üretilir. Uyarılar kendiliğinden kapanmaz — üstlenilir ve çözümlenir.',
@@ -420,7 +420,7 @@ export const HELP_I18N: Translations = {
     en: '"Open" in the status filter is a synthetic option showing Firing and Acknowledged alerts together; no such state exists in the database.'
   },
 
-  // ══ BİLDİRİMLER ═══════════════════════════════════════════════════════════
+  // ══ NOTIFICATIONS ═════════════════════════════════════════════════════════
   'pc.help.notifications.title': { tr: 'Bildirim Merkezi', en: 'Notification Center' },
   'pc.help.notifications.summary': {
     tr: 'Uyarı ve olayların kime, hangi kanaldan iletileceğini belirleyen kurallar ile konsol içi gelen kutusu.',
@@ -443,7 +443,7 @@ export const HELP_I18N: Translations = {
   'pc.help.notifications.rule.throttle.label': { tr: 'Kısıtlama', en: 'Throttling' },
   'pc.help.notifications.rule.throttle.desc': { tr: 'Aynı kuralın belirlenen dakika içinde tekrar bildirim göndermesi engellenir — bir arıza yüzlerce bildirim üretmez.', en: 'A rule is prevented from notifying again within the configured minutes — one incident does not produce hundreds of notifications.' },
 
-  // ══ MODEL KAYIT DEFTERİ ═══════════════════════════════════════════════════
+  // ══ MODEL REGISTRY ════════════════════════════════════════════════════════
   'pc.help.registry.title': { tr: 'Model Kayıt Defteri', en: 'Model Registry' },
   'pc.help.registry.summary': {
     tr: 'Tenant\'ların şema ve derlenmiş model sürümlerinin platformun güncel sürümüyle karşılaştırılması. Amaç, geride kalmış kurulumları görünür kılmaktır.',
@@ -470,7 +470,7 @@ export const HELP_I18N: Translations = {
     en: 'On a tenant with assembly errors the affected model\'s CRUD endpoints do not work. Those rows should be handled before migrating.'
   },
 
-  // ══ MİGRASYONLAR ══════════════════════════════════════════════════════════
+  // ══ MIGRATIONS ════════════════════════════════════════════════════════════
   'pc.help.migrations.title': { tr: 'Migrasyonlar', en: 'Migrations' },
   'pc.help.migrations.summary': {
     tr: 'Şema migrasyonlarının tenant\'lara kademeli olarak uygulanması. Tüm kuruluma aynı anda değil, dalgalar hâlinde yayılır.',
@@ -513,7 +513,7 @@ export const HELP_I18N: Translations = {
     en: 'Migrations modify tenant databases and cannot be undone — only restored from backup. Keep "take a backup first" and "stop on first failure" enabled in production. If a run takes a long time you may see a parked job on the Jobs screen; the run\'s own status on this page is the authoritative one.'
   },
 
-  // ══ WORKER'LAR ════════════════════════════════════════════════════════════
+  // ══ WORKERS ═══════════════════════════════════════════════════════════════
   'pc.help.workers.title': { tr: 'Worker\'lar', en: 'Workers' },
   'pc.help.workers.summary': {
     tr: 'Platformun periyodik arka plan worker\'ları: iş kuyruğu, zamanlayıcı, sağlık probları, uyarı değerlendirici ve diğerleri. Buradan her birini duraklatabilir, çalışma aralığını değiştirebilir ve döngüsünü yenileyebilirsiniz. Ayarlar veritabanında durur; uygulamayı yeniden derlemek gerekmez.',
@@ -547,7 +547,7 @@ export const HELP_I18N: Translations = {
     en: 'The telemetry flusher is not in this list: it runs as data arrives rather than on a fixed interval, so pausing and intervals do not apply to it. Also, changes made here apply to every server — the setting lives in the database, not in one process\'s memory.'
   },
 
-  // ══ API İZLEME ════════════════════════════════════════════════════════════
+  // ══ API MONITORING ════════════════════════════════════════════════════════
   'pc.help.apiMonitor.title': { tr: 'API İzleme', en: 'API Monitoring' },
   'pc.help.apiMonitor.summary': {
     tr: 'Uç bazında trafik, hata oranı ve gecikme; ayrıca isteklerin canlı akışı. Metrikler dakikalık rollup\'tan, canlı akış ise ham isteklerden gelir.',
@@ -570,7 +570,7 @@ export const HELP_I18N: Translations = {
     en: 'The metrics table is based on rollups produced once a minute; a newly added endpoint or the last minute of traffic will not appear immediately. Use the Live stream tab when you need real time.'
   },
 
-  // ══ PERFORMANS ════════════════════════════════════════════════════════════
+  // ══ PERFORMANCE ═══════════════════════════════════════════════════════════
   'pc.help.performance.title': { tr: 'Performans', en: 'Performance' },
   'pc.help.performance.summary': {
     tr: 'Seçilen saat aralığındaki en yavaş uçlar ve en yavaş tekil istekler. Optimizasyon çalışmasına nereden başlanacağını gösterir.',
@@ -585,7 +585,7 @@ export const HELP_I18N: Translations = {
   'pc.help.performance.field.p95.label': { tr: 'p95', en: 'p95' },
   'pc.help.performance.field.p95.desc': { tr: 'İsteklerin %95\'inin altında kaldığı süre; kullanıcıların hissettiği yavaşlığın ölçüsü budur.', en: 'The duration 95% of requests stay under; this is the measure of slowness users actually feel.' },
 
-  // ══ PLANLAR ═══════════════════════════════════════════════════════════════
+  // ══ PLANS ═════════════════════════════════════════════════════════════════
   'pc.help.plans.title': { tr: 'Plan Kataloğu', en: 'Plan Catalog' },
   'pc.help.plans.summary': {
     tr: 'Müşterilere sunulan abonelik modelleri ve her birinin verdiği özellik/kota hakları. Bir tenant\'ın neye erişebildiği, bağlı olduğu planın özelliklerinden hesaplanır.',
@@ -620,7 +620,7 @@ export const HELP_I18N: Translations = {
     en: 'Changes to plan features do not reach tenants instantly — entitlement snapshots are cached and refresh after a short delay.'
   },
 
-  // ══ ABONELİKLER ═══════════════════════════════════════════════════════════
+  // ══ SUBSCRIPTIONS ═════════════════════════════════════════════════════════
   'pc.help.subscriptions.title': { tr: 'Abonelikler', en: 'Subscriptions' },
   'pc.help.subscriptions.summary': {
     tr: 'Hangi tenant\'ın hangi plana, hangi koşullarla bağlı olduğu. Bir tenant\'ın platformu kullanabilmesi buradaki kaydın varlığına ve durumuna bağlıdır.',
@@ -651,7 +651,7 @@ export const HELP_I18N: Translations = {
     en: 'Cancelling a subscription does not technically shut the tenant down; it only drops their entitlement. To close the installation too, suspend or archive it from the tenant detail page.'
   },
 
-  // ══ KULLANIM ══════════════════════════════════════════════════════════════
+  // ══ USAGE ═════════════════════════════════════════════════════════════════
   'pc.help.usage.title': { tr: 'Kullanım', en: 'Usage' },
   'pc.help.usage.summary': {
     tr: 'Tenant başına ölçülen kullanım miktarları. Kota denetimi ve maliyet hesabı bu kayıtlardan beslenir.',
@@ -666,7 +666,7 @@ export const HELP_I18N: Translations = {
   'pc.help.usage.field.window.label': { tr: 'Dönem', en: 'Window' },
   'pc.help.usage.field.window.desc': { tr: 'Özet tablosu son 30 günü toplar; tek tek kayıtlar girildikleri anla saklanır.', en: 'The summary table aggregates the last 30 days; individual records are stored with the moment they were entered.' },
 
-  // ══ MALİYET ═══════════════════════════════════════════════════════════════
+  // ══ COST ══════════════════════════════════════════════════════════════════
   'pc.help.cost.title': { tr: 'Maliyet', en: 'Cost' },
   'pc.help.cost.summary': {
     tr: 'Tenant başına tahmini altyapı maliyeti — kullanım miktarlarının birim maliyetle çarpımı. Faturalama değil, iç maliyet görünürlüğü içindir.',
@@ -687,7 +687,7 @@ export const HELP_I18N: Translations = {
     en: 'The figures are estimates based on the unit costs you entered; they are not expected to match the actual provider invoice exactly.'
   },
 
-  // ══ YAPILANDIRMA ══════════════════════════════════════════════════════════
+  // ══ CONFIGURATION ═════════════════════════════════════════════════════════
   'pc.help.config.title': { tr: 'Platform Yapılandırması', en: 'Platform Configuration' },
   'pc.help.config.summary': {
     tr: 'Platformun ayarları: SMTP, yapay zeka sağlayıcısı ve birim maliyetler. Her satır kendi Kaydet düğmesiyle yazılır.',
@@ -733,7 +733,7 @@ export const HELP_I18N: Translations = {
     en: 'Flag state is cached, so a change may not take effect on every server instantly. For a critical kill-switch, verify the change and allow a short delay.'
   },
 
-  // ══ ENTEGRASYON ═══════════════════════════════════════════════════════════
+  // ══ INTEGRATION ═══════════════════════════════════════════════════════════
   'pc.help.integration.title': { tr: 'Entegrasyon', en: 'Integration' },
   'pc.help.integration.summary': {
     tr: 'Dış sistemlerle bağlantı: platform olaylarını dışarı ileten webhook\'lar ve dışarıdan erişim için API anahtarları.',
@@ -764,7 +764,7 @@ export const HELP_I18N: Translations = {
     en: 'Revoking an API key rejects calls using it immediately. Make sure the systems using the key have been updated before you revoke it.'
   },
 
-  // ══ DUYURULAR ═════════════════════════════════════════════════════════════
+  // ══ ANNOUNCEMENTS ═════════════════════════════════════════════════════════
   'pc.help.announcements.title': { tr: 'Duyurular', en: 'Announcements' },
   'pc.help.announcements.summary': {
     tr: 'Tüm tenant kullanıcılarına gösterilecek platform duyuruları: planlı bakım, devam eden arıza veya bilgilendirme. Duyuru oluşturmak onu yayınlamaz — yayınlama ayrı bir adımdır.',

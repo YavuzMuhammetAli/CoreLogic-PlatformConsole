@@ -24,7 +24,7 @@
     <button class="tab" [class.active]="tab() === 'rules'" (click)="selectTab('rules')">{{ 'pc.notif.rules' | t }}</button>
   </div>
 
-  <!-- ── Gelen kutusu ── -->
+  <!-- ── Inbox ── -->
   @if (tab() === 'inbox') {
     <div class="panel">
       <div class="panel-head filters">
@@ -61,7 +61,7 @@
     </div>
   }
 
-  <!-- ── Kurallar ── -->
+  <!-- ── Rules ── -->
   @if (tab() === 'rules') {
     @if (canManage) {
       <section class="panel">

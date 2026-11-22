@@ -4,8 +4,8 @@ import { HELP_I18N } from './help.i18n';
 import { ENUM_I18N } from './enum.i18n';
 
 /**
- * Tüm çeviri sözlüklerinin birleşimi. Yeni bir alan çevrildiğinde burada bir
- * `*.i18n.ts` import'u eklenip spread edilir; anahtarlar 'pc.*' ön ekiyle benzersiz olur.
+ * The union of all translation dictionaries. When a new area is translated, a
+ * `*.i18n.ts` import is added here and spread; keys are kept unique with the 'pc.*' prefix.
  */
 export const TRANSLATIONS: Translations = {
   ...PLATFORM_I18N,

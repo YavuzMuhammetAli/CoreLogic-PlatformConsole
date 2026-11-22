@@ -4,13 +4,13 @@ import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { IconComponent } from '../icon/icon.component';
 
 /**
- * Sayfa bilgilendirme diyaloğu — "bu ekranda ne var, ne anlama geliyor, nasıl elde ediliyor".
+ * Page info dialog — "what is on this screen, what it means, how it is obtained".
  *
- * CoreLogicUI'daki `datatype-help` deseninin konsol karşılığı: içerik bir veri
- * tablosundan (`page-help.data.ts`) okunur, metinlerin tamamı i18n anahtarıdır,
- * eşleşmeyen konu `FALLBACK_TOPIC`'e düşer (boş ekran olmaz).
+ * The console counterpart of the `datatype-help` pattern in CoreLogicUI: content is read from a
+ * data table (`page-help.data.ts`), all texts are i18n keys,
+ * an unmatched topic falls back to `FALLBACK_TOPIC` (never an empty screen).
  *
- * Kullanım (her sayfanın `.page-head`'inde):
+ * Usage (in each page's `.page-head`):
  *   <button (click)="help.set(true)">Nasıl çalışır?</button>
  *   <app-page-help [open]="help()" topic="plans" (closed)="help.set(false)" />
  */
@@ -32,15 +32,15 @@ export class PageHelpComponent {
     this.closed.emit();
   }
 
-  /** Yalnızca arka plana tıklanınca kapat — panelin içi tıklanabilir kalsın. */
+  /** Close only when the backdrop is clicked — the panel's contents stay clickable. */
   onBackdrop(event: MouseEvent): void {
     if (event.target === event.currentTarget) this.close();
   }
 
   /**
-   * Yardım her zaman diğer diyalogların ÜSTÜNDE açılır (onay diyaloğu vb.).
-   * Her iki ESC dinleyicisi de `document` üzerinde olduğu için `stopPropagation`
-   * yetmez — `stopImmediatePropagation` olmadan tek ESC ikisini birden kapatır.
+   * Help always opens ON TOP of other dialogs (confirm dialog etc.).
+   * Since both ESC listeners are on `document`, `stopPropagation` is not
+   * enough — without `stopImmediatePropagation` a single ESC closes both.
    */
   @HostListener('document:keydown.escape', ['$event'])
   onEscape(event: Event): void {

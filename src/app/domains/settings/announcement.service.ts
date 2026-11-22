@@ -6,7 +6,7 @@ import { DataResponseModel, ListResponseModel, ResponseModel } from '../../core/
 import { AnnouncementItem, DatabaseServerItem } from '../../core/models/announcement.models';
 import { BadgeTone } from '../../shared/ui/status-badge.component';
 
-/** Announcements & Status (M26) servisi — /announcements uçları. */
+/** Announcements & Status (M26) service — /announcements endpoints. */
 @Injectable({ providedIn: 'root' })
 export class AnnouncementService {
   private readonly http = inject(HttpClient);

@@ -9,7 +9,7 @@ import { LanguageService } from '../../services/language.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
-/** Feature Flags (M39) — liste + durum/yüzde + tenant override + ölü flag işareti. */
+/** Feature Flags (M39) — list + state/percentage + tenant override + dead flag marker. */
 @Component({
     selector: 'app-feature-flags',
     imports: [FormsModule, RouterLink, RouterLinkActive, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -27,9 +27,9 @@ export class FeatureFlagsComponent implements OnInit {
   readonly busyKey = signal<string | null>(null);
 
   readonly tone = flagStateTone;
-  // Değer sunucu sabiti (On/Off/Percentage), etiket çeviriden.
+  // The value is a server constant (On/Off/Percentage), the label comes from translations.
   readonly states = computed(() => FLAG_STATES.map(v => ({ value: v, label: this.enumLabel(v) })));
-  /** Tenant override'ı yüzdelik olamaz — yalnız açık/kapalı. */
+  /** A tenant override cannot be a percentage — only on/off. */
   readonly overrideStates = computed(() => ['On', 'Off'].map(v => ({ value: v, label: this.enumLabel(v) })));
 
   enumLabel(value: string): string {

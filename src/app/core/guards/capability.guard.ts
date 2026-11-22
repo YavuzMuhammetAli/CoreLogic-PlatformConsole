@@ -3,12 +3,12 @@ import { inject } from '@angular/core';
 import { PlatformSessionStore } from '../auth/platform-session.store';
 
 /**
- * Yetenek-bazlı route koruması ([05 §3], [11 §8]). Kullanıcı verilen
- * yeteneklerden en az birine sahip değilse Overview'a yönlendirir.
- * Menü de aynı yetenek listesinden çizilir — kör kapı yok. (Backend policy'si
- * ayrıca zorlar; bu yalnızca UX.)
+ * Capability-based route guard ([05 §3], [11 §8]). Redirects to Overview if the user
+ * has none of the given capabilities.
+ * The menu is drawn from the same capability list — no dead-end doors. (The backend policy
+ * enforces it separately; this is UX only.)
  *
- * Kullanım: canActivate: [platformAuthGuard, capabilityGuard(Cap.IamManage)]
+ * Usage: canActivate: [platformAuthGuard, capabilityGuard(Cap.IamManage)]
  */
 export function capabilityGuard(...required: string[]): CanActivateFn {
   return () => {

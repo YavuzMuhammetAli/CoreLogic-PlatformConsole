@@ -15,9 +15,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
- * Platform Overview (M01, [07 §6]) — golden signals + sağlık ağacı özeti + açık uyarılar.
- * Panolar API'den beslenir (depoya bağlanmaz): mevcut /health/tree, /alerts, /telemetry/metrics
- * uçları bir araya getirilir. Bir kaynak düşerse diğerleri gösterilmeye devam eder.
+ * Platform Overview (M01, [07 §6]) — golden signals + health tree summary + open alerts.
+ * The panels are fed from the API (not bound to the store): the existing /health/tree, /alerts,
+ * /telemetry/metrics endpoints are combined. If one source fails the others keep showing.
  */
 @Component({
     selector: 'app-overview',
@@ -41,7 +41,7 @@ export class OverviewComponent implements OnInit {
   readonly hTone = healthTone;
   readonly sevTone = severityTone;
 
-  /** Golden signals — son 24 saat rollup'ından türetilir ([07 §4]). */
+  /** Golden signals — derived from the last 24 hours' rollup ([07 §4]). */
   readonly totalRequests = computed(() => this.metrics().reduce((s, m) => s + m.count, 0));
   readonly totalErrors = computed(() => this.metrics().reduce((s, m) => s + m.errorCount, 0));
   readonly errorRate = computed(() => {
@@ -51,7 +51,7 @@ export class OverviewComponent implements OnInit {
   readonly worstP95 = computed(() =>
     this.metrics().reduce((mx, m) => Math.max(mx, m.p95DurationMs), 0));
 
-  /** Sağlık bileşenlerinin durum dağılımı. */
+  /** Status distribution of health components. */
   readonly healthCounts = computed(() => {
     const comps = this.tree()?.components ?? [];
     const by = (s: string) => comps.filter(c => c.status === s).length;

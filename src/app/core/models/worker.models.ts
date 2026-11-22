@@ -1,26 +1,26 @@
-/** Worker kontrol düzlemi (migrasyon 025) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Worker control plane (migration 025) models — match backend Entities.DTOs.Platform. */
 
 /**
- * Durum SUNUCUDA türetilir (WorkerControlManager.DeriveStatus); istemci yalnız
- * gösterir. Kuralın burada tekrarlanması iki tarafın ıraksamasına yol açardı.
+ * The status is derived ON THE SERVER (WorkerControlManager.DeriveStatus); the client only
+ * displays it. Repeating the rule here would let the two sides diverge.
  */
 export type WorkerRunState = 'Running' | 'Disabled' | 'Stale' | 'Error';
 
 export interface WorkerStatus {
   name: string;
   enabled: boolean;
-  /** Kapatılması platformun tamamını etkiler — onay istenir. */
+  /** Disabling it affects the whole platform — confirmation is required. */
   isCritical: boolean;
-  /** Kapatmanın somut sonucu (onay diyaloğu metni, sunucudan gelir). */
+  /** Concrete consequence of disabling (confirmation dialog text, comes from the server). */
   impact: string;
-  /** null = koddaki varsayılan kullanılıyor (operatör override etmemiş). */
+  /** null = the default in code is used (the operator has not overridden it). */
   intervalSeconds: number | null;
   defaultIntervalSeconds: number;
   effectiveIntervalSeconds: number;
   status: WorkerRunState;
-  /** Döngünün son yaşam sinyali — "ayakta mıyım". */
+  /** The loop's last liveness signal — "am I alive". */
   lastHeartbeatAt?: string | null;
-  /** Son gerçek iş — heartbeat'ten ayrı: 24 saatlik worker gün boyu iş yapmaz. */
+  /** Last actual work — separate from the heartbeat: a 24-hour worker does no work most of the day. */
   lastRunAt?: string | null;
   lastError?: string | null;
   lastErrorAt?: string | null;
@@ -30,8 +30,8 @@ export interface WorkerStatus {
 
 export interface UpdateWorkerRequest {
   enabled: boolean;
-  /** null gönderilirse override kaldırılır ve kod varsayılanına dönülür. */
+  /** If null is sent, the override is removed and the code default is restored. */
   intervalSeconds: number | null;
-  /** Kritik worker KAPATILIRKEN zorunlu. */
+  /** Required when DISABLING a critical worker. */
   confirm: boolean;
 }

@@ -16,7 +16,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 type Tab = 'inbox' | 'rules';
 
-/** Notification Center (M25) — InApp gelen kutusu (okundu) + kural yönetimi. */
+/** Notification Center (M25) — InApp inbox (mark read) + rule management. */
 @Component({
     selector: 'app-notification-center',
     imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, StatusBadgeComponent, SelectComponent, HelpButtonComponent, TranslatePipe, IconComponent],
@@ -41,7 +41,7 @@ export class NotificationCenterComponent implements OnInit {
   readonly channelTypes = computed(() =>
     ['InApp', 'Email'].map(v => ({ value: v, label: this.enumLabel(v) })));
 
-  /** Tablo hücreleri için — tetikleyici ve kanal tipi sunucudan ham gelir. */
+  /** For table cells — trigger and channel type come raw from the server. */
   enumLabel(value: string): string {
     return this.language.enumLabel(value);
   }

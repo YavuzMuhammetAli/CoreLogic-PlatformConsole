@@ -1,7 +1,7 @@
 {
   "name": "platform-console",
   "version": "0.1.0",
-  "description": "CoreLogic Platform Console — control plane (PYS) yönetim arayüzü",
+  "description": "CoreLogic Platform Console — control plane (PYS) management UI",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

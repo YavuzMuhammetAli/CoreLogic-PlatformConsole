@@ -1,5 +1,5 @@
-/* z-index 200: onay diyaloğunun overlay'i 100'de — yardım her zaman ÜSTÜNDE açılır,
-   çünkü kullanıcı bir onayı okurken "bu ne demek?" diye buraya bakabilmeli. */
+/* z-index 200: the confirm dialog's overlay is at 100 — help always opens ON TOP,
+   because while reading a confirmation the user should be able to check "what does this mean?" here. */
 .help-overlay {
   position: fixed;
   inset: 0;
@@ -17,7 +17,7 @@
   max-height: 88vh;
   display: flex;
   flex-direction: column;
-  /* .panel'in overflow: hidden'ı köşeleri korur; kaydırma gövdede yapılır. */
+  /* .panel's overflow: hidden preserves the corners; scrolling happens in the body. */
 }
 
 .help-panel h2 { font-size: var(--text-lg); }
@@ -34,7 +34,7 @@
   border-top: 1px solid var(--border-soft);
 }
 
-/* Alan/kural sözlüğü — etiket solda, açıklama sağda; dar ekranda alt alta. */
+/* Field/rule glossary — label on the left, description on the right; stacked on narrow screens. */
 .help-list {
   display: grid;
   grid-template-columns: minmax(140px, 220px) 1fr;
@@ -45,7 +45,7 @@
 .help-list dt { font-weight: 600; color: var(--fg); }
 .help-list dd { margin: 0; color: var(--fg-2); }
 
-/* Durum zinciri şeridi */
+/* Status chain strip */
 .lifecycle {
   display: flex;
   flex-wrap: wrap;

@@ -1,4 +1,4 @@
-/** Tenant Directory (M02) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Tenant Directory (M02) models — match backend Entities.DTOs.Platform. */
 
 export type { PagedResult } from './api.models';
 
@@ -10,7 +10,7 @@ export interface TenantSummary {
   isProvisioned: boolean;
   databaseName?: string | null;
   databaseVersion?: number | null;
-  /** Son bilinen sağlık durumu (Healthy/Degraded/Unhealthy/Unknown) — denorm ([07 §2]). */
+  /** Last known health status (Healthy/Degraded/Unhealthy/Unknown) — denormalized ([07 §2]). */
   lastHealthStatus: string;
   lastHealthAt?: string | null;
   createdDate: string;
@@ -49,13 +49,13 @@ export interface TenantStateHistory {
   correlationId?: string | null;
 }
 
-/** CompanyStatus değerleri — filtre açılır listesi. */
+/** CompanyStatus values — filter dropdown. */
 export const TENANT_STATUSES = ['Provisioning', 'Active', 'Failed', 'Suspended'] as const;
 
 /**
- * Model ağacı düğümü. Liste backend'den derinlik-öncelikli SIRALI gelir
- * (kök → çocukları → torunları), bu yüzden istemci özyineleme yapmaz —
- * girinti `depth`, ata zinciri `path` alanından okunur.
+ * Model tree node. The list comes from the backend ORDERED depth-first
+ * (root → children → grandchildren), so the client does no recursion —
+ * indentation is read from `depth`, the ancestor chain from `path`.
  */
 export interface TenantModelNode {
   id: number;
@@ -63,9 +63,9 @@ export interface TenantModelNode {
   description?: string | null;
   parentId?: number | null;
   parentName?: string | null;
-  /** 1 = ana model. */
+  /** 1 = root model. */
   depth: number;
-  /** Kökten kendine zincir, ör. ["Siparis", "SiparisSatir"]. */
+  /** Chain from the root to itself, e.g. ["Siparis", "SiparisSatir"]. */
   path: string[];
   columnCount: number;
   version: number;
@@ -75,7 +75,7 @@ export interface TenantModelNode {
   createdOn?: string | null;
 }
 
-/** Model ağacı yanıtı — liste + özet sayaçlar. */
+/** Model tree response — list + summary counters. */
 export interface TenantModelTree {
   items: TenantModelNode[];
   totalCount: number;
@@ -83,22 +83,22 @@ export interface TenantModelTree {
   maxDepth: number;
 }
 
-/** Tablo sınıflandırması — backend Entities.DTOs.Platform.TenantTableKind ile eşleşir. */
+/** Table classification — matches backend Entities.DTOs.Platform.TenantTableKind. */
 export type TenantTableKind = 'Published' | 'DeletedModel' | 'System' | 'Unknown';
 
-/** Fiziksel tablo + boyut + sınıflandırma. */
+/** Physical table + size + classification. */
 export interface TenantTable {
   name: string;
   rowCount: number;
-  /** Ayrılmış toplam alan (bayt) — veri + indeks. */
+  /** Total reserved space (bytes) — data + index. */
   totalBytes: number;
   usedBytes: number;
   kind: TenantTableKind;
-  /** Yayınlanmış/silinmiş model tablolarında model derinliği. */
+  /** Model depth for published/deleted model tables. */
   depth?: number | null;
 }
 
-/** Tablo envanteri yanıtı. */
+/** Table inventory response. */
 export interface TenantTables {
   items: TenantTable[];
   databaseName: string;

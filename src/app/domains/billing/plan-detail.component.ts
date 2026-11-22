@@ -17,12 +17,12 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 /**
- * Plan detayı — kimlik düzenleme + özellik/kota editörü + durum geçişi + silme.
+ * Plan detail — identity editing + feature/quota editor + status transition + deletion.
  *
- * Plan listesi bugüne kadar salt-okurdu (yalnız durum geçişi vardı); backend'de de
- * güncelleme/silme ucu yoktu. Code ve Version burada DÜZENLENMEZ: UQ_Plan_Code_Version
- * sürümleme sözleşmesi gereği kimlik sabittir, fiyat/limit değişimi yeni bir sürüm
- * satırı olarak açılır (grandfathering).
+ * Until now the plan list was read-only (it only had status transitions); the backend had no
+ * update/delete endpoint either. Code and Version are NOT edited here: per the UQ_Plan_Code_Version
+ * versioning contract the identity is fixed, a price/limit change is opened as a new version
+ * row (grandfathering).
  */
 @Component({
     selector: 'app-plan-detail',
@@ -51,18 +51,18 @@ export class PlanDetailComponent implements OnInit {
 
   readonly tone = planStatusTone;
   readonly canWrite = this.store.has(Cap.BillingWrite);
-  /** Kapalı katalog (sunucudan) — değer anahtar, etiket isteğin dilinde. Backend dışı anahtarı reddeder. */
+  /** Closed catalog (from the server) — value is the key, label is in the request's language. The backend rejects other keys. */
   readonly featureKeys = computed(() =>
     this.catalog.planFeatures().map(m => ({ value: m.key, label: m.label })));
 
   private planId = 0;
 
-  /** Kimlik formu — plan yüklendiğinde doldurulur. */
+  /** Identity form — filled when the plan loads. */
   form = { name: '', description: '', isPublic: true, trialDays: 14 };
-  /** Özellik ekleme/düzenleme satırı. */
+  /** Feature add/edit row. */
   featureForm = { featureKey: '', limitValue: null as number | null, unit: '' };
 
-  /** Varsayılan plan Active dışına çıkamaz — backend de reddeder, buton da gizlenir. */
+  /** The default plan cannot leave Active — the backend rejects it and the button is hidden too. */
   readonly canLeaveActive = computed(() => !this.plan()?.isDefaultForNewTenants);
 
   ngOnInit(): void {
@@ -121,7 +121,7 @@ export class PlanDetailComponent implements OnInit {
     });
   }
 
-  /** Satırı forma alır — upsert olduğu için aynı anahtarla kaydetmek günceller. */
+  /** Loads the row into the form — since it is an upsert, saving with the same key updates it. */
   editFeature(f: PlanFeatureItem): void {
     this.featureForm = {
       featureKey: f.featureKey,
@@ -134,7 +134,7 @@ export class PlanDetailComponent implements OnInit {
     this.run(this.service.removeFeature(this.planId, f.featureKey));
   }
 
-  /** Kalıcı silme — backend yalnız abonesi olmayan Draft için kabul eder. */
+  /** Permanent delete — the backend accepts it only for a Draft with no subscribers. */
   deletePlan(): void {
     this.confirmDelete.set(false);
     this.busy.set(true);
@@ -163,7 +163,7 @@ export class PlanDetailComponent implements OnInit {
     return unit ? this.catalog.unitLabel(unit) : '—';
   }
 
-  /** Tüm mutasyonlar aynı sonuç/yenileme kalıbını paylaşır. */
+  /** All mutations share the same result/refresh pattern. */
   private run(obs: Observable<ResponseModel>, onSuccess?: () => void): void {
     this.busy.set(true);
     this.error.set(null);

@@ -1,4 +1,4 @@
-/** Integration Center (M40) modelleri — backend Entities.DTOs.Platform ile eşleşir. */
+/** Integration Center (M40) models — match backend Entities.DTOs.Platform. */
 
 export interface WebhookItem {
   id: number;
